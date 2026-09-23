@@ -1,0 +1,6 @@
+{
+  "name": "ras",
+  "version": "0.1.0",
+  "description": "RAISE A SLIDE: turn briefs into rehearsable Marp presentations.",
+  "author": { "name": "Wei Lee" }
+}

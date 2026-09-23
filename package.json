@@ -1,0 +1,38 @@
+{
+  "name": "@ras/slide-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "RAISE A SLIDE — standalone Marp projects and AI presentation workflows",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "bin": {
+    "ras": "scripts/ras.mjs"
+  },
+  "scripts": {
+    "init:deck": "node scripts/ras.mjs init",
+    "build": "node scripts/deck.mjs build",
+    "check": "node scripts/deck.mjs check",
+    "export": "node scripts/deck.mjs export",
+    "preview": "node scripts/deck.mjs preview",
+    "doctor": "node scripts/deck.mjs doctor",
+    "test": "node --test tests/*.test.mjs",
+    "test:mutation": "node scripts/mutation-check.mjs",
+    "validate": "node scripts/validate.mjs"
+  },
+  "overrides": {
+    "@xmldom/xmldom": "0.9.12",
+    "puppeteer-core": "25.11.0"
+  },
+  "dependencies": {
+    "@fontsource/roboto": "5.3.0",
+    "@fontsource/roboto-condensed": "5.3.0",
+    "@fontsource/roboto-mono": "5.3.0",
+    "@marp-team/marp-cli": "4.5.1",
+    "@marp-team/marp-core": "4.4.0",
+    "@mermaid-js/mermaid-cli": "11.17.0",
+    "pdf-lib": "1.17.1",
+    "puppeteer": "25.11.0"
+  }
+}
