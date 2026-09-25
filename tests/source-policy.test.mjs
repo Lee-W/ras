@@ -31,7 +31,7 @@ function validate(root) {
 }
 
 test('source policy rejects unfamiliar media formats and directories', () => {
-  for (const file of ['docs/diagram.avif', 'uploads/diagram.png', 'new-folder/notes.md']) {
+  for (const file of ['docs/diagram.avif', 'uploads/diagram.png', 'new-folder/notes.md', '.github/workflows/logo.svg', '.github/workflows/unknown.yml']) {
     assert.throws(() => validateSourceFile(file, '100644', Buffer.from('content')), /Unapproved repository source path/);
   }
 });

@@ -197,6 +197,13 @@ npm test
 npm run test:mutation
 ```
 
+GitHub CI runs these checks plus a standalone starter export on Ubuntu/macOS
+with Node 22.18.0 and 26.9.0. Pull requests run CI directly; pushes to `main` run
+the same CI before the version/release job. Conventional Commits drive version
+updates across the npm manifests and all three plugin manifests, a changelog,
+and a GitHub Release. See [repository automation](docs/development.md) for setup,
+local commands, and release permissions.
+
 The scripts use project-relative paths and a configurable browser. Behavioural
 tests cover source parsing, independent initialization, missing assets, and layout
 failure detection. Browser tests require an installed Chrome/Chromium.

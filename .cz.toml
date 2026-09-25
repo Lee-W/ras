@@ -1,0 +1,13 @@
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "npm"
+version_scheme = "semver"
+major_version_zero = true
+tag_format = "v$version"
+annotated_tag = true
+update_changelog_on_bump = true
+version_files = [
+  'plugin.json:"version"',
+  '.claude-plugin/plugin.json:"version"',
+  '.codex-plugin/plugin.json:"version"',
+]

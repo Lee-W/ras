@@ -1,0 +1,57 @@
+name: Version and release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  checks:
+    uses: ./.github/workflows/ci.yml
+
+  release:
+    needs: checks
+    if: github.ref == 'refs/heads/main' && github.repository == 'Lee-W/ras' && !startsWith(github.event.head_commit.message, 'bump:')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: '22.18.0'
+          package-manager-cache: false
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+      - name: Configure release author
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Bump versions and publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          previous_head="$(git rev-parse HEAD)"
+          # 3: no new commits; 21: commits without a version increment.
+          uvx --from commitizen==4.16.2 cz --no-raise 3,21 bump --yes
+          if [ "$(git rev-parse HEAD)" = "$previous_head" ]; then
+            echo 'No release-eligible commits.'
+            exit 0
+          fi
+          npm run validate
+          release_version="$(uvx --from commitizen==4.16.2 cz version --project)"
+          release_tag="$(uvx --from commitizen==4.16.2 cz version --project --tag)"
+          release_notes="$RUNNER_TEMP/ras-release-notes.md"
+          uvx --from commitizen==4.16.2 cz changelog --dry-run "$release_version" > "$release_notes"
+          git push --atomic origin HEAD:main --follow-tags
+          gh release create "$release_tag" --verify-tag --notes-file "$release_notes"

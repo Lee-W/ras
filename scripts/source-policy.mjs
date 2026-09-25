@@ -5,6 +5,8 @@ const rootFiles = new Set([
   '.gitignore', 'AGENTS.md', 'README.md', 'SKILL.md', 'package.json',
   'package-lock.json', 'plugin.json', '.codex-plugin/plugin.json',
   '.claude-plugin/plugin.json',
+  '.cz.toml', 'CHANGELOG.md', '.github/workflows/ci.yml',
+  '.github/workflows/bumpversion.yml',
 ]);
 const sourcePaths = [
   /^(agents|profiles|references|docs)\/[a-z0-9-]+\.md$/,
