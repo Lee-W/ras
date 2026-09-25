@@ -44,7 +44,10 @@ a GitHub Release in the same job. It does not publish to npm.
 
 `npm run test:release` requires Git and uv. It copies repository source into a
 temporary repository, runs the pinned Commitizen against a first feature release,
-an immediate rerun, and a docs-only follow-up. It checks version synchronization,
+an immediate rerun, a docs-only follow-up, and a later patch release. The first
+fixture excludes the checkout's changelog because it has no historical tags;
+the patch scenario then exercises the generated changelog and tag history.
+It checks version synchronization,
 unchanged dependency pins, the tag/changelog, release notes, source validation,
 and both no-bump results. It never pushes, publishes, or changes the current
 repository's history.
