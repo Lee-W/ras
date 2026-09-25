@@ -1,11 +1,13 @@
 import { createHash } from 'node:crypto';
-import { cp, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { spawn } from 'node:child_process';
 import { Marp } from '@marp-team/marp-core';
 import puppeteer from 'puppeteer';
+import { diagramFonts } from './fonts.mjs';
+export { prepareFonts } from './fonts.mjs';
 
 const require = createRequire(import.meta.url);
 export const defaults = { minTextSize: 24, minCodeSize: 18, minCreditSize: 14 };
@@ -68,45 +70,43 @@ export async function readConfig(root) {
   return { ...defaults, ...config };
 }
 
-export async function prepareFonts(dist) {
-  const fonts = [
-    ['roboto', 400], ['roboto', 700], ['roboto-condensed', 700], ['roboto-mono', 400],
-  ];
-  const out = path.join(dist, 'assets', 'fonts');
-  await mkdir(out, { recursive: true });
-  for (const [family, weight] of fonts) {
-    const pkg = path.dirname(require.resolve(`@fontsource/${family}/package.json`));
-    const name = `${family}-latin-${weight}-normal.woff2`;
-    await cp(path.join(pkg, 'files', name), path.join(out, name));
-    await cp(path.join(pkg, 'LICENSE'), path.join(out, `${family}-LICENSE`));
-  }
-}
-
 export async function compileDiagrams(source, root, dist) {
   const engine = new Marp({ html: true });
   const tokens = engine.markdown.parse(source, {});
   const diagrams = tokens.filter(token => token.type === 'fence' && token.info.trim() === 'mermaid');
   if (!diagrams.length) return source;
-  const { run: renderDiagram } = await import('@mermaid-js/mermaid-cli');
+  const { renderMermaid } = await import('@mermaid-js/mermaid-cli');
   const executablePath = await browserPath();
   const scratch = path.join(root, '.ras', 'diagrams');
   const output = path.join(dist, 'assets', 'generated');
   await mkdir(scratch, { recursive: true });
   await mkdir(output, { recursive: true });
   const lines = source.split('\n');
-  for (const token of [...diagrams].reverse()) {
-    const id = createHash('sha256').update(token.content).digest('hex').slice(0, 16);
-    const input = path.join(scratch, `${id}.mmd`);
-    await writeFile(input, token.content);
-    await renderDiagram(input, path.join(output, `${id}.svg`), {
-      puppeteerConfig: { executablePath },
-      parseMMDOptions: {
-        backgroundColor: 'transparent',
-        mermaidConfig: { theme: 'dark', securityLevel: 'strict', flowchart: { htmlLabels: false } },
-      },
-      quiet: true,
-    });
-    lines.splice(token.map[0], token.map[1] - token.map[0], `![Workflow diagram](assets/generated/${id}.svg)`);
-  }
+  const browser = await puppeteer.launch({ executablePath });
+  try {
+    for (const token of [...diagrams].reverse()) {
+      const id = createHash('sha256').update(token.content).digest('hex').slice(0, 16);
+      const input = path.join(scratch, `${id}.mmd`);
+      await writeFile(input, token.content);
+      const { fonts, css } = await diagramFonts(token.content);
+      // The CLI loads document.fonts before measuring labels, but adds myCSS only
+      // after rendering. Register fonts at document creation, then embed them in SVG.
+      const fontBrowser = {
+        async newPage() {
+          const page = await browser.newPage();
+          await page.evaluateOnNewDocument(faces => {
+            for (const font of faces) document.fonts.add(new FontFace(font.family, font.source, { weight: font.weight, unicodeRange: font.unicodeRange }));
+          }, fonts);
+          return page;
+        },
+      };
+      const diagram = await renderMermaid(fontBrowser, token.content, 'svg', {
+        backgroundColor: 'transparent', myCSS: css,
+        mermaidConfig: { theme: 'dark', securityLevel: 'strict', fontFamily: 'RAS Sans, RAS CJK, sans-serif', htmlLabels: false },
+      });
+      await writeFile(path.join(output, `${id}.svg`), diagram.data);
+      lines.splice(token.map[0], token.map[1] - token.map[0], `![Workflow diagram](assets/generated/${id}.svg)`);
+    }
+  } finally { await browser.close(); }
   return lines.join('\n');
 }

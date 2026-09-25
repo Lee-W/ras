@@ -46,6 +46,9 @@ builds use local fonts, images, and pre-rendered Mermaid diagrams.
 | `npm run export` | Checks, then PDF with verified page count |
 | `npm run preview` | Local preview at `http://127.0.0.1:4173` |
 | `npm run doctor` | Node/browser/config diagnosis |
+| `npm run status` | Current machine/review states and stale evidence |
+| `npm run review:record -- <review.json>` | Record an actual visual or factual review |
+| `npm run memory -- list` | Read the selected project's saved preferences |
 
 `dist/` is generated output and is replaced on every build. Keep source assets
 in `assets/`, not in `dist/`. The preview serves `dist/`; rebuild after edits and refresh the page. Set `PORT`
@@ -67,7 +70,8 @@ Load this repository as a local plugin:
 claude --plugin-dir /path/to/ras
 ```
 
-Then use `/ras:create`, `/ras:revise`, `/ras:review`, or `/ras:export`.
+Then use `/ras:create`, `/ras:revise`, `/ras:review`, `/ras:export`,
+`/ras:remember`, or `/ras:retro`.
 Each operation is a shared skill, so no separate command definitions are needed.
 Claude Code [automatically scans the plugin's `skills/` directory](https://code.claude.com/docs/en/plugins-reference#skills);
 the Claude manifest does not need a `skills` field. The `skills` and `interface`
@@ -93,6 +97,8 @@ ras:create Explain retry policies to junior engineers in 15 minutes --plan
 ras:revise talks/retries/slides.md Shorten the opening to two minutes
 ras:review talks/retries/slides.md
 ras:export talks/retries/slides.md
+ras:remember In talks/retries, introduce the problem before showing code
+ras:retro Review this session for reusable lessons in talks/retries
 ```
 
 Host command discovery varies. The router does not register native slash commands
@@ -121,8 +127,10 @@ You can also paste `ras-chat.md` into a local chat interface. Supply the content
 of any brief/source files that the model cannot read. Save its labelled drafts
 into a deck created with `init`, then run `npm run export`. Chat mode explicitly
 returns file contents and commands; it cannot write files, browse sources, inspect
-images, or export on its own. `prompt revise`, `prompt review`, and `prompt export`
-use the same four operations; `--plan` remains plan-only.
+images, or export on its own. `prompt revise`, `prompt review`, `prompt export`,
+`prompt remember`, and `prompt retro` expand the matching shared operations;
+`--plan` remains plan-only for creation. Memory prompts in chat mode propose
+entries and saving steps without claiming to persist them.
 
 For a tool-capable model through Codex's local provider instead:
 
@@ -164,14 +172,26 @@ Conference/company branding and personal artwork belong in individual projects.
 
 ## Quality and scope
 
-Machine reports explicitly leave visual and factual review **pending**. Inspect
-the latest PNGs and record the reviewed source hash/pages in `review.md`. Live talk
-duration remains an estimate until rehearsed. See [the review contract](references/review.md).
+Machine checks alone leave visual and factual review **pending**. Inspect the
+latest PNGs and sources, then use `review:record` with the hashes captured before
+review and actual page coverage/observations. `status` detects stale records when
+source, brief, outline, or sources change. Export includes those states and stays
+available for drafts. Live talk duration remains an estimate until rehearsed.
+See [the review contract](references/review.md).
+
+`ras:remember` saves an explicitly requested preference in the selected project's
+ignored `.ras/memory.json`. `ras:retro` proposes lessons from the actual session
+and saves the candidates the user selects. Relevant saved entries guide later
+operations without overriding the current brief. No home-directory memory store
+is read, and memories are not included in slide exports. See [project memory](references/memory.md).
 
 First-version scope: new talks, revision, review, and HTML/PDF export. Legacy sample
 conversions validate the style; bulk migration of the three old talks is deferred.
-Custom CJK fonts should be supplied by the project when stable cross-platform
-typography is required. See [Marp authoring](references/marp.md).
+The starter theme bundles pinned Noto Sans TC Variable for Taiwanese Mandarin
+written in traditional characters,
+including headings and code comments. Mermaid embeds its label fonts. Other
+scripts and custom branding can supply project-local fonts and licences.
+See [Marp authoring](references/marp.md).
 
 Repository source excludes historical slide excerpts, character artwork,
 employer logos, third-party memes, and font files. Keep reference fixtures outside

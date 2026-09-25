@@ -46,7 +46,7 @@ test('initialization copies a portable project and refuses to overwrite one', as
   assert.deepEqual(pkg.dependencies, lock.packages[''].dependencies);
   assert.equal(pkg.scripts.export, 'node scripts/deck.mjs export');
   assert.equal(pkg.bin, undefined);
-  for (const name of ['deck', 'project', 'probe']) {
+  for (const name of ['deck', 'project', 'probe', 'fonts', 'review', 'state', 'memory']) {
     const script = await readFile(path.join(target, `scripts/${name}.mjs`), 'utf8');
     assert.doesNotMatch(script, /\/Users\/|\.config\/|\.\.\/\.\.\/ras/);
   }
@@ -77,8 +77,9 @@ test('font output retains the exact upstream license for each font family', asyn
   t.after(() => rm(temporary, { recursive: true, force: true }));
   await prepareFonts(temporary);
   const require = createRequire(import.meta.url);
-  for (const family of ['roboto', 'roboto-condensed', 'roboto-mono']) {
-    const source = path.dirname(require.resolve(`@fontsource/${family}/package.json`));
+  for (const family of ['roboto', 'roboto-condensed', 'roboto-mono', 'noto-sans-tc']) {
+    const scope = family === 'noto-sans-tc' ? '@fontsource-variable' : '@fontsource';
+    const source = path.dirname(require.resolve(`${scope}/${family}/package.json`));
     const license = await readFile(path.join(source, 'LICENSE'));
     assert.ok(license.length > 0);
     assert.deepEqual(await readFile(path.join(temporary, 'assets/fonts', `${family}-LICENSE`)), license);

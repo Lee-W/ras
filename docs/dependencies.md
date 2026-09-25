@@ -33,3 +33,12 @@ in the originally resolved 0.9.10 version.
 toolchain. Exercise HTML, Mermaid, and PDF export when changing these pins.
 Tests run on macOS arm64 with Node 22.18.0 and 26.9.0; this is not a claim that
 every intermediate Node release or operating system has been tested.
+
+## Fonts for Taiwanese Mandarin in traditional characters
+
+`@fontsource-variable/noto-sans-tc` is pinned to 5.3.0 (verified from the npm
+registry on 2026-09-25). [Fontsource's installation guide](https://fontsource.org/fonts/noto-sans-tc/install)
+documents the variable weight CSS used by the build. Font files and the upstream
+licence are copied from the installed dependency into generated output, never
+checked into repository source. Mermaid preloads label fonts before measuring
+text and embeds the necessary subsets in its generated SVGs for offline use.

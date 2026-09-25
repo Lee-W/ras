@@ -61,7 +61,7 @@ function runTests(files) {
 
 const errors = [];
 try {
-  for (const name of ['scripts', 'tests', 'templates', 'package.json', 'package-lock.json', '.gitignore']) {
+  for (const name of ['scripts', 'tests', 'templates', 'references', 'package.json', 'package-lock.json', '.gitignore']) {
     await cp(path.join(root, name), path.join(temporary, name), { recursive: true });
   }
   await symlink(path.join(root, 'node_modules'), path.join(temporary, 'node_modules'), 'dir');

@@ -1,14 +1,18 @@
 # RAS workflow
 
 RAS means **RAISE A SLIDE**. It creates a presentation for a speaker, audience,
-and occasion. Marp Markdown is the editable source. Use Traditional Chinese
-with Taiwanese vocabulary when the user writes in Chinese; keep slide language
+and occasion. Marp Markdown is the editable source. Use Taiwanese Mandarin
+(臺灣華語) written in traditional characters when the user writes in Mandarin; keep slide language
 and spoken language separate.
 
 Resolve the plugin root from the skill file's location. All scripts and templates
 are relative to that root. Work on the target deck, never on plugin templates when
 the user asks to change a talk. Only use the user's supplied project context
 and sources.
+
+Read [project memory](memory.md) for accepted preferences in the selected deck.
+Use relevant entries within the current brief; do not load unrelated personal
+stores. `remember` and `retro` use that reference's dedicated flow.
 
 ## Roles
 
@@ -42,6 +46,8 @@ theming applies to collaboration; slide branding comes from the chosen theme.
 | revise | CHU² scopes the feedback → relevant writing/design pass → LOCK updates → MASKING rechecks | Requested changes and a review of the latest render |
 | review | MASKING leads, consulting LAYER/PAREO criteria as needed | Findings and review status; editable source stays unchanged |
 | export | LOCK builds/checks/exports → PAREO/MASKING inspect or verify a matching prior review → CHU² delivers | Artifacts plus actual verification status |
+| remember | CHU² resolves the project and saves an authorized entry | Saved entry and path, or explicit pending persistence |
+| retro | CHU² proposes grounded lessons → user selects → remember saves | Actual saved IDs and unresolved candidates |
 
 Pass along the artifact paths, changed page headings, source hash when available,
 decisions to preserve, checks actually performed, and unresolved findings. Use
@@ -126,6 +132,8 @@ they build independently of the AI host.
 Inspect the latest rendered pages. Fix faults in the source or theme, rebuild,
 and verify the changed result. If a full final inspection was not possible,
 report that limit explicitly. A machine check is not a visual or factual review.
+Use `npm run status` to check freshness of recorded reviews. Follow the review
+contract to record observations; never mark an unperformed review as passed.
 
 Deliver links to `slides.md`, `dist/index.html`, `dist/slides.pdf`, and the
 verification report. Summarize what changed, checks actually performed, missing

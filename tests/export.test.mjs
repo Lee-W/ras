@@ -6,6 +6,7 @@ import path from 'node:path';
 import { PDFDocument } from 'pdf-lib';
 import { exportDeck } from '../scripts/deck.mjs';
 import { initDeck } from '../scripts/ras.mjs';
+import { recordReview, status } from '../scripts/review.mjs';
 
 async function makeDeck(t) {
   const temporary = await mkdtemp(path.join(os.tmpdir(), 'ras-export-'));
@@ -24,6 +25,22 @@ test('export records the actual PDF page count in verification.json', async t =>
   assert.equal(report.slides, 2);
   assert.equal(report.pdfPages, report.slides);
   assert.equal(report.pdfPages, pdf.getPageCount());
+  assert.equal(report.visualReview, 'pending');
+  const snapshot = await status(deck);
+  for (const kind of ['visual', 'factual']) await recordReview(deck, {
+    kind, sourceHash: snapshot.sourceHash, contextHash: snapshot.contextHash,
+    verdict: 'passed', reviewer: 'Export integration fixture', pages: [1, 2],
+    observations: 'Synthetic attestation to test persistence through export; not a human review.',
+  });
+  await exportDeck(deck);
+  const reviewed = JSON.parse(await readFile(path.join(deck, 'dist/verification.json'), 'utf8'));
+  assert.equal(reviewed.visualReview, 'passed');
+  assert.equal(reviewed.factualReview, 'passed');
+  await writeFile(path.join(deck, 'sources.md'), 'Updated evidence requires a fresh review.');
+  await exportDeck(deck);
+  const stale = JSON.parse(await readFile(path.join(deck, 'dist/verification.json'), 'utf8'));
+  assert.equal(stale.visualReview, 'stale');
+  assert.equal(stale.factualReview, 'stale');
 });
 
 test('export rejects a truncated PDF before publishing verification.json', async t => {

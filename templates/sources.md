@@ -8,4 +8,7 @@ document, relevant version/date, and the slide heading. Record artwork provenanc
 and credits here too. Preserve research detail separately from speaker notes.
 
 The build copies Roboto, Roboto Condensed, and Roboto Mono from their pinned
-Fontsource packages. Font licences are included in `dist/assets/fonts/`.
+Fontsource packages, plus Noto Sans TC Variable for Taiwanese Mandarin written
+in traditional characters.
+Font licences are included in `dist/assets/fonts/`. Mermaid SVGs embed the font
+subsets needed for their labels and retain the same notices in the output tree.

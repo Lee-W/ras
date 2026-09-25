@@ -28,3 +28,6 @@ evidence. Return `NEEDS_CHANGES` for required fixes, `UNVERIFIED` when necessary
 checks lack evidence, or `READY` when the requested review is complete. Identify
 which kinds of review were actually performed. Recheck the repaired findings and
 affected pages after a new build; a clean machine report alone is not clearance.
+For initialized decks, capture status hashes before review and record actual
+visual/factual observations with `review:record`. Use `status` to detect stale
+evidence after the brief, outline, sources, or rendered inputs change.
