@@ -1,6 +1,6 @@
 ---
 name: command-router
-description: Route RAS command-shaped requests such as ras:create, ras:revise, ras:review, or ras:export to the matching shared skill.
+description: Route ras:create, ras:revise, ras:review, ras:export, ras:remember, and ras:retro requests to the matching shared skill.
 ---
 
 # RAS command router
@@ -15,6 +15,8 @@ remaining request unchanged:
 | revise | [revise](../revise/SKILL.md) |
 | review | [review](../review/SKILL.md) |
 | export | [export](../export/SKILL.md) |
+| remember | [remember](../remember/SKILL.md) |
+| retro | [retro](../retro/SKILL.md) |
 
 The operation skill is the source of truth. Do not duplicate workflow rules here.
 For an unknown operation, list supported ones rather than inventing behaviour.

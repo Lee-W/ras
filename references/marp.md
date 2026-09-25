@@ -47,9 +47,12 @@ screenshots go in `assets/`. Plain ASCII diagrams use `text` fences; coloured
 ones can use escaped `<pre class="ascii">` with colour spans.
 
 Local media lives under `assets/`; filenames with spaces must use valid Markdown
-URL escaping or angle brackets. Bundled Latin fonts are copied at build time.
-Add any required CJK/custom fonts and their licences under `assets/`, declare
-them in `theme.css`, and inspect their actual rendering on the target machine.
+URL escaping or angle brackets. Pinned Latin fonts and Noto Sans TC Variable are
+copied at build time, with their licences. The starter theme uses `RAS CJK` as
+the fallback for Taiwanese Mandarin body text, headings, and code comments. Mermaid labels
+load these fonts before layout and embed the needed subsets in their SVGs.
+For other scripts or custom branding, supply fonts and their licences under
+`assets/`, declare them in `theme.css`, and inspect the actual rendering.
 Use local resources for presentation-critical media and fonts. HTTP links to
 sources are fine; remote render-time resources are caught by the offline check.
 

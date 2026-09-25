@@ -8,7 +8,7 @@ description: Build, verify, and export an existing RAS Marp project to HTML and 
 Read [the shared workflow](../../references/workflow.md) and
 [review contract](../../references/review.md). Locate the existing deck directory,
 inspect its build instructions, and run its doctor/export commands. Use an existing
-review only if its source hash still matches. Inspect the final renders and report
+review only if both its source and context hashes still match (`npm run status`). Inspect the final renders and report
 any missing verification. Return links to source, HTML, PDF, notes, and evidence.
 Use the shared export flow and read each active role's file before its pass.
 

@@ -1,6 +1,7 @@
 # RAS repository
 
-Use Taiwanese Traditional Chinese when discussing work with Wei.
+Use Taiwanese Mandarin (臺灣華語) written in traditional characters when discussing
+work with Wei. Name the language 臺灣華語 in Mandarin and Taiwanese Mandarin in English.
 
 Keep the workflow model-neutral and self-contained:
 Codex, Claude Code, and open models share `skills/` and `references/`.

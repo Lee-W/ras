@@ -8,6 +8,7 @@ import puppeteer from 'puppeteer';
 import { PDFDocument } from 'pdf-lib';
 import { browserPath, marp, render, projectHash, readConfig, prepareFonts, compileDiagrams } from './project.mjs';
 import { probeSlide } from './probe.mjs';
+import { reviewState } from './review.mjs';
 
 export async function build(root = process.cwd()) {
   root = path.resolve(root);
@@ -18,10 +19,10 @@ export async function build(root = process.cwd()) {
   await mkdir(dist, { recursive: true });
   await mkdir(path.join(root, '.ras'), { recursive: true });
   const original = await readFile(path.join(root, 'slides.md'), 'utf8');
-  const theme = await readFile(path.join(root, 'theme.css'), 'utf8');
+  const themeSource = await readFile(path.join(root, 'theme.css'), 'utf8');
   const sourceHash = await projectHash(root);
   if (existsSync(path.join(root, 'assets'))) await cp(path.join(root, 'assets'), path.join(dist, 'assets'), { recursive: true });
-  await prepareFonts(dist);
+  const theme = themeSource + '\n' + await prepareFonts(dist);
   const source = await compileDiagrams(original, root, dist);
   const result = render(source, theme);
   if (!result.count) throw new Error('The source contains no slides');
@@ -42,7 +43,7 @@ export async function check(root = process.cwd()) {
   const previews = path.join(built.root, '.ras', 'previews');
   await rm(previews, { recursive: true, force: true });
   await mkdir(previews, { recursive: true });
-  const report = { sourceHash: built.sourceHash, slides: built.slides, checkedAt: new Date().toISOString(), passed: false, visualReview: 'pending', factualReview: 'pending', problems: [], pages: [] };
+  const report = { sourceHash: built.sourceHash, slides: built.slides, checkedAt: new Date().toISOString(), passed: false, problems: [], pages: [] };
   const browser = await puppeteer.launch({ executablePath: await browserPath(), headless: true });
   try {
     const page = await browser.newPage();
@@ -81,6 +82,8 @@ export async function check(root = process.cwd()) {
   } finally { await browser.close(); }
   if (await projectHash(built.root) !== built.sourceHash) report.problems.push('Source changed during verification; run check again');
   report.passed = !report.problems.length && report.pages.every(page => !page.problems.length);
+  const reviews = await reviewState(built.root);
+  Object.assign(report, { contextHash: reviews.contextHash, visualReview: reviews.visualReview, factualReview: reviews.factualReview });
   await writeFile(path.join(built.root, '.ras', 'check.json'), JSON.stringify(report, null, 2) + '\n');
   for (const problem of report.problems) console.error(problem);
   for (const page of report.pages) for (const problem of page.problems) console.error(`Slide ${page.page}: ${problem}`);
@@ -96,7 +99,7 @@ export async function exportDeck(root = process.cwd()) {
   const pages = pdf.getPageCount();
   if (pages !== built.slides) throw new Error(`PDF has ${pages} pages; expected ${built.slides}`);
   if (await projectHash(built.root) !== built.sourceHash) throw new Error('Source changed during export; export again');
-  await writeFile(path.join(built.dist, 'verification.json'), JSON.stringify({ ...report, pdfPages: pages }, null, 2) + '\n');
+  await writeFile(path.join(built.dist, 'verification.json'), JSON.stringify({ ...report, ...await reviewState(built.root), pdfPages: pages }, null, 2) + '\n');
   console.log(`Exported ${pages} PDF pages → dist/slides.pdf`);
 }
 

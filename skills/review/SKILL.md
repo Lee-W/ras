@@ -16,3 +16,6 @@ Report required fixes, suggestions, and unverified points with a current page
 number, heading, reason, and concrete correction. Keep source unchanged in review
 mode; generating local verification artifacts is part of the review. Do not claim
 that a build success or automated probe proves visual quality or factual accuracy.
+Capture `npm run status` hashes before inspection and record only the review
+kinds actually performed, using the review contract's JSON format and helper.
+Report partial or unavailable review as pending rather than fabricating coverage.

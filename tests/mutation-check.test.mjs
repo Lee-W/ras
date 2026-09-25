@@ -8,7 +8,7 @@ import path from 'node:path';
 async function runFailingBaseline(t, changedFiles) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'ras-mutation-harness-'));
   t.after(() => rm(root, { recursive: true, force: true }));
-  for (const directory of ['scripts', 'tests', 'templates', 'node_modules', 'ignored', 'local-cache']) {
+  for (const directory of ['scripts', 'tests', 'templates', 'references', 'node_modules', 'ignored', 'local-cache']) {
     await mkdir(path.join(root, directory));
   }
   await cp(new URL('../scripts/mutation-check.mjs', import.meta.url), path.join(root, 'scripts/mutation-check.mjs'));
