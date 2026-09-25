@@ -1,8 +1,8 @@
 {
   "name": "@ras/slide-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "RAISE A SLIDE — standalone Marp projects and AI presentation workflows",
+  "description": "RAISE A SLIDE \u2014 standalone Marp projects and AI presentation workflows",
   "type": "module",
   "engines": {
     "node": ">=22.18"
