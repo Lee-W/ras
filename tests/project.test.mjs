@@ -8,6 +8,8 @@ import { initDeck, makePrompt, pluginRoot } from '../scripts/ras.mjs';
 import { projectHash, render, prepareFonts, readConfig, browserPath, run, defaults } from '../scripts/project.mjs';
 
 test('portable prompts expand the selected workflow without requiring a vendor', async () => {
+  const roleFiles = ['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `agents/${role}.md`);
+  const roles = await Promise.all(roleFiles.map(file => readFile(path.join(pluginRoot, file), 'utf8')));
   for (const operation of ['create', 'revise', 'review', 'export']) {
     const prompt = await makePrompt(operation, 'Explain retries --plan');
     assert.ok(prompt.includes(`# RAS — ${operation}`));
@@ -16,11 +18,13 @@ test('portable prompts expand the selected workflow without requiring a vendor',
     assert.match(prompt, /Without those tools, return a draft/);
     assert.match(prompt, /Explain retries --plan/);
     assert.doesNotMatch(prompt, /ANTHROPIC_API_KEY|OPENAI_API_KEY/);
+    for (const role of roles) assert.ok(prompt.includes(role), 'Portable prompts must include the complete role instructions');
   }
   await assert.rejects(makePrompt('../secrets'), /Choose an operation/);
   const chat = await makePrompt('create', 'A short talk', { chat: true });
   assert.match(chat, /Active host: chat only/);
   assert.match(chat, /Do not simulate tool calls/);
+  for (const role of roles) assert.ok(chat.includes(role), 'Chat mode must preserve role voices and handoffs');
 });
 
 test('Marp keeps fenced separators, untitled pages, reveal order, and speaker notes', async () => {

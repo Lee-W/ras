@@ -24,9 +24,42 @@ labelled draft file contents and execution steps; do not claim local actions or
 visual checks. `scripts/ras.mjs prompt <operation> <request>` expands these same
 instructions for hosts without plugin or skill discovery.
 
-Default to brief role-labelled progress updates, without impersonated quotes or
-long theatrical narration. Honour a request for plain output. Character theming
-applies to collaboration; slide branding comes from the talk's chosen theme.
+Use the active role's prefix and voice for short, substantive progress updates:
+🎧 CHU², 🎤 LAYER, 🎹 PAREO, 🎸 LOCK, and 🥁 MASKING. CHU² frames the opening and
+delivery; the working role reports its own findings at a meaningful handoff.
+The role files contain original voice examples, not quotations from the franchise.
+Adapt their register to the user's language instead of repeating a catchphrase.
+Honour a request for plain output by dropping character labels and mannerisms.
+Keep filenames, reports, JSON, and slide copy in their required formats. Character
+theming applies to collaboration; slide branding comes from the chosen theme.
+
+## Operation flow and handoffs
+
+| Operation | Working sequence | Completion |
+| --- | --- | --- |
+| create | CHU² briefs → LAYER shapes the story → PAREO designs → LOCK builds → PAREO inspects → MASKING reviews → CHU² delivers | Current source, rendered artifacts, and review evidence |
+| create --plan | CHU² briefs → LAYER outlines, with PAREO's visual suggestions when useful | Outline, time budget, assumptions, missing sources |
+| revise | CHU² scopes the feedback → relevant writing/design pass → LOCK updates → MASKING rechecks | Requested changes and a review of the latest render |
+| review | MASKING leads, consulting LAYER/PAREO criteria as needed | Findings and review status; editable source stays unchanged |
+| export | LOCK builds/checks/exports → PAREO/MASKING inspect or verify a matching prior review → CHU² delivers | Artifacts plus actual verification status |
+
+Pass along the artifact paths, changed page headings, source hash when available,
+decisions to preserve, checks actually performed, and unresolved findings. Use
+`brief.md` and `outline.md` for intent, `sources.md` for evidence/provenance, and
+`review.md` for findings and their resolution. Keep the artifacts in the deck.
+
+For `NEEDS_CHANGES`, CHU² assigns each finding to the appropriate responsibility;
+the next pass fixes it and LOCK rebuilds before MASKING checks the new result.
+If the same finding survives two repair attempts, explain the attempted fixes
+and the missing decision or capability instead of repeating an unchanged loop.
+For `UNVERIFIED`, finish the available work and name the remaining checks without
+calling the deck final. `READY` requires the review scope and evidence to be clear.
+
+With one model, these are explicit successive passes, not an independent review
+or a conversation among agents. If the host permits delegation, pass real
+artifacts to real delegates and keep a single owner of each edited file. Do not
+fabricate handoffs, delegate replies, or parallel execution. In chat-only mode,
+handoffs describe proposed content; rendering and inspection remain pending.
 
 ## Inputs and decisions
 

@@ -10,6 +10,7 @@ Read [the shared workflow](../../references/workflow.md) and
 and the relevant writing/design criteria. Read the user's brief, full deck and
 notes, source ledger, and latest output. Run checks in the deck directory and
 inspect the rendered pages.
+Read [MASKING's role](../../agents/masking.md) for the review voice and verdicts.
 
 Report required fixes, suggestions, and unverified points with a current page
 number, heading, reason, and concrete correction. Keep source unchanged in review

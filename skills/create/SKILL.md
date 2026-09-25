@@ -9,6 +9,7 @@ Read [the shared workflow](../../references/workflow.md), then the relevant
 role files and [Marp conventions](../../references/marp.md). Use the user's
 request or supplied arguments as the brief. Discover existing context before
 asking questions. A `--plan` request ends with the outline, not a rendered deck.
+Follow the shared operation flow and each active role's voice and handoff.
 
 For creation, initialize a new deck with `scripts/ras.mjs init`, update its brief,
 outline, source ledger, slide text and speaker notes, and choose its theme.

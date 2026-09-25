@@ -140,15 +140,23 @@ quality; this adapter does not certify every model.
 
 | Role | Responsibility |
 | --- | --- |
-| CHU² | Brief, argument, coordination, completion |
-| LAYER | Writing, transitions, speaker notes |
-| PAREO | Theme, hierarchy, imagery, visual inspection |
-| LOCK | Marp implementation, builds, fixes |
-| MASKING | Clarity, pacing, evidence, rehearsal review |
+| 🎧 CHU² | Decisive producer: brief, argument, coordination, completion |
+| 🎤 LAYER | Calm writer: slide text, transitions, speaker notes |
+| 🎹 PAREO | Bright, attentive designer: theme, hierarchy, visual inspection |
+| 🎸 LOCK | Earnest implementer: Marp source, builds, concrete repairs |
+| 🥁 MASKING | Direct, dependable reviewer: clarity, pacing, evidence |
 
 Roles are responsibilities, not five compulsory agent calls. The host may execute
 them sequentially. The speaker controls what the talk says. Character theming stays
 in the collaboration; the slide theme is chosen per presentation.
+
+Creation follows **CHU² → LAYER → PAREO → LOCK → visual inspection → MASKING →
+CHU²**. Review findings return to the responsible role, then the changed deck is
+rebuilt and rechecked. Each handoff carries artifact paths and actual evidence.
+The [shared workflow](references/workflow.md) defines the shorter revision,
+review, export, and plan-only routes. Role files provide distinct voices and
+original example lines. Ask for plain output to omit the character labels and
+mannerisms. A single model uses successive passes and reports that honestly.
 
 The optional [Wei profile](profiles/wei.md) captures short sentences, large type,
 progressive reveals, code/diagrams, and sparse humour from the reference decks.
