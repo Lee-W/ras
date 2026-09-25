@@ -16,7 +16,8 @@ const readJson = async file => JSON.parse(await readFile(path.join(temporary, fi
 const manifests = ['plugin.json', '.claude-plugin/plugin.json', '.codex-plugin/plugin.json'];
 
 try {
-  const files = [...new Set(execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '-z'], { cwd: root, encoding: 'utf8' }).split('\0').filter(Boolean))];
+  // A first-release fixture has neither tags nor an inherited changelog.
+  const files = [...new Set(execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard', '-z'], { cwd: root, encoding: 'utf8' }).split('\0').filter(file => file && file !== 'CHANGELOG.md'))];
   for (const file of files) {
     await mkdir(path.dirname(path.join(temporary, file)), { recursive: true });
     await cp(path.join(root, file), path.join(temporary, file));
@@ -37,14 +38,17 @@ try {
 
   // Exercise the first release without a pre-existing version tag.
   bump();
-  assert.deepEqual(await readJson('package.json'), { ...originalPackage, version: expected });
-  const expectedLock = structuredClone(originalLock);
-  expectedLock.version = expected;
-  expectedLock.packages[''].version = expected;
-  assert.deepEqual(await readJson('package-lock.json'), expectedLock, 'Dependency lock entries must survive a version bump');
-  for (const [index, file] of manifests.entries()) {
-    assert.deepEqual(await readJson(file), { ...originalManifests[index], version: expected });
+  async function assertVersion(version) {
+    assert.deepEqual(await readJson('package.json'), { ...originalPackage, version });
+    const expectedLock = structuredClone(originalLock);
+    expectedLock.version = version;
+    expectedLock.packages[''].version = version;
+    assert.deepEqual(await readJson('package-lock.json'), expectedLock, 'Dependency lock entries must survive a version bump');
+    for (const [index, file] of manifests.entries()) {
+      assert.deepEqual(await readJson(file), { ...originalManifests[index], version });
+    }
   }
+  await assertVersion(expected);
   assert.match(git('log', '-1', '--format=%s'), /^bump:/);
   assert.equal(git('tag', '--points-at', 'HEAD'), `v${expected}`);
   assert.ok((await readFile(path.join(temporary, 'CHANGELOG.md'), 'utf8')).includes(expected));
@@ -70,4 +74,17 @@ try {
   assert.equal(git('rev-parse', 'HEAD'), before);
   assert.equal(git('status', '--porcelain'), '');
   console.log('PASS: documentation-only commits do not create another release.');
+
+  await writeFile(path.join(temporary, 'docs/release-fixture.md'), '# Corrected original release fixture\n');
+  git('add', '--', 'docs/release-fixture.md');
+  git('commit', '--quiet', '-m', 'fix: correct release fixture behavior');
+  bump();
+  const patchVersion = `${major}.${minor + 1}.1`;
+  await assertVersion(patchVersion);
+  assert.equal(git('tag', '--points-at', 'HEAD'), `v${patchVersion}`);
+  const changelog = await readFile(path.join(temporary, 'CHANGELOG.md'), 'utf8');
+  assert.ok(changelog.includes(expected) && changelog.includes(patchVersion));
+  assert.match(changelog, /correct release fixture behavior/);
+  assert.equal(git('status', '--porcelain'), '');
+  console.log('PASS: a later fix releases a patch and retains the existing changelog.');
 } finally { await rm(temporary, { recursive: true, force: true }); }
