@@ -1,3 +1,9 @@
+## v0.4.0 (2026-09-26)
+
+### Feat
+
+- add multilingual documentation and local preview
+
 ## v0.3.0 (2026-09-25)
 
 ### Feat
