@@ -1,5 +1,7 @@
 # Validation record
 
+[English](validation.md) · [臺灣華語](validation-zh-tw.md)
+
 ## First-version validation
 
 Validated locally on 2026-09-24: macOS arm64, Node 22.18.0 and 26.9.0,

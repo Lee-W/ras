@@ -11,6 +11,7 @@
     "ras": "scripts/ras.mjs"
   },
   "scripts": {
+    "docs": "node scripts/docs.mjs",
     "init:deck": "node scripts/ras.mjs init",
     "build": "node scripts/deck.mjs build",
     "check": "node scripts/deck.mjs check",

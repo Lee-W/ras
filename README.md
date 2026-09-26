@@ -1,5 +1,7 @@
 # RAS — RAISE A SLIDE
 
+[English](README.md) · [臺灣華語](README.zh-TW.md)
+
 Turn a topic or outline into a presentation you can rehearse and deliver.
 RAS is an independent AI plugin plus a portable Marp project kit, inspired by
 RAISE A SUILEN. Each generated presentation is a self-contained project.
@@ -15,6 +17,21 @@ RAISE A SUILEN. Each generated presentation is a self-contained project.
 The AI host supplies the model and tools. The JavaScript scripts build and verify
 slides; they do not call an AI API. The plugin's creative workflow requires an
 AI host, while an exported project builds on its own.
+
+## Browse the documentation locally
+
+From this repository, run `npm ci` once, then:
+
+```sh
+npm run docs
+```
+
+Open [English documentation](http://127.0.0.1:4174/en/) or
+[臺灣華語文件](http://127.0.0.1:4174/zh-TW/). The language switcher keeps the
+current page while translating navigation and content. Mermaid renders locally.
+Refresh after editing Markdown; use `PORT` to select a different port.
+This command previews the repository documentation. Deck preview commands below
+run inside an initialized presentation project.
 
 ## Start a standalone deck
 
