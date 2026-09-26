@@ -1,5 +1,27 @@
 # Repository automation
 
+[English](development.md) · [臺灣華語](development-zh-tw.md)
+
+## Documentation website
+
+After `npm ci`, run `npm run docs` in this repository. The local site serves
+English at `/en/` and Taiwanese Mandarin at `/zh-TW/` on `http://127.0.0.1:4174`.
+`PORT` selects another port. The server binds only to the loopback interface.
+
+`scripts/docs-pages.mjs` maps each page identity to its two Markdown sources and
+holds the translated interface labels. Add both translations there when adding
+a page. The site reads the existing README, `docs/`, and `references/` files;
+there is no separate generated copy to maintain. Refresh to see source edits.
+Language switching preserves the page, and internal links resolve to localized
+routes. Shared agent/skill specifications retain their English source and show
+an explicit notice in the Taiwanese Mandarin interface.
+
+The renderer uses the Markdown and Mermaid dependencies from the locked Marp
+and Mermaid toolchain. It serves dependency modules from the installed packages,
+without copying their assets into repository source. `npm test` covers paired
+routes, navigation, Mermaid rendering, and local file boundaries.
+The documentation server is a repository tool and is not copied into generated decks.
+
 ## CI
 
 `.github/workflows/ci.yml` runs on pull requests and manual dispatch, and can be

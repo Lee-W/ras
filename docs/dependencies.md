@@ -1,5 +1,7 @@
 # Dependency pins
 
+[English](dependencies.md) · [臺灣華語](dependencies-zh-tw.md)
+
 Verified against upstream release notes and maintainer advisories on 2026-09-24.
 
 ## XML parsing
