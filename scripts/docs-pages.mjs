@@ -25,6 +25,8 @@ export const pages = [
     en: ['Marp authoring', 'references/marp.md'], 'zh-TW': ['Marp 撰寫', 'docs/marp-zh-tw.md'] },
   { slug: 'review', group: 'guide',
     en: ['Review and verification', 'references/review.md'], 'zh-TW': ['審閱與驗證', 'docs/review-zh-tw.md'] },
+  { slug: 'image-rights', group: 'guide',
+    en: ['Image rights and credits', 'references/image-rights.md'], 'zh-TW': ['圖片權利與標示', 'docs/image-rights-zh-tw.md'] },
   { slug: 'memory', group: 'guide',
     en: ['Project memory', 'references/memory.md'], 'zh-TW': ['專案記憶', 'docs/memory-zh-tw.md'] },
   { slug: 'development', group: 'maintenance',
@@ -36,7 +38,7 @@ export const pages = [
 ];
 
 export const sharedSources = new Set([
-  'SKILL.md', 'profiles/wei.md',
+  'SKILL.md', 'profiles/wei.md', 'LICENSE', 'NOTICE.md',
   ...['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `agents/${role}.md`),
   ...['command-router', 'create', 'revise', 'review', 'export', 'remember', 'retro'].map(operation => `skills/${operation}/SKILL.md`),
 ]);

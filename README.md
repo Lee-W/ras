@@ -6,6 +6,11 @@ Turn a topic or outline into a presentation you can rehearse and deliver.
 RAS is an independent AI plugin plus a portable Marp project kit, inspired by
 RAISE A SUILEN. Each generated presentation is a self-contained project.
 
+Original RAS code, documentation, and templates use the [MIT licence](LICENSE).
+This is an unofficial project with no affiliation, sponsorship, or endorsement
+from the franchise or its rights holders. See [rights and affiliation](NOTICE.md);
+the software licence does not grant third-party character or trademark rights.
+
 ## What it does
 
 - Create a narrative outline, slide text, and speaker notes from a brief.
@@ -13,6 +18,7 @@ RAISE A SUILEN. Each generated presentation is a self-contained project.
 - Build HTML, export PDF/notes, and render every page for inspection.
 - Check slide counts, local resources, font loading, text size, overflow, and clipping.
 - Keep facts and asset provenance separate from rehearsal cues.
+- Verify supplied images' use terms and required creator/rightsholder credits.
 
 The AI host supplies the model and tools. The JavaScript scripts build and verify
 slides; they do not call an AI API. The plugin's creative workflow requires an
@@ -48,7 +54,7 @@ npm run preview
 
 Edit `brief.md`, `slides.md`, `sources.md`, and `theme.css`. The initial deck is
 a runnable ten-page example, **Give one idea a stage**. Replace it with your talk.
-The generator copies the build tools and exact dependency lockfile into the new
+The generator copies the build tools and preserves the locked dependency graph in the new
 project. The project remains usable after moving it away from this repository.
 
 The install needs network access for npm dependencies and Puppeteer's browser.
@@ -102,7 +108,7 @@ the project skill bundle described below, or point Codex directly to the operati
 skill. Creating this repository does not automatically install it in Codex.
 
 For a project-local skills fallback, copy `SKILL.md`, `skills/`, `references/`, `agents/`,
-`profiles/`, `templates/`, `scripts/`, the package manifests, and `.gitignore` together
+`profiles/`, `templates/`, `scripts/`, `docs/`, `LICENSE`, `NOTICE.md`, the package manifests, and `.gitignore` together
 under the project's `.agents/skills/ras/`, and start a new session. Preserve this
 bundle's relative paths; copying a `SKILL.md` alone loses its supporting files.
 
@@ -195,6 +201,14 @@ review and actual page coverage/observations. `status` detects stale records whe
 source, brief, outline, or sources change. Export includes those states and stays
 available for drafts. Live talk duration remains an estimate until rehearsed.
 See [the review contract](references/review.md).
+
+Follow [image rights and credits](references/image-rights.md) for every supplied
+or selected image, including screenshots and backgrounds. Record the use basis
+and whether a credit is required in `sources.md`; inspect required notices in
+the audience HTML/PDF. Unknown rights or missing credits keep the deck unverified.
+These are reviewer checks, not an automatic legal clearance by the build scripts.
+Generated projects include the same guide and retain RAS's MIT notice separately
+from the speaker's own content, which is not automatically licensed under MIT.
 
 `ras:remember` saves an explicitly requested preference in the selected project's
 ignored `.ras/memory.json`. `ras:retro` proposes lessons from the actual session

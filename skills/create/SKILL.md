@@ -14,6 +14,9 @@ Follow the shared operation flow and each active role's voice and handoff.
 For creation, initialize a new deck with `scripts/ras.mjs init`, update its brief,
 outline, source ledger, slide text and speaker notes, and choose its theme.
 The initialized example is a working template, not the user's finished content.
+Check all supplied and selected images using [image rights and credits](../../references/image-rights.md).
+Record permission evidence and the required credit text in `sources.md`, including
+images supplied by the user; put required notices in the audience-visible slides.
 Continue through [review and verification](../../references/review.md), fix
 problems, and deliver the Markdown, HTML, PDF, and actual verification evidence.
 

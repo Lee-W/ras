@@ -6,6 +6,10 @@
 RAS 是受 RAISE A SUILEN 啟發的獨立 AI 外掛，也是一套可攜式 Marp 專案工具。
 每份產生的簡報都是能獨立運作的專案。
 
+RAS 的原創程式碼、文件與範本採 [MIT 授權](LICENSE)。這是非官方專案，
+與作品及其權利人沒有隸屬、贊助或背書關係；詳見[權利聲明](NOTICE.md)。
+軟體授權不包含第三方角色或商標權利。
+
 ## 可以做什麼
 
 - 從需求整理敘事大綱、投影片文字與講者備註。
@@ -13,6 +17,7 @@ RAS 是受 RAISE A SUILEN 啟發的獨立 AI 外掛，也是一套可攜式 Marp
 - 建置 HTML、匯出 PDF 與備註，並產生每頁預覽供檢查。
 - 檢查頁數、本機資源、字型載入、文字大小、溢出與裁切。
 - 分開管理事實查證、素材來源與上台提示。
+- 查核提供的圖片是否符合使用條件，以及是否需標示創作者／權利人。
 
 AI 宿主提供模型與工具；JavaScript 腳本負責建置及驗證，不會呼叫 AI API。
 創作流程需要 AI 宿主，產生的簡報專案則可以自行建置。
@@ -97,7 +102,7 @@ Claude Code 會[自動掃描外掛的 `skills/` 目錄](https://code.claude.com/
 建立或下載本儲存庫不會自動把它安裝到 Codex。
 
 專案內的替代安裝方式：將 `SKILL.md`、`skills/`、`references/`、`agents/`、
-`profiles/`、`templates/`、`scripts/`、套件 manifest 與鎖定檔，以及 `.gitignore`，
+`profiles/`、`templates/`、`scripts/`、`docs/`、`LICENSE`、`NOTICE.md`、套件 manifest 與鎖定檔，以及 `.gitignore`，
 一起複製到目標專案的 `.agents/skills/ras/`，然後開啟新工作階段。
 請保留整組檔案的相對路徑；只複製 `SKILL.md` 會缺少必要資源。
 
@@ -194,6 +199,11 @@ flowchart TD
 匯出可用於草稿，驗證報告會保留實際狀態；上台時間在排練前都只是估計。
 詳見[審閱與驗證](docs/review-zh-tw.md)。
 
+所有提供或選用的圖片（含截圖與背景）都依[圖片權利與標示](docs/image-rights-zh-tw.md)查核。
+在 `sources.md` 記錄使用依據與標示判定，並在觀眾版 HTML／PDF 檢查必要文字。
+未知權利或漏標時，簡報維持未完成審閱；這是審閱者的查核，建置腳本不會自動判定合法使用。
+獨立專案自帶相同指南，並以 `RAS-LICENSE` 保留工具與主題的 MIT 聲明；講者內容不會自動改採 MIT。
+
 `ras:remember` 將明確要求記住的偏好存入所選專案的 `.ras/memory.json`，該檔案由 Git 忽略。
 `ras:retro` 從實際工作階段提出經驗，儲存使用者選定的項目。
 相關條目會協助後續操作，但不會蓋過目前需求；也不會讀取家目錄記憶庫或隨投影片匯出。
@@ -222,6 +232,7 @@ Mermaid 會內嵌標籤字型。其他文字系統或品牌字型可放入專案
 | [工作流程](docs/workflow-zh-tw.md) | 角色分工、各操作路線與交付方式 |
 | [Marp 撰寫指南](docs/marp-zh-tw.md) | 投影片、備註、主題、Mermaid 與本機素材 |
 | [審閱與驗證](docs/review-zh-tw.md) | 機器檢查、視覺／事實審閱與紀錄有效性 |
+| [圖片權利與標示](docs/image-rights-zh-tw.md) | 提供圖片的使用依據、權利人標示與最終產出查核 |
 | [專案記憶](docs/memory-zh-tw.md) | remember、retro、儲存範圍與優先順序 |
 | [開發與自動化](docs/development-zh-tw.md) | 本機檢查、CI、版本與發布 |
 | [相依套件版本](docs/dependencies-zh-tw.md) | 固定版本、CVE 對照與字型 |

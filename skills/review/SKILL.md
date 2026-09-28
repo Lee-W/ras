@@ -11,6 +11,9 @@ and the relevant writing/design criteria. Read the user's brief, full deck and
 notes, source ledger, and latest output. Run checks in the deck directory and
 inspect the rendered pages.
 Read [MASKING's role](../../agents/masking.md) for the review voice and verdicts.
+Audit all included images using [image rights and credits](../../references/image-rights.md).
+Verify use evidence and required credit wording, then check actual HTML/PDF credit
+placement. Missing evidence or required notices prevents a passing factual review.
 
 Report required fixes, suggestions, and unverified points with a current page
 number, heading, reason, and concrete correction. Keep source unchanged in review

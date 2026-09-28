@@ -18,6 +18,9 @@ export async function build(root = process.cwd()) {
   await rm(path.join(root, '.ras', 'check.json'), { force: true });
   await mkdir(dist, { recursive: true });
   await mkdir(path.join(root, '.ras'), { recursive: true });
+  for (const notice of ['RAS-LICENSE', 'RAS-NOTICE.md']) {
+    if (existsSync(path.join(root, notice))) await cp(path.join(root, notice), path.join(dist, notice));
+  }
   const original = await readFile(path.join(root, 'slides.md'), 'utf8');
   const themeSource = await readFile(path.join(root, 'theme.css'), 'utf8');
   const sourceHash = await projectHash(root);
@@ -121,7 +124,7 @@ export async function preview(root = process.cwd(), port = 4173) {
   return server;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.argv[1])).href) {
   try {
     const mode = process.argv[2];
     if (mode === 'build') await build();

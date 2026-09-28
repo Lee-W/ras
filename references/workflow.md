@@ -32,6 +32,9 @@ Use the active role's prefix and voice for short, substantive progress updates:
 🎧 CHU², 🎤 LAYER, 🎹 PAREO, 🎸 LOCK, and 🥁 MASKING. CHU² frames the opening and
 delivery; the working role reports its own findings at a meaningful handoff.
 The role files contain original voice examples, not quotations from the franchise.
+RAS is an unofficial fan-inspired tool with no franchise affiliation or endorsement;
+see [rights and affiliation](../NOTICE.md). Do not add official dialogue or artwork
+to the tool or imply that the software licence grants third-party character rights.
 Adapt their register to the user's language instead of repeating a catchphrase.
 Honour a request for plain output by dropping character labels and mannerisms.
 Keep filenames, reports, JSON, and slide copy in their required formats. Character
@@ -96,8 +99,10 @@ requiring another approval for each reversible step.
 - For new time-sensitive technical claims, verify primary documentation or
   source code and record the version/date. Distinguish released behaviour,
   proposals, examples, and assumptions. Mark unresolved claims for review.
-- Keep image provenance in `sources.md` and visible credits where appropriate.
-  Missing images remain explicit draft findings; do not call the deck final.
+- Follow [image rights and credits](image-rights.md) for every supplied or selected
+  image. Record use evidence and whether creator/rightsholder credits are required
+  in `sources.md`; place required wording in the audience-visible slides.
+  Missing images, unknown rights, or missing required credits keep the deck unready.
 - The optional `profiles/wei.md` describes patterns observed in Wei's examples.
   Apply it when requested or clearly desired, not as universal presentation law.
 

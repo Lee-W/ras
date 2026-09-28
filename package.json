@@ -2,6 +2,7 @@
   "name": "@ras/slide-kit",
   "version": "0.4.0",
   "private": true,
+  "license": "MIT",
   "description": "RAISE A SLIDE \u2014 standalone Marp projects and AI presentation workflows",
   "type": "module",
   "engines": {
