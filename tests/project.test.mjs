@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, writeFile, rm, mkdir, symlink } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile, rm, mkdir, symlink, access } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { execFileSync, spawnSync } from 'node:child_process';
 import os from 'node:os';
@@ -53,13 +53,16 @@ test('initialization copies a portable project and refuses to overwrite one', as
   assert.equal(pkg.license, 'UNLICENSED', 'Initialization must not license the speaker\'s own content');
   assert.equal(lock.packages[''].license, pkg.license);
   assert.equal(lock.packages[''].bin, undefined);
-  for (const [source, destination] of [['LICENSE', 'RAS-LICENSE'], ['NOTICE.md', 'RAS-NOTICE.md']]) {
+  for (const [source, destination] of [['LICENSE', 'licenses/ras/MIT.txt'], ['NOTICE.md', 'licenses/ras/NOTICE.md']]) {
     assert.deepEqual(await readFile(path.join(target, destination)), await readFile(path.join(pluginRoot, source)));
   }
-  for (const guide of ['review-guide.md', 'sources.md', 'image-rights-guide.md', 'image-rights-guide-zh-tw.md']) {
+  for (const oldName of ['RAS-LICENSE', 'RAS-NOTICE.md']) {
+    await assert.rejects(access(path.join(target, oldName)), { code: 'ENOENT' });
+  }
+  for (const guide of ['README.md', 'review-guide.md', 'sources.md', 'image-rights-guide.md', 'image-rights-guide-zh-tw.md', 'licenses/README.md']) {
     const text = await readFile(path.join(target, guide), 'utf8');
     for (const match of text.matchAll(/\]\(([^)]+)\)/g)) {
-      if (!/^https?:/.test(match[1])) await readFile(path.resolve(target, match[1]));
+      if (!/^https?:/.test(match[1])) await readFile(path.resolve(target, path.dirname(guide), match[1]));
     }
   }
   for (const name of ['deck', 'project', 'probe', 'fonts', 'review', 'state', 'memory']) {
@@ -94,8 +97,9 @@ test('verification hash changes with assets, configuration, scripts, and source'
   t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, 'assets'));
   await mkdir(path.join(root, 'scripts'));
+  await mkdir(path.join(root, 'licenses', 'ras'), { recursive: true });
   let previous = await projectHash(root);
-  for (const file of ['slides.md', 'theme.css', 'ras.config.json', 'package.json', 'package-lock.json', 'RAS-LICENSE', 'RAS-NOTICE.md', 'assets/image.svg', 'scripts/deck.mjs']) {
+  for (const file of ['slides.md', 'theme.css', 'ras.config.json', 'package.json', 'package-lock.json', 'RAS-LICENSE', 'RAS-NOTICE.md', 'licenses/README.md', 'licenses/ras/MIT.txt', 'licenses/ras/NOTICE.md', 'assets/image.svg', 'scripts/deck.mjs']) {
     await writeFile(path.join(root, file), `changed ${file}`);
     const current = await projectHash(root);
     assert.notEqual(current, previous, `${file} must invalidate prior evidence`);

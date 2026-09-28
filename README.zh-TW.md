@@ -202,7 +202,9 @@ flowchart TD
 所有提供或選用的圖片（含截圖與背景）都依[圖片權利與標示](docs/image-rights-zh-tw.md)查核。
 在 `sources.md` 記錄使用依據與標示判定，並在觀眾版 HTML／PDF 檢查必要文字。
 未知權利或漏標時，簡報維持未完成審閱；這是審閱者的查核，建置腳本不會自動判定合法使用。
-獨立專案自帶相同指南，並以 `RAS-LICENSE` 保留工具與主題的 MIT 聲明；講者內容不會自動改採 MIT。
+獨立專案自帶相同指南；`licenses/README.md` 說明授權適用範圍，
+`licenses/ras/MIT.txt` 保留隨附 RAS 工具與範本的標準 MIT 授權。講者自行決定內容的授權。
+建置與匯出會將此目錄保留在 `dist/licenses/`。
 
 `ras:remember` 將明確要求記住的偏好存入所選專案的 `.ras/memory.json`，該檔案由 Git 忽略。
 `ras:retro` 從實際工作階段提出經驗，儲存使用者選定的項目。

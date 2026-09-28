@@ -57,6 +57,7 @@ export async function projectHash(root) {
   }
   await add('assets');
   await add('scripts');
+  await add('licenses');
   return hash.digest('hex');
 }
 
