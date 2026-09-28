@@ -155,7 +155,7 @@ export async function serveDocs({ port = 4174 } = {}) {
   return server;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.argv[1])).href) {
   try {
     const server = await serveDocs({ port: Number(process.env.PORT || 4174) });
     console.log(`RAS docs: http://127.0.0.1:${server.address().port}/zh-TW/ — Ctrl+C stops.`);

@@ -11,6 +11,8 @@ requested changes. Preserve unrelated content, reveal order, notes, and user edi
 Use the shared revision flow and read each active role's file before its pass.
 
 Change the editable source/theme. Keep the brief and sources accurate when scope
-or factual claims change. Rebuild and inspect affected pages during iteration;
+or factual claims change. Apply [image rights and credits](../../references/image-rights.md)
+to new or changed images and changed distribution/use context; preserve required
+credits when cropping or moving images. Rebuild and inspect affected pages during iteration;
 complete the final [review](../../references/review.md) before delivering updated
 artifacts. Explain material content changes and report remaining uncertainty.

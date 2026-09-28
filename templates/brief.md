@@ -7,6 +7,8 @@
 - Slide language: English
 - Speaking language: choose for the actual audience
 - Visual profile: neutral dark RAS theme
+- Intended distribution: confirm live use, recording, public HTML/PDF or sources, and commercial context
+- Supplied images: none; verify use rights and required credits when adding assets
 - Status: runnable example; replace this brief and slides with the actual talk
 
 This is an original illustrative talk. It contains no claims about a particular

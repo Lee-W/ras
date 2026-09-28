@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { TextDecoder } from 'node:util';
 
 const rootFiles = new Set([
-  '.gitignore', 'AGENTS.md', 'README.md', 'README.zh-TW.md', 'SKILL.md', 'package.json',
+  '.gitignore', 'AGENTS.md', 'README.md', 'README.zh-TW.md', 'SKILL.md', 'LICENSE', 'NOTICE.md', 'package.json',
   'package-lock.json', 'plugin.json', '.codex-plugin/plugin.json',
   '.claude-plugin/plugin.json',
   '.cz.toml', 'CHANGELOG.md', '.github/workflows/ci.yml',

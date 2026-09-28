@@ -26,6 +26,9 @@ test('export records the actual PDF page count in verification.json', async t =>
   assert.equal(report.pdfPages, report.slides);
   assert.equal(report.pdfPages, pdf.getPageCount());
   assert.equal(report.visualReview, 'pending');
+  for (const notice of ['RAS-LICENSE', 'RAS-NOTICE.md']) {
+    assert.deepEqual(await readFile(path.join(deck, 'dist', notice)), await readFile(path.join(deck, notice)), 'Export must retain RAS notices byte-for-byte');
+  }
   const snapshot = await status(deck);
   for (const kind of ['visual', 'factual']) await recordReview(deck, {
     kind, sourceHash: snapshot.sourceHash, contextHash: snapshot.contextHash,

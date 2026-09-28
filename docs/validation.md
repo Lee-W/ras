@@ -2,6 +2,54 @@
 
 [English](validation.md) · [臺灣華語](validation-zh-tw.md)
 
+## Public-release preparation — 2026-09-28
+
+Checked the working changes based on `2da18661eaf6cdb3a817eeb9522912a3862c5116`
+on macOS arm64, Node 26.10.0, npm 11.19.1:
+
+- `npm run validate` and all 46 tests passed, including licence propagation,
+  standalone guide links, portable image-rights instructions, and CLI execution
+  through a symlinked installation directory. That last check caught and fixed
+  silent CLI no-ops through macOS's `/tmp` alias.
+- `npm run test:release` passed first-release, rerun, docs-only, and patch scenarios.
+- A new source bundle outside the checkout initialized a deck through the CLI.
+  The deck installed its own dependencies with `npm ci`, passed `doctor`, and
+  exported ten pages using its own tools. The install audit reported zero known
+  vulnerabilities. Existing locally cached Puppeteer Chrome was used; this was
+  not a new machine or an empty browser cache.
+- Both `RAS-LICENSE` and `RAS-NOTICE.md` survived into output byte-for-byte.
+  The generated project uses `UNLICENSED` package metadata so it does not assign
+  MIT terms to the speaker's own content. The copied RAS kit retains MIT terms.
+- Codex CLI 0.157.1, in a fresh app-server process, discovered the project-local
+  root skill and seven router/operation skills, all enabled, without discovery
+  errors. Names were exposed as `ras:ras`, `ras:create`, etc. Claude Code 2.1.283
+  validated the manifest and loaded seven skills and five roles via `--plugin-dir`
+  in a new process. These establish discovery, not model-generated presentation
+  quality or a complete creative conversation in either host. No global install
+  or model invocation was performed by these host checks.
+- Chromium screenshots were inspected for both languages' README, workflow,
+  authoring, review and image-rights pages, plus the licence and rights notice.
+  The new guide was also inspected at 390px width. Local links resolved; no page
+  overflow or Mermaid errors were reported. The in-app browser was unavailable,
+  so screenshots came from the existing Puppeteer toolchain. Screenshots and the
+  per-page source-hash manifest remain local fixtures outside this repository.
+
+The standalone export's source hash was
+`d5f994f8eed2466083fb88f69edf0753cba935ebdd9ae6ec019134637d9d2332`.
+Its visual/factual review states were left pending: a successful export is not a
+recorded slide review. The reviewed image-rights document source hashes were
+`4bd8801a8529f2747ca3c1a771de20a2543e9c78980f2cb2d7b6110d284130c9` (English) and
+`02f06b0caa44c296b76d373a158bd40a1f3b4f499bf0f05ede1d203613513859` (Taiwanese Mandarin).
+
+The history inventory covered all 12 locally reachable commits and 136 distinct
+file blobs at the baseline, including historical role and template text. It found
+no bundled binary media, historical deck excerpts, official dialogue/lyrics, or
+vendored fonts requiring removal. Data-URI matches were runtime font encoding
+and an intentionally broken test image, not embedded asset copies. No history
+rewrite or release deletion was indicated by this review. Names and franchise
+references remain subject to the [rights notice](../NOTICE.md); this inventory
+does not establish ownership of every text or grant third-party rights.
+
 ## First-version validation
 
 Validated locally on 2026-09-24: macOS arm64, Node 22.18.0 and 26.9.0,

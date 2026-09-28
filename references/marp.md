@@ -36,6 +36,11 @@ enabled for these known local layouts. Ordinary prose, lists, tables, and code
 remain Markdown. Prefer a shorter sentence or split slide to shrinking fonts.
 Do not introduce a new colour-token or metadata grammar.
 
+Check [image rights and credits](image-rights.md) before using supplied artwork.
+Keep required credit text visible with `.credit`; HTML comments and speaker notes
+are not audience-facing credits in the PDF. Use the licence's actual required
+wording, links, and change indications rather than guessing a copyright owner.
+
 HTML comments become presenter notes unless Marp recognizes them as directives.
 Keep note comments free of `-->`. Use fenced code for examples containing HTML
 comment syntax. Notes must be associated with the correct page after edits.

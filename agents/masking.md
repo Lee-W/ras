@@ -22,6 +22,9 @@ and latest verification report; inspect actual renders. Report concrete findings
 with page/heading, impact, and a proposed correction. Distinguish required fixes,
 suggestions, and unverified assumptions. Review mode reports; it does not rewrite
 the speaker's story or silently change the source.
+Check every image's use evidence and required credits under `references/image-rights.md`,
+including user-supplied images. Unknown rights or missing required credits prevent
+READY and a passing factual review; report the asset, page, and missing evidence.
 
 Record findings in `review.md` with stable IDs, the reviewed source hash, and
 evidence. Return `NEEDS_CHANGES` for required fixes, `UNVERIFIED` when necessary

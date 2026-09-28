@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtemp, readFile, writeFile, rm, mkdir, symlink } from 'node:fs/promises';
 import { createRequire } from 'node:module';
+import { execFileSync, spawnSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import { initDeck, makePrompt, pluginRoot } from '../scripts/ras.mjs';
@@ -10,11 +11,13 @@ import { projectHash, render, prepareFonts, readConfig, browserPath, run, defaul
 test('portable prompts expand the selected workflow without requiring a vendor', async () => {
   const roleFiles = ['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `agents/${role}.md`);
   const roles = await Promise.all(roleFiles.map(file => readFile(path.join(pluginRoot, file), 'utf8')));
+  const imageRights = await readFile(path.join(pluginRoot, 'references/image-rights.md'), 'utf8');
   for (const operation of ['create', 'revise', 'review', 'export']) {
     const prompt = await makePrompt(operation, 'Explain retries --plan');
     assert.ok(prompt.includes(`# RAS — ${operation}`));
     assert.match(prompt, /# Marp authoring contract/);
     assert.match(prompt, /# Review and verification/);
+    assert.ok(prompt.includes(imageRights), 'Every presentation operation must include the image-rights review');
     assert.match(prompt, /Without those tools, return a draft/);
     assert.match(prompt, /Explain retries --plan/);
     assert.doesNotMatch(prompt, /ANTHROPIC_API_KEY|OPENAI_API_KEY/);
@@ -25,6 +28,7 @@ test('portable prompts expand the selected workflow without requiring a vendor',
   assert.match(chat, /Active host: chat only/);
   assert.match(chat, /Do not simulate tool calls/);
   for (const role of roles) assert.ok(chat.includes(role), 'Chat mode must preserve role voices and handoffs');
+  assert.ok(chat.includes(imageRights), 'Chat mode must retain image-rights checks and their evidence limits');
 });
 
 test('Marp keeps fenced separators, untitled pages, reveal order, and speaker notes', async () => {
@@ -46,6 +50,18 @@ test('initialization copies a portable project and refuses to overwrite one', as
   assert.deepEqual(pkg.dependencies, lock.packages[''].dependencies);
   assert.equal(pkg.scripts.export, 'node scripts/deck.mjs export');
   assert.equal(pkg.bin, undefined);
+  assert.equal(pkg.license, 'UNLICENSED', 'Initialization must not license the speaker\'s own content');
+  assert.equal(lock.packages[''].license, pkg.license);
+  assert.equal(lock.packages[''].bin, undefined);
+  for (const [source, destination] of [['LICENSE', 'RAS-LICENSE'], ['NOTICE.md', 'RAS-NOTICE.md']]) {
+    assert.deepEqual(await readFile(path.join(target, destination)), await readFile(path.join(pluginRoot, source)));
+  }
+  for (const guide of ['review-guide.md', 'sources.md', 'image-rights-guide.md', 'image-rights-guide-zh-tw.md']) {
+    const text = await readFile(path.join(target, guide), 'utf8');
+    for (const match of text.matchAll(/\]\(([^)]+)\)/g)) {
+      if (!/^https?:/.test(match[1])) await readFile(path.resolve(target, match[1]));
+    }
+  }
   for (const name of ['deck', 'project', 'probe', 'fonts', 'review', 'state', 'memory']) {
     const script = await readFile(path.join(target, `scripts/${name}.mjs`), 'utf8');
     assert.doesNotMatch(script, /\/Users\/|\.config\/|\.\.\/\.\.\/ras/);
@@ -55,13 +71,31 @@ test('initialization copies a portable project and refuses to overwrite one', as
   assert.equal(await readFile(path.join(target, 'slides.md'), 'utf8'), '# Preserve me');
 });
 
+test('CLI entry points execute through a symlinked installation directory', async t => {
+  const temporary = await mkdtemp(path.join(os.tmpdir(), 'ras-cli-link-'));
+  t.after(() => rm(temporary, { recursive: true, force: true }));
+  const linked = path.join(temporary, 'linked-kit');
+  await symlink(pluginRoot, linked, 'dir');
+  const deck = path.join(temporary, 'talk');
+  const invoke = (script, args, options = {}) => execFileSync(process.execPath, [path.join(linked, 'scripts', script), ...args], { encoding: 'utf8', timeout: 30_000, ...options });
+  assert.match(invoke('ras.mjs', ['init', deck]), /Created/);
+  await writeFile(path.join(deck, 'slides.md'), '---\nmarp: true\ntheme: ras\n---\n# A real CLI build\n');
+  assert.match(invoke('deck.mjs', ['build'], { cwd: deck }), /Built 1 slides/);
+  assert.match(await readFile(path.join(deck, 'dist/index.html'), 'utf8'), /A real CLI build/);
+  const docs = spawnSync(process.execPath, [path.join(linked, 'scripts/docs.mjs')], {
+    env: { ...process.env, PORT: 'invalid' }, encoding: 'utf8', timeout: 30_000,
+  });
+  assert.equal(docs.status, 1, 'The docs CLI must execute and reject an invalid port, not silently succeed');
+  assert.match(docs.stderr, /port/i);
+});
+
 test('verification hash changes with assets, configuration, scripts, and source', async t => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'ras-hash-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, 'assets'));
   await mkdir(path.join(root, 'scripts'));
   let previous = await projectHash(root);
-  for (const file of ['slides.md', 'theme.css', 'ras.config.json', 'package.json', 'package-lock.json', 'assets/image.svg', 'scripts/deck.mjs']) {
+  for (const file of ['slides.md', 'theme.css', 'ras.config.json', 'package.json', 'package-lock.json', 'RAS-LICENSE', 'RAS-NOTICE.md', 'assets/image.svg', 'scripts/deck.mjs']) {
     await writeFile(path.join(root, file), `changed ${file}`);
     const current = await projectHash(root);
     assert.notEqual(current, previous, `${file} must invalidate prior evidence`);

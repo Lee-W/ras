@@ -17,6 +17,8 @@ for (const manifest of manifests) {
 }
 const lock = await readJson('package-lock.json');
 assert.equal(lock.packages[''].version, pkg.version);
+assert.equal(pkg.license, 'MIT');
+assert.equal(lock.packages[''].license, pkg.license);
 assert.deepEqual(lock.packages[''].dependencies, pkg.dependencies);
 for (const folder of await readdir(path.join(root, 'skills'))) {
   const file = path.join(root, 'skills', folder, 'SKILL.md');

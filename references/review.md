@@ -13,6 +13,14 @@ Speaker notes are for delivery, not internal editing history. Check their meanin
 not just their presence. Estimate section duration and suggest cuts; label estimates
 as untested until the speaker rehearses. Do not impose a fixed slides-per-minute rule.
 
+Apply [image rights and credits](image-rights.md) to every included image, including
+user-supplied assets. Record the use basis, attribution decision, required wording,
+and evidence in `sources.md`. Include the outcomes in factual review observations;
+unknown rights or missing required credits prevent a passing factual review.
+An older factual pass without image-rights evidence needs a new review.
+Inspect required credits in the final HTML and audience PDF during visual review.
+This is an evidence-based reviewer check; the scripts do not infer legal permission.
+
 ## Machine checks
 
 `npm run check` builds the current source, opens all pages in a local browser,
