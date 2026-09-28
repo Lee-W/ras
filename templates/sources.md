@@ -13,7 +13,9 @@ Follow [image rights and credits](image-rights-guide.md). Include every supplied
 or selected image, screenshot, logo, CSS background, and embedded image; group
 repeat uses by asset ID and list all slide headings/pages. The starter contains
 only an original Mermaid diagram and no third-party image assets. Its original
-diagram is covered by `RAS-LICENSE`; the dependency font notices below still apply.
+diagram uses the standard MIT licence in [licenses/ras/MIT.txt](licenses/ras/MIT.txt).
+See [licence scope](licenses/README.md) for the included tools and your own content;
+the dependency font notices below still apply.
 
 For each added asset, copy and fill these fields with real evidence:
 

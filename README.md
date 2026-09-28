@@ -207,8 +207,10 @@ or selected image, including screenshots and backgrounds. Record the use basis
 and whether a credit is required in `sources.md`; inspect required notices in
 the audience HTML/PDF. Unknown rights or missing credits keep the deck unverified.
 These are reviewer checks, not an automatic legal clearance by the build scripts.
-Generated projects include the same guide and retain RAS's MIT notice separately
-from the speaker's own content, which is not automatically licensed under MIT.
+Generated projects include the same guide. `licenses/README.md` explains the
+licence scope; `licenses/ras/MIT.txt` retains the standard MIT licence for the
+included RAS tools and templates. The speaker chooses terms for their own content.
+Build/export preserves the directory in `dist/licenses/`.
 
 `ras:remember` saves an explicitly requested preference in the selected project's
 ignored `.ras/memory.json`. `ras:retro` proposes lessons from the actual session

@@ -18,8 +18,9 @@ export async function build(root = process.cwd()) {
   await rm(path.join(root, '.ras', 'check.json'), { force: true });
   await mkdir(dist, { recursive: true });
   await mkdir(path.join(root, '.ras'), { recursive: true });
-  for (const notice of ['RAS-LICENSE', 'RAS-NOTICE.md']) {
-    if (existsSync(path.join(root, notice))) await cp(path.join(root, notice), path.join(dist, notice));
+  // Keep the legacy root notices when building an older generated project.
+  for (const notice of ['licenses', 'RAS-LICENSE', 'RAS-NOTICE.md']) {
+    if (existsSync(path.join(root, notice))) await cp(path.join(root, notice), path.join(dist, notice), { recursive: true });
   }
   const original = await readFile(path.join(root, 'slides.md'), 'utf8');
   const themeSource = await readFile(path.join(root, 'theme.css'), 'utf8');
