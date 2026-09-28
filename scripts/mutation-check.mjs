@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { cp, lstat, mkdtemp, readFile, readlink, writeFile, rm, symlink } from 'node:fs/promises';
+import { cp, lstat, mkdir, mkdtemp, readFile, readlink, writeFile, rm, symlink } from 'node:fs/promises';
 import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
@@ -61,8 +61,13 @@ function runTests(files) {
 
 const errors = [];
 try {
-  for (const name of ['scripts', 'tests', 'templates', 'references', 'package.json', 'package-lock.json', '.gitignore']) {
-    await cp(path.join(root, name), path.join(temporary, name), { recursive: true });
+  // Use the Git-aware snapshot so new initDeck inputs (guides, licences, etc.)
+  // are included without maintaining a second list of required source paths.
+  for (const entry of before) {
+    if (entry.missing) continue;
+    const destination = path.join(temporary, entry.path);
+    await mkdir(path.dirname(destination), { recursive: true });
+    await cp(path.join(root, entry.path), destination, { recursive: true });
   }
   await symlink(path.join(root, 'node_modules'), path.join(temporary, 'node_modules'), 'dir');
   console.log('Checking the unmodified export and preview tests in an isolated copy...');
