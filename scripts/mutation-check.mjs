@@ -51,10 +51,16 @@ async function snapshotWorkspace() {
 }
 
 function runTests(files) {
-  const result = spawnSync(process.execPath, ['--test', '--test-reporter=tap', ...files], {
+  // Match npm test: browser suites run one file at a time to avoid competing
+  // Chrome launches on resource-constrained CI runners.
+  const result = spawnSync(process.execPath, ['--test', '--test-concurrency=1', '--test-reporter=tap', ...files], {
     cwd: temporary, encoding: 'utf8', timeout: 120_000, maxBuffer: 4 * 1024 * 1024,
   });
-  if (result.error) throw result.error;
+  if (result.error) {
+    // Preserve the child diagnostics when a timeout or spawn error interrupts TAP.
+    console.error(result.stdout + result.stderr);
+    throw result.error;
+  }
   assert.equal(result.signal, null, `Test process terminated by ${result.signal}`);
   return { status: result.status, output: result.stdout + result.stderr };
 }
