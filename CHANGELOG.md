@@ -1,3 +1,14 @@
+## v0.5.0 (2026-09-29)
+
+### Feat
+
+- add MIT licensing and image rights checks
+
+### Fix
+
+- include new deck inputs in mutation checks
+- clarify licensing in generated presentations
+
 ## v0.4.0 (2026-09-26)
 
 ### Feat
