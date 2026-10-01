@@ -93,7 +93,7 @@ Load this repository as a local plugin:
 claude --plugin-dir /path/to/ras
 ```
 
-Then use `/ras:create`, `/ras:revise`, `/ras:review`, `/ras:export`,
+Then use `/ras:create`, `/ras:outline`, `/ras:revise`, `/ras:review`, `/ras:export`,
 `/ras:remember`, or `/ras:retro`.
 Each operation is a shared skill, so no separate command definitions are needed.
 Claude Code [automatically scans the plugin's `skills/` directory](https://code.claude.com/docs/en/plugins-reference#skills);
@@ -117,6 +117,7 @@ Use natural language or the model-side router:
 ```text
 ras:create brief.md
 ras:create Explain retry policies to junior engineers in 15 minutes --plan
+ras:outline talks/retries Discuss the narrative for a 15-minute retry-policy talk before drafting slides
 ras:revise talks/retries/slides.md Shorten the opening to two minutes
 ras:review talks/retries/slides.md
 ras:export talks/retries/slides.md
@@ -150,7 +151,7 @@ You can also paste `ras-chat.md` into a local chat interface. Supply the content
 of any brief/source files that the model cannot read. Save its labelled drafts
 into a deck created with `init`, then run `npm run export`. Chat mode explicitly
 returns file contents and commands; it cannot write files, browse sources, inspect
-images, or export on its own. `prompt revise`, `prompt review`, `prompt export`,
+images, or export on its own. `prompt outline`, `prompt revise`, `prompt review`, `prompt export`,
 `prompt remember`, and `prompt retro` expand the matching shared operations;
 `--plan` remains plan-only for creation. Memory prompts in chat mode propose
 entries and saving steps without claiming to persist them.
@@ -195,7 +196,7 @@ and delivery, while working roles respond to the preceding pass's concrete findi
 in their own rhythm. For example, 🎤 LAYER can propose keeping the conclusion on
 the slide and moving background into notes; 🎸 LOCK then picks up that decision
 and explains the edit and checks. These are illustrative exchanges, not claims
-that any work has run. All six operations and portable prompts share the same
+that any work has run. All seven operations and portable prompts share the same
 [interaction rules](skills/orchestrator-voice/SKILL.md).
 
 The optional [Wei profile](profiles/wei.md) captures short sentences, large type,

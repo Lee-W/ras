@@ -1,6 +1,6 @@
 ---
 name: command-router
-description: Route ras:create, ras:revise, ras:review, ras:export, ras:remember, and ras:retro requests to the matching shared skill.
+description: Route ras:create, ras:outline, ras:revise, ras:review, ras:export, ras:remember, and ras:retro requests to the matching shared skill.
 ---
 
 # RAS command router
@@ -12,6 +12,7 @@ remaining request unchanged:
 | Operation | Source |
 | --- | --- |
 | create | [create](../create/SKILL.md) |
+| outline | [outline](../outline/SKILL.md) |
 | revise | [revise](../revise/SKILL.md) |
 | review | [review](../review/SKILL.md) |
 | export | [export](../export/SKILL.md) |

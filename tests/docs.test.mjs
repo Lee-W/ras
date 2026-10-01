@@ -59,6 +59,10 @@ test('documentation pairs every page across locales and rewrites source links', 
   const shared = await get(port, '/zh-TW/source/agents/chu2.md');
   assert.match(shared.body, /這份共用規格目前以英文維護/);
   assert.match(shared.body, /<article lang="en">/);
+  const operation = await get(port, '/zh-TW/source/skills/outline/SKILL.md');
+  assert.doesNotMatch(operation.body, /這份共用規格目前以英文維護/);
+  assert.match(operation.body, /<article lang="zh-TW">/);
+  assert.match((await get(port, '/zh-TW/source/skills/command-router/SKILL.md')).body, /這份共用規格目前以英文維護/);
 });
 
 test('documentation redirects old URLs and limits served files and methods', async t => {

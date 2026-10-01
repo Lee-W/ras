@@ -71,6 +71,7 @@ flowchart TD
 | --- | --- | --- |
 | `create` | CHU² 釐清需求 → LAYER 敘事 → PAREO 設計 → LOCK 建置 → PAREO 看圖 → MASKING 審閱 → CHU² 交付 | 最新來源、產出與審閱證據 |
 | `create --plan` | CHU² 釐清需求 → LAYER 大綱，必要時加入 PAREO 的視覺建議 | 大綱、時間預算、假設與待補來源 |
+| `outline` | CHU² 與使用者釐清 brief → LAYER 草擬並迭代 outline，必要時加入 PAREO 的視覺建議 → 使用者確認 | 確認過的 `outline.md`（brief 有變動時含 `brief.md`）；不渲染投影片；既有審閱會變成 stale |
 | `revise` | CHU² 確認回饋範圍 → 相關寫作／設計工作 → LOCK 更新 → MASKING 複查 | 完成指定修改並檢查最新畫面 |
 | `review` | MASKING 主導，按需要參照 LAYER／PAREO 的準則 | 提出問題與審閱狀態，保留可編輯來源原樣 |
 | `export` | LOCK 建置／檢查／匯出 → PAREO／MASKING 檢視或確認相符的既有審閱 → CHU² 交付 | 產出與實際驗證狀態 |
@@ -99,6 +100,7 @@ flowchart TD
 `brief.md` 隨需求更新，`outline.md` 保存敘事計畫。
 `--plan` 交付各段目的、約略時間、視覺機會與待補來源後停止。
 使用者要求製作投影片時，持續完成撰寫、繪製、檢查與修正，不必為每個可還原步驟重複詢問。
+`outline` 與 `--plan` 不同：`outline` 是來回討論，使用者確認後才寫入 `outline.md`；`--plan` 則是一次產出大綱後就停止。
 
 ## 撰寫原則
 

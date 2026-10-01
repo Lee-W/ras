@@ -1,4 +1,5 @@
 // One page identity across languages; Markdown remains the editable source.
+import { operations } from './ras.mjs';
 export const locales = {
   'zh-TW': {
     label: '臺灣華語', docs: '文件', guide: '使用指南', maintenance: '專案維護',
@@ -40,8 +41,11 @@ export const pages = [
 export const sharedSources = new Set([
   'SKILL.md', 'profiles/wei.md', 'LICENSE', 'NOTICE.md',
   ...['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `agents/${role}.md`),
-  ...['command-router', 'orchestrator-voice', 'create', 'revise', 'review', 'export', 'remember', 'retro'].map(skill => `skills/${skill}/SKILL.md`),
+  ...['command-router', 'orchestrator-voice', 'create', 'outline', 'revise', 'review', 'export', 'remember', 'retro'].map(skill => `skills/${skill}/SKILL.md`),
 ]);
+
+// Operation skills that are maintained in Taiwanese Mandarin, so the English-only notice does not apply.
+export const zhTwSources = new Set(operations.map(skill => `skills/${skill}/SKILL.md`));
 
 export const pageUrl = (locale, slug = '') => `/${locale}/${slug}`;
 export const sourcePages = new Map(pages.flatMap(page => Object.keys(locales).map(locale => [page[locale][1], { page, locale }])));

@@ -89,7 +89,7 @@ npm run preview
 claude --plugin-dir /path/to/ras
 ```
 
-接著使用 `/ras:create`、`/ras:revise`、`/ras:review`、`/ras:export`、
+接著使用 `/ras:create`、`/ras:outline`、`/ras:revise`、`/ras:review`、`/ras:export`、
 `/ras:remember` 或 `/ras:retro`。
 每個操作都是共用 skill，不需要另外維護命令定義。
 Claude Code 會[自動掃描外掛的 `skills/` 目錄](https://code.claude.com/docs/en/plugins-reference#skills)，
@@ -111,6 +111,7 @@ Claude Code 會[自動掃描外掛的 `skills/` 目錄](https://code.claude.com/
 ```text
 ras:create brief.md
 ras:create 用 15 分鐘向初階工程師說明重試策略 --plan
+ras:outline talks/retries 先和我討論 15 分鐘重試策略簡報的敘事結構，再開始做投影片
 ras:revise talks/retries/slides.md 把開場縮短到兩分鐘
 ras:review talks/retries/slides.md
 ras:export talks/retries/slides.md
@@ -142,7 +143,7 @@ ollama run YOUR_MODEL < ras-chat.md
 將它回傳的具名草稿存入以 `init` 建立的專案，再執行 `npm run export`。
 純聊天模式只會提供檔案內容與待執行指令，無法自行寫檔、瀏覽來源、檢視圖片或匯出。
 
-`prompt revise`、`prompt review`、`prompt export`、`prompt remember` 與 `prompt retro`
+`prompt outline`、`prompt revise`、`prompt review`、`prompt export`、`prompt remember` 與 `prompt retro`
 會展開對應操作；建立簡報時加上 `--plan` 仍只產生計畫。
 聊天模式的記憶操作只提出條目與儲存步驟，不會宣稱已儲存。
 
@@ -176,7 +177,7 @@ RAS 不會代選或下載模型，也不會修改 provider 設定。
 例如，🎤 LAYER 提出「結論留在頁面上，背景移到備註」後，
 🎸 LOCK 會接下這個決定並說明要如何修改與檢查。
 這是互動方式的示例；實際回報只依當輪工作，不補演未執行的角色。
-六個操作與可攜式提示詞都使用同一份[互動規則](skills/orchestrator-voice/SKILL.md)，
+七個操作與可攜式提示詞都使用同一份[互動規則](skills/orchestrator-voice/SKILL.md)，
 更多說明見[工作流程](docs/workflow-zh-tw.md)。
 
 ```mermaid

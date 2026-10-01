@@ -45,6 +45,7 @@ theme. The collaboration voice defines plain output and artifact-format boundari
 | --- | --- | --- |
 | create | CHU² briefs → LAYER shapes the story → PAREO designs → LOCK builds → PAREO inspects → MASKING reviews → CHU² delivers | Current source, rendered artifacts, and review evidence |
 | create --plan | CHU² briefs → LAYER outlines, with PAREO's visual suggestions when useful | Outline, time budget, assumptions, missing sources |
+| outline | CHU² clarifies the brief with the user → LAYER drafts and iterates the outline, with PAREO's visual suggestions when useful → user confirms | Confirmed `outline.md` (and `brief.md` if changed); no rendered slides; existing reviews become stale |
 | revise | CHU² scopes the feedback → relevant writing/design pass → LOCK updates → MASKING rechecks | Requested changes and a review of the latest render |
 | review | MASKING leads, consulting LAYER/PAREO criteria as needed | Findings and review status; editable source stays unchanged |
 | export | LOCK builds/checks/exports → PAREO/MASKING inspect or verify a matching prior review → CHU² delivers | Artifacts plus actual verification status |
@@ -81,7 +82,9 @@ Keep `brief.md` as the evolving brief and `outline.md` as the narrative plan.
 For `--plan`, stop after a concrete outline with section purposes, approximate
 time budget, visual opportunities, and missing sources. For a request to make
 the slides, continue through authoring, rendering, inspection, and fixes without
-requiring another approval for each reversible step.
+requiring another approval for each reversible step. `outline` differs from
+`--plan`: it is a back-and-forth discussion that writes `outline.md` only after
+the user confirms, while `--plan` produces one outline and stops.
 
 ## Authoring
 

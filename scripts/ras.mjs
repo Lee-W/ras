@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 export const pluginRoot = fileURLToPath(new URL('../', import.meta.url));
-const operations = ['create', 'revise', 'review', 'export', 'remember', 'retro'];
+export const operations = ['create', 'outline', 'revise', 'review', 'export', 'remember', 'retro'];
 
 export async function makePrompt(operation, request = '', { chat = false } = {}) {
   if (!operations.includes(operation)) throw new Error(`Choose an operation: ${operations.join(', ')}`);
@@ -74,6 +74,6 @@ if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.
     else if (process.argv[2] === 'prompt') {
       const args = process.argv.slice(4);
       process.stdout.write(await makePrompt(process.argv[3], args.filter(arg => arg !== '--chat').join(' '), { chat: args.includes('--chat') }));
-    } else throw new Error('Usage: node scripts/ras.mjs init <new-directory> | prompt <create|revise|review|export|remember|retro> [--chat] [request]');
+    } else throw new Error(`Usage: node scripts/ras.mjs init <new-directory> | prompt <${operations.join('|')}> [--chat] [request]`);
   } catch (error) { console.error(error.message); process.exitCode = 1; }
 }

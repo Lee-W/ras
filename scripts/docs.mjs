@@ -5,7 +5,7 @@ import { createRequire } from 'node:module';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { locales, pages, pageUrl, sourcePages, sharedSources } from './docs-pages.mjs';
+import { locales, pages, pageUrl, sourcePages, sharedSources, zhTwSources } from './docs-pages.mjs';
 import { docsStyle } from './docs-style.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -92,8 +92,8 @@ ${Object.keys(locales).map(language => `<link rel="alternate" hreflang="${langua
 <header><a class="brand" href="${pageUrl(locale)}">RAS<span>RAISE A SLIDE · ${copy.docs}</span></a><nav class="languages" aria-label="${copy.language}">${languages}</nav></header>
 <div class="layout"><aside class="sidebar"><details open><summary>${copy.navigation}</summary><nav aria-label="${copy.navigation}">${sidebar}</nav></details></aside>
 <main id="content"><div class="eyebrow">${shared ? copy.source : copy[page.group]}</div>
-${shared && copy.englishOnly ? `<p class="notice">${copy.englishOnly}</p>` : ''}
-<article${shared ? ' lang="en"' : ''}>${rendered.html}</article><nav class="pager" aria-label="${copy.navigation}">${pager}</nav></main>
+${shared && copy.englishOnly && !zhTwSources.has(shared) ? `<p class="notice">${copy.englishOnly}</p>` : ''}
+<article${shared ? ` lang="${zhTwSources.has(shared) ? 'zh-TW' : 'en'}"` : ''}>${rendered.html}</article><nav class="pager" aria-label="${copy.navigation}">${pager}</nav></main>
 <aside class="outline" aria-label="${copy.outline}"><strong>${copy.outline}</strong>${rendered.outline.map(item => `<a class="level-${item.level}" href="#${escape(item.id)}">${escape(item.title)}</a>`).join('')}</aside></div>
 <script>
 const menu = document.querySelector('.sidebar details');
