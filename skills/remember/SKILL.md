@@ -5,6 +5,7 @@ description: Save an explicitly requested presentation preference, correction, c
 
 # RAS — remember
 
+Read [the collaboration voice](../orchestrator-voice/SKILL.md) before the opening.
 Read [project memory](../../references/memory.md) and
 [CHU²'s role](../../agents/chu2.md). Resolve the target project and existing
 entries, then follow the shared remember write rules. Preserve the user's meaning

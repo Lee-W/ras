@@ -40,7 +40,7 @@ export const pages = [
 export const sharedSources = new Set([
   'SKILL.md', 'profiles/wei.md', 'LICENSE', 'NOTICE.md',
   ...['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `agents/${role}.md`),
-  ...['command-router', 'create', 'revise', 'review', 'export', 'remember', 'retro'].map(operation => `skills/${operation}/SKILL.md`),
+  ...['command-router', 'orchestrator-voice', 'create', 'revise', 'review', 'export', 'remember', 'retro'].map(skill => `skills/${skill}/SKILL.md`),
 ]);
 
 export const pageUrl = (locale, slug = '') => `/${locale}/${slug}`;

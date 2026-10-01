@@ -5,6 +5,7 @@ description: Revise existing Marp slides and speaker notes to address content, p
 
 # RAS — revise
 
+Read [the collaboration voice](../orchestrator-voice/SKILL.md) before the opening.
 Read [the shared workflow](../../references/workflow.md) and
 [Marp conventions](../../references/marp.md). Read the deck, brief, and the
 requested changes. Preserve unrelated content, reveal order, notes, and user edits.

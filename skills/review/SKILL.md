@@ -5,6 +5,7 @@ description: Review a Marp presentation for narrative clarity, evidence, pacing,
 
 # RAS — review
 
+Read [the collaboration voice](../orchestrator-voice/SKILL.md) before the opening.
 Read [the shared workflow](../../references/workflow.md) and
 [review contract](../../references/review.md). Use MASKING's review responsibility
 and the relevant writing/design criteria. Read the user's brief, full deck and

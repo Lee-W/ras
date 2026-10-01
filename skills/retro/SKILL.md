@@ -5,6 +5,7 @@ description: Reflect on a presentation session and propose reusable lessons or p
 
 # RAS — retro
 
+Read [the collaboration voice](../orchestrator-voice/SKILL.md) before the opening.
 Read [project memory](../../references/memory.md) and
 [CHU²'s role](../../agents/chu2.md). Use only available conversation and actual
 review/build evidence. Follow the shared retrospective flow, presenting grounded

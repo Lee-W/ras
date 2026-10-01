@@ -8,6 +8,17 @@ import path from 'node:path';
 import { initDeck, makePrompt, pluginRoot } from '../scripts/ras.mjs';
 import { projectHash, render, prepareFonts, readConfig, browserPath, run, defaults } from '../scripts/project.mjs';
 
+test('all portable operations carry the shared interaction contract in tool and chat hosts', async () => {
+  const voice = await readFile(path.join(pluginRoot, 'skills/orchestrator-voice/SKILL.md'), 'utf8');
+  for (const operation of ['create', 'revise', 'review', 'export', 'remember', 'retro']) {
+    for (const chat of [false, true]) {
+      const prompt = await makePrompt(operation, '投影片用英文，繼續用臺灣華語討論。', { chat });
+      assert.ok(prompt.includes(voice), `${operation} (chat=${chat}) must expand the full interaction contract`);
+      assert.equal(prompt.split('## Source: skills/orchestrator-voice/SKILL.md').length - 1, 1);
+    }
+  }
+});
+
 test('portable prompts expand the selected workflow without requiring a vendor', async () => {
   const roleFiles = ['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `agents/${role}.md`);
   const roles = await Promise.all(roleFiles.map(file => readFile(path.join(pluginRoot, file), 'utf8')));

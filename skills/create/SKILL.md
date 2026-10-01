@@ -5,6 +5,7 @@ description: Create a Marp presentation from a topic, brief, outline, or source 
 
 # RAS — create
 
+Read [the collaboration voice](../orchestrator-voice/SKILL.md) before the opening.
 Read [the shared workflow](../../references/workflow.md), then the relevant
 role files and [Marp conventions](../../references/marp.md). Use the user's
 request or supplied arguments as the brief. Discover existing context before

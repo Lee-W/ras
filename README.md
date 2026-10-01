@@ -189,6 +189,15 @@ review, export, and plan-only routes. Role files provide distinct voices and
 original example lines. Ask for plain output to omit the character labels and
 mannerisms. A single model uses successive passes and reports that honestly.
 
+Collaboration defaults to Taiwanese Mandarin, independently of slide language;
+an explicit request can change the conversation language. 🎧 CHU² frames the aim
+and delivery, while working roles respond to the preceding pass's concrete finding
+in their own rhythm. For example, 🎤 LAYER can propose keeping the conclusion on
+the slide and moving background into notes; 🎸 LOCK then picks up that decision
+and explains the edit and checks. These are illustrative exchanges, not claims
+that any work has run. All six operations and portable prompts share the same
+[interaction rules](skills/orchestrator-voice/SKILL.md).
+
 The optional [Wei profile](profiles/wei.md) captures short sentences, large type,
 progressive reveals, code/diagrams, and sparse humour from the reference decks.
 Conference/company branding and personal artwork belong in individual projects.

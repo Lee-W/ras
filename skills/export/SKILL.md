@@ -5,6 +5,7 @@ description: Build, verify, and export an existing RAS Marp project to HTML and 
 
 # RAS — export
 
+Read [the collaboration voice](../orchestrator-voice/SKILL.md) before the opening.
 Read [the shared workflow](../../references/workflow.md) and
 [review contract](../../references/review.md). Locate the existing deck directory,
 inspect its build instructions, and run its doctor/export commands. Use an existing
