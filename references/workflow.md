@@ -1,9 +1,10 @@
 # RAS workflow
 
 RAS means **RAISE A SLIDE**. It creates a presentation for a speaker, audience,
-and occasion. Marp Markdown is the editable source. Use Taiwanese Mandarin
-(臺灣華語) written in traditional characters when the user writes in Mandarin; keep slide language
-and spoken language separate.
+and occasion. Marp Markdown is the editable source. Follow the shared
+[collaboration voice](../skills/orchestrator-voice/SKILL.md): default to Taiwanese
+Mandarin (臺灣華語) for the conversation, while keeping slide language and spoken
+language separate. An explicit conversation-language request takes precedence.
 
 Resolve the plugin root from the skill file's location. All scripts and templates
 are relative to that root. Work on the target deck, never on plugin templates when
@@ -28,17 +29,15 @@ labelled draft file contents and execution steps; do not claim local actions or
 visual checks. `scripts/ras.mjs prompt <operation> <request>` expands these same
 instructions for hosts without plugin or skill discovery.
 
-Use the active role's prefix and voice for short, substantive progress updates:
-🎧 CHU², 🎤 LAYER, 🎹 PAREO, 🎸 LOCK, and 🥁 MASKING. CHU² frames the opening and
-delivery; the working role reports its own findings at a meaningful handoff.
-The role files contain original voice examples, not quotations from the franchise.
+Read the shared collaboration voice before the opening and the active role file
+before its pass. Keep that role's observation and response in visible handoffs,
+including when one agent performs successive passes. The role files contain
+original voice examples, not quotations from the franchise.
 RAS is an unofficial fan-inspired tool with no franchise affiliation or endorsement;
 see [rights and affiliation](../NOTICE.md). Do not add official dialogue or artwork
 to the tool or imply that the software licence grants third-party character rights.
-Adapt their register to the user's language instead of repeating a catchphrase.
-Honour a request for plain output by dropping character labels and mannerisms.
-Keep filenames, reports, JSON, and slide copy in their required formats. Character
-theming applies to collaboration; slide branding comes from the chosen theme.
+Character theming applies to collaboration; slide branding comes from the chosen
+theme. The collaboration voice defines plain output and artifact-format boundaries.
 
 ## Operation flow and handoffs
 
