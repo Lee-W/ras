@@ -1,3 +1,9 @@
+## v0.7.0 (2026-10-01)
+
+### Feat
+
+- add outline operation and Taiwanese Mandarin operation guides
+
 ## v0.6.0 (2026-10-01)
 
 ### Feat
