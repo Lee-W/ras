@@ -71,6 +71,16 @@ npm run preview
 | `npm run review:record -- <review.json>` | 記錄實際完成的視覺或事實審閱 |
 | `npm run memory -- list` | 讀取目前專案儲存的偏好 |
 
+產生的專案也會附上 [Just](https://just.systems/man/en/) 指令入口。
+如果已安裝 Just，可在簡報專案內用 `just deps` 安裝套件、`just doctor` 診斷環境，
+再用 `just build`（或 `just export`）匯出 HTML、備註與 PDF。
+`just html` 只建置 HTML，`just preview` 啟動預覽服務。
+未安裝 Just 時，仍可使用上面的 npm 指令。
+
+啟動預覽時，若建置雜湊與目前來源相符，就直接使用既有產物，保留 PDF 與驗證證據。
+來源改動或 HTML 缺漏時才重新建置 HTML。
+直接執行 HTML 建置或檢查會替換 `dist/` 並移除先前的 PDF；需要 PDF 時請再次匯出。
+
 每次建置都會替換 `dist/`，原始素材請放在 `assets/`。
 預覽服務提供 `dist/` 的內容；修改來源後需重新建置並重新整理頁面。
 可用 `PORT` 指定其他本機連接埠。Marp HTML 支援鍵盤換頁與講者模式。

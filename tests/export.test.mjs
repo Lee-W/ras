@@ -4,7 +4,7 @@ import { mkdtemp, readFile, writeFile, rm, access } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { PDFDocument } from 'pdf-lib';
-import { exportDeck } from '../scripts/deck.mjs';
+import { exportDeck, preview } from '../scripts/deck.mjs';
 import { initDeck } from '../scripts/ras.mjs';
 import { recordReview, status } from '../scripts/review.mjs';
 
@@ -26,6 +26,19 @@ test('export records the actual PDF page count in verification.json', async t =>
   assert.equal(report.pdfPages, report.slides);
   assert.equal(report.pdfPages, pdf.getPageCount());
   assert.equal(report.visualReview, 'pending');
+  const evidence = ['dist/slides.pdf', 'dist/verification.json', '.ras/check.json'];
+  const beforePreview = await Promise.all(evidence.map(file => readFile(path.join(deck, file))));
+  const server = await preview(deck, 0);
+  try {
+    for (const [index, file] of evidence.entries()) {
+      assert.deepEqual(await readFile(path.join(deck, file)), beforePreview[index], `Preview must preserve current ${file}`);
+    }
+    const response = await fetch(`http://127.0.0.1:${server.address().port}/slides.pdf`);
+    assert.equal(response.status, 200);
+    assert.deepEqual(Buffer.from(await response.arrayBuffer()), beforePreview[0]);
+  } finally {
+    await new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+  }
   for (const notice of ['licenses/README.md', 'licenses/ras/MIT.txt', 'licenses/ras/NOTICE.md']) {
     assert.deepEqual(await readFile(path.join(deck, 'dist', notice)), await readFile(path.join(deck, notice)), 'Export must retain RAS notices byte-for-byte');
   }
