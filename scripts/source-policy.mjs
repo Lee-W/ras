@@ -7,7 +7,7 @@ const rootFiles = new Set([
   '.claude-plugin/plugin.json',
   '.cz.toml', 'CHANGELOG.md', '.github/workflows/ci.yml',
   '.github/workflows/bumpversion.yml',
-  'templates/licenses/README.md',
+  'templates/licenses/README.md', 'templates/justfile',
 ]);
 const sourcePaths = [
   /^(agents|profiles|references|docs)\/[a-z0-9-]+\.md$/,

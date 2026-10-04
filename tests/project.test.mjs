@@ -65,6 +65,12 @@ test('initialization copies a portable project and refuses to overwrite one', as
   assert.equal(pkg.license, 'UNLICENSED', 'Initialization must not license the speaker\'s own content');
   assert.equal(lock.packages[''].license, pkg.license);
   assert.equal(lock.packages[''].bin, undefined);
+  const justfile = await readFile(path.join(target, 'justfile'), 'utf8');
+  assert.deepEqual(justfile, await readFile(path.join(pluginRoot, 'templates/justfile'), 'utf8'));
+  assert.doesNotMatch(justfile, /\/Users\/|archive\.py|\.venv|source\//, 'Deck recipes must run directly inside the standalone project');
+  const readme = await readFile(path.join(target, 'README.md'), 'utf8');
+  assert.match(readme, /just build/);
+  assert.match(readme, /preview.*preserves.*PDF/);
   for (const [source, destination] of [['LICENSE', 'licenses/ras/MIT.txt'], ['NOTICE.md', 'licenses/ras/NOTICE.md']]) {
     assert.deepEqual(await readFile(path.join(target, destination)), await readFile(path.join(pluginRoot, source)));
   }
@@ -111,7 +117,7 @@ test('verification hash changes with assets, configuration, scripts, and source'
   await mkdir(path.join(root, 'scripts'));
   await mkdir(path.join(root, 'licenses', 'ras'), { recursive: true });
   let previous = await projectHash(root);
-  for (const file of ['slides.md', 'theme.css', 'ras.config.json', 'package.json', 'package-lock.json', 'RAS-LICENSE', 'RAS-NOTICE.md', 'licenses/README.md', 'licenses/ras/MIT.txt', 'licenses/ras/NOTICE.md', 'assets/image.svg', 'scripts/deck.mjs']) {
+  for (const file of ['slides.md', 'theme.css', 'ras.config.json', 'package.json', 'package-lock.json', 'justfile', 'RAS-LICENSE', 'RAS-NOTICE.md', 'licenses/README.md', 'licenses/ras/MIT.txt', 'licenses/ras/NOTICE.md', 'assets/image.svg', 'scripts/deck.mjs']) {
     await writeFile(path.join(root, file), `changed ${file}`);
     const current = await projectHash(root);
     assert.notEqual(current, previous, `${file} must invalidate prior evidence`);

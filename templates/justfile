@@ -1,0 +1,40 @@
+# List the commands available in this standalone presentation.
+default:
+    @{{ quote(just_executable()) }} --list
+
+# Install the project's locked dependencies.
+deps:
+    npm ci
+
+# Diagnose Node, browser, and configuration.
+doctor:
+    npm run doctor
+
+# Build HTML, notes, and PDF, and confirm the PDF exists.
+build:
+    #!/usr/bin/env sh
+    set -eu
+    npm run export
+    if [ ! -s dist/slides.pdf ]; then
+        printf '%s\n' 'Export did not produce a nonempty dist/slides.pdf.' >&2
+        exit 1
+    fi
+    printf '%s\n' 'PDF: dist/slides.pdf'
+
+alias export := build
+
+# Rebuild HTML and notes only, replacing any previous PDF.
+html:
+    npm run build
+
+# Rebuild, check the slides, and create PNG previews.
+check:
+    npm run check
+
+# Preview the current output; keep an exported PDF when source is unchanged.
+preview:
+    npm run preview
+
+# Show build and human review status.
+status:
+    npm run status

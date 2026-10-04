@@ -52,7 +52,7 @@ export async function projectHash(root) {
       else { hash.update(child); hash.update(await readFile(path.join(root, child))); }
     }
   }
-  for (const file of ['slides.md', 'theme.css', 'ras.config.json', 'package.json', 'package-lock.json', 'RAS-LICENSE', 'RAS-NOTICE.md']) {
+  for (const file of ['slides.md', 'theme.css', 'ras.config.json', 'package.json', 'package-lock.json', 'justfile', 'RAS-LICENSE', 'RAS-NOTICE.md']) {
     if (existsSync(path.join(root, file))) { hash.update(file); hash.update(await readFile(path.join(root, file))); }
   }
   await add('assets');

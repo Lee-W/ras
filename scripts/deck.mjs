@@ -108,8 +108,19 @@ export async function exportDeck(root = process.cwd()) {
 }
 
 export async function preview(root = process.cwd(), port = 4173) {
-  const built = await build(root);
-  const base = await realpath(built.dist);
+  root = path.resolve(root);
+  const dist = path.join(root, 'dist');
+  let current = false;
+  try {
+    const manifest = JSON.parse(await readFile(path.join(dist, 'build.json'), 'utf8'));
+    current = manifest?.sourceHash === await projectHash(root)
+      && (await stat(path.join(dist, 'index.html'))).isFile();
+  } catch (error) {
+    if (error.code !== 'ENOENT' && !(error instanceof SyntaxError)) throw error;
+  }
+  // Reusing a current export preserves its PDF and verification evidence.
+  if (!current) await build(root);
+  const base = await realpath(dist);
   const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.woff2': 'font/woff2', '.pdf': 'application/pdf', '.md': 'text/plain; charset=utf-8', '.txt': 'text/plain; charset=utf-8', '.json': 'application/json' };
   const server = createServer(async (request, response) => {
     try {

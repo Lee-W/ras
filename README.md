@@ -73,6 +73,18 @@ builds use local fonts, images, and pre-rendered Mermaid diagrams.
 | `npm run review:record -- <review.json>` | Record an actual visual or factual review |
 | `npm run memory -- list` | Read the selected project's saved preferences |
 
+Generated projects also include an optional [Just](https://just.systems/man/en/)
+command entry point. Inside the generated project, `just deps` installs its
+dependencies, `just doctor` diagnoses the environment, and `just build` (or
+`just export`) exports HTML, notes, and PDF. `just html` performs the HTML-only
+build, and `just preview` starts the preview server. The npm commands remain
+available without installing Just.
+
+Preview reuses output whose build hash matches the current source, preserving
+an exported PDF and its verification evidence. Changed source or missing HTML
+triggers a fresh HTML build. Explicit HTML builds and checks replace `dist/`
+and remove any previous PDF; export again afterward if needed.
+
 `dist/` is generated output and is replaced on every build. Keep source assets
 in `assets/`, not in `dist/`. The preview serves `dist/`; rebuild after edits and refresh the page. Set `PORT`
 for a different local port. Marp HTML supports keyboard navigation and presenter
