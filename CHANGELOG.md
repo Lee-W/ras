@@ -1,3 +1,9 @@
+## v0.8.0 (2026-10-04)
+
+### Feat
+
+- add standalone Just commands and preserve PDFs during preview
+
 ## v0.7.0 (2026-10-01)
 
 ### Feat
