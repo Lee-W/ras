@@ -212,7 +212,7 @@ that any work has run. All seven operations and portable prompts share the same
 [interaction rules](skills/orchestrator-voice/SKILL.md).
 
 The optional [Wei profile](profiles/wei.md) captures short sentences, large type,
-progressive reveals, code/diagrams, and sparse humour from the reference decks.
+progressive reveals, code/diagrams, and purposeful humour from the reference decks.
 Conference/company branding and personal artwork belong in individual projects.
 
 ## Quality and scope
