@@ -1,3 +1,9 @@
+## v0.10.0 (2026-10-07)
+
+### Feat
+
+- add a deck upgrade command
+
 ## v0.9.0 (2026-10-07)
 
 ### Feat
