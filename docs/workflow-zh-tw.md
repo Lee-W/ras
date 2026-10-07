@@ -112,6 +112,11 @@ flowchart TD
 - 對所有提供或選用的圖片執行[圖片權利與標示查核](image-rights-zh-tw.md)，
   在 `sources.md` 記錄使用依據、是否需標示創作者／權利人，以及實際標示文字。
   必要標示放在觀眾看得到的投影片；缺圖、未知權利或漏標都不能視為完成。
+- 投影片上的數量、次數與量測值一律寫成阿拉伯數字（`3 retries`、`9 steps`、`1,163 tokens`），
+  不要拼成英文單字；數字在會場後排更容易讀。代名詞（例如 "the one you already speak"）照常用字，
+  講者筆記可以拼寫。
+- 標題放不進一行時，用 `<br>` 在詞組邊界手動斷成兩行（`` `AgentOperator`:<br>a budget across every attempt ``），
+  不要讓它在寬度用完的地方自動折行；自動折行常把單一個字孤零零留在第二行。
 - [Wei profile](../profiles/wei.md)是可選偏好，使用者要求或意圖明確時才套用。
 
 ## 工具流程
