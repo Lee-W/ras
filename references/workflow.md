@@ -142,6 +142,21 @@ Read `references/marp.md` for the source conventions and `references/review.md`
 for the verification contract. Generated projects carry their own tools and lockfile;
 they build independently of the AI host.
 
+To bring an existing deck's kit up to the current RAS version, run:
+
+```sh
+node <plugin-root>/scripts/ras.mjs upgrade <deck>          # report only
+node <plugin-root>/scripts/ras.mjs upgrade <deck> --yes    # apply
+```
+
+Upgrade replaces only generated tool files (`scripts/`, `package.json`,
+`package-lock.json`, `justfile`, `licenses/`, `README.md`, copied guides), backs
+up every replaced file to `.ras/upgrade-backup-<timestamp>/`, and adds missing
+keys to `ras.config.json` and missing rules to `.gitignore` without changing
+existing ones. It never changes slides, briefs, outlines, sources, reviews,
+theme, assets, or other files. Afterwards run `npm ci` if the package files
+changed, then `npm run export`.
+
 ## Delivery
 
 Inspect the latest rendered pages. Fix faults in the source or theme, rebuild,
