@@ -53,6 +53,19 @@ test('checks catch flex and grid content pushed past the content area of rendere
   assert.deepEqual(report.pages[2].problems, []);
 });
 
+test('checks let .label text use the credit size and still flag other small text', async t => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'ras-label-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const deck = await initDeck(path.join(root, 'talk'));
+  const theme = await readFile(path.join(deck, 'theme.css'), 'utf8');
+  await writeFile(path.join(deck, 'theme.css'), theme + '\n.tiny{font-size:18px}\n');
+  await writeFile(path.join(deck, 'slides.md'), `---\nmarp: true\ntheme: ras\npaginate: true\n---\n\n# Labelled\n\n<p><span class="tiny label">Task · every attempt</span></p>\n\n---\n\n# Unlabelled\n\n<p><span class="tiny">Task · every attempt</span></p>\n`);
+  await assert.rejects(check(deck), /Verification failed/);
+  const report = JSON.parse(await readFile(path.join(deck, '.ras/check.json'), 'utf8'));
+  assert.deepEqual(report.pages[0].problems, []);
+  assert.match(report.pages[1].problems.join('\n'), /Small text \(18px/);
+});
+
 test('fresh builds remove stale output and checks reject missing or remote resources', async t => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'ras-build-'));
   t.after(() => rm(root, { recursive: true, force: true }));

@@ -37,6 +37,7 @@ title: 我的演講
 CSS 主題以 `/* @theme ras */` 宣告，`theme.css` 由專案自行維護。
 
 `.accent` 用於重點色，`.muted` 用於次要文字，`.credit` 用於圖片出處，
+`.label` 用於圖表或框線上的小標籤（字級門檻比照 `minCreditSize`），
 `.columns` 用於兩欄比較。這些已知的本機版型可以使用原始 HTML；
 一般文字、清單、表格與程式碼仍採 Markdown。
 文字太多時，優先縮短句子或拆頁，避免一味縮小字體。不要另創色彩 token 或 metadata 語法。

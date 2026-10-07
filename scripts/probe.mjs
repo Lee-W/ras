@@ -44,7 +44,7 @@ export function probeSlide(config) {
       const lineHeight = parseFloat(style.lineHeight);
       if (rects.some(r => leaves(r, content, Number.isFinite(lineHeight) ? Math.max(0, (r.height - lineHeight) / 2) : r.height * 0.2))) problems.push(`Text leaves content area: ${sample}`);
     }
-    const minimum = el.closest('.credit,footer,header') ? config.minCreditSize : el.closest('pre,code') ? config.minCodeSize : config.minTextSize;
+    const minimum = el.closest('.credit,.label,footer,header') ? config.minCreditSize : el.closest('pre,code') ? config.minCodeSize : config.minTextSize;
     if (rects.length && parseFloat(style.fontSize) < minimum) problems.push(`Small text (${style.fontSize}, minimum ${minimum}px): ${sample}`);
     // A text fragment clipped by any ancestor is still a failure, even if its
     // outermost block remains inside the slide.
