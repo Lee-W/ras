@@ -28,6 +28,31 @@ test('layout probe catches overflow, clipping, tiny text, and missing assets', a
   } finally { await page.close(); }
 });
 
+test('checks catch flex and grid content pushed past the content area of rendered slides', async t => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'ras-overflow-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const deck = await initDeck(path.join(root, 'talk'));
+  const theme = await readFile(path.join(deck, 'theme.css'), 'utf8');
+  await writeFile(path.join(deck, 'theme.css'), theme + `
+.rows{display:flex;flex-direction:column;gap:22px;margin-top:4px}
+.rows>div{display:grid;grid-template-columns:190px 1fr auto;gap:28px;align-items:center;padding-bottom:22px;border-bottom:1px solid #494657}
+.rows h2{font-size:56px;margin:0}
+.rows p{margin:0;font-size:30px;line-height:1.25}
+.rows p span{display:block;font-size:26px;line-height:1.25;margin-top:6px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+.pair>div{border:2px solid #494657;border-radius:14px;padding:32px 34px;display:flex;flex-direction:column;gap:16px}
+.pair p{margin:0;font-size:26px;line-height:1.35}
+`);
+  const row = word => `<div><h2>${word}</h2><p>A proposal title<span>One line that explains what this proposal could enable for people who run it.</span></p><p>Draft</p></div>`;
+  const code = ['budget(', ...Array.from({ length: 8 }, (_, line) => `    limit_${line}=${line},`), ')'].join('\n');
+  await writeFile(path.join(deck, 'slides.md'), `---\nmarp: true\ntheme: ras\npaginate: true\n---\n\n# Four rows\n\n<div class="rows">\n${['loop', 'step', 'plan', 'gate'].map(row).join('\n')}\n</div>\n\n---\n\n<!-- _class: code -->\n# One budget\n\n\`\`\`python\n${code}\n\`\`\`\n\n<div class="pair"><div><p>Before: every attempt starts with a fresh budget.</p></div><div><p>After: one budget across every attempt.</p></div></div>\n\n---\n\n# Two rows\n\n<div class="rows">\n${['loop', 'step'].map(row).join('\n')}\n</div>\n`);
+  await assert.rejects(check(deck), /Verification failed/);
+  const report = JSON.parse(await readFile(path.join(deck, '.ras/check.json'), 'utf8'));
+  assert.match(report.pages[0].problems.join('\n'), /div\.rows leaves content area/);
+  assert.match(report.pages[1].problems.join('\n'), /div\.pair leaves content area/);
+  assert.deepEqual(report.pages[2].problems, []);
+});
+
 test('fresh builds remove stale output and checks reject missing or remote resources', async t => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'ras-build-'));
   t.after(() => rm(root, { recursive: true, force: true }));
