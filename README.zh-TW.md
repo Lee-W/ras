@@ -86,6 +86,29 @@ npm run preview
 可用 `PORT` 指定其他本機連接埠。Marp HTML 支援鍵盤換頁與講者模式。
 **HTML 包含講者備註；只要提供觀眾投影片時，請使用 PDF。**
 
+## 升級既有簡報
+
+簡報專案會保留建立時的 RAS 工具版本。要把既有簡報的工具更新到本儲存庫的版本，在本儲存庫執行：
+
+```sh
+node scripts/ras.mjs upgrade ../my-talk           # 只列出會變更的檔案
+node scripts/ras.mjs upgrade ../my-talk --yes     # 實際寫入
+cd ../my-talk
+npm ci            # 只有 package.json 或 package-lock.json 有變更時需要
+npm run export
+```
+
+沒有加 `--yes`（或加上 `--dry-run`）時不會寫入任何檔案；指令會列出簡報目前與升級後的
+slide-kit 版本，並把每個工具檔標示為新增、更新、合併或不變。
+工具檔是 `init` 產生的工具類檔案：`scripts/`、`package.json`、`package-lock.json`、
+`justfile`、`licenses/`、`README.md` 與複製進來的指南。
+與目前版本不同的工具檔（包括手動改過的）都會被替換；寫入前，所有會被替換的檔案會先複製到
+`.ras/upgrade-backup-<時間戳記>/`，並在輸出中印出路徑。
+`ras.config.json` 與 `.gitignore` 保留既有設定，只補上缺少的項目。
+內容檔（`slides.md`、`brief.md`、`outline.md`、`sources.md`、`review.md`、`theme.css`、
+`assets/`、`.ras/`、`dist/` 與其他任何檔案）一律不動。
+`package.json` 名稱不是 `@ras/slide-kit` 的目錄會被拒絕。
+
 ## 搭配 Codex、Claude Code 或開放模型
 
 所有入口共用同一組 skills 與工作流程。模型由宿主選擇，RAS 不要求特定供應商或 API 金鑰。

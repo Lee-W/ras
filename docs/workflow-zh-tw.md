@@ -140,6 +140,19 @@ npm run preview
 專案自帶工具與鎖定檔，建置不依賴 AI 宿主。
 來源格式見 [Marp 撰寫指南](marp-zh-tw.md)，驗證方式見[審閱與驗證](review-zh-tw.md)。
 
+要把既有簡報的工具更新到目前的 RAS 版本：
+
+```sh
+node /path/to/ras/scripts/ras.mjs upgrade ./my-talk          # 只列出變更
+node /path/to/ras/scripts/ras.mjs upgrade ./my-talk --yes    # 實際寫入
+```
+
+升級只替換產生的工具檔（`scripts/`、`package.json`、`package-lock.json`、`justfile`、
+`licenses/`、`README.md` 與複製進來的指南），並先把每個被替換的檔案備份到
+`.ras/upgrade-backup-<時間戳記>/`；`ras.config.json` 只補上缺少的設定、`.gitignore`
+只補上缺少的規則，既有內容不變。投影片、brief、大綱、來源、審閱紀錄、佈景主題、素材與其他檔案一律不動。
+完成後若套件檔有變更，先執行 `npm ci`，再執行 `npm run export`。
+
 ## 交付
 
 檢視最新畫面，在來源或主題修正版面問題，再重建並確認結果。

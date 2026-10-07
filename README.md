@@ -90,6 +90,32 @@ in `assets/`, not in `dist/`. The preview serves `dist/`; rebuild after edits an
 for a different local port. Marp HTML supports keyboard navigation and presenter
 view. HTML contains speaker notes; PDF is the audience-only handout.
 
+## Upgrade an existing deck
+
+A deck keeps the RAS tools it was created with. To bring an existing deck's
+tools up to this repository's version, run from this repository:
+
+```sh
+node scripts/ras.mjs upgrade ../my-talk           # list changes only
+node scripts/ras.mjs upgrade ../my-talk --yes     # apply them
+cd ../my-talk
+npm ci            # only when package.json or package-lock.json changed
+npm run export
+```
+
+Without `--yes` (or with `--dry-run`) the command writes nothing; it prints the
+deck's current and new slide-kit versions and lists each kit file as added,
+updated, merged, or unchanged. Kit files are the files `init` generates as
+tooling: `scripts/`, `package.json`, `package-lock.json`, `justfile`,
+`licenses/`, `README.md`, and the copied guides. Kit files that differ from
+this version, including hand-edited ones, are replaced. Before writing, the
+command copies every file it replaces to `.ras/upgrade-backup-<timestamp>/` and
+prints that path. `ras.config.json` and `.gitignore` keep your values and only
+gain missing entries. Content (`slides.md`, `brief.md`, `outline.md`,
+`sources.md`, `review.md`, `theme.css`, `assets/`, `.ras/`, `dist/`, and any
+other file) is never touched. Directories whose `package.json` is not named
+`@ras/slide-kit` are refused.
+
 ## Use with Codex, Claude Code, or open models
 
 All entry points read the same skills and workflow. Model selection belongs to
