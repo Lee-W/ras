@@ -31,7 +31,9 @@ Use `_class` to keep a class on one slide. `class` persists to later slides.
 Themes are CSS files with `/* @theme ras */`; the project owns `theme.css`.
 
 Use `.accent` for coloured emphasis, `.muted` for secondary text, `.credit`
-for image credits, and `.columns` for a two-column comparison. Raw HTML is
+for image credits, `.label` for small diagram or box labels that may sit
+below the body text size (checked against `minCreditSize`), and `.columns`
+for a two-column comparison. Raw HTML is
 enabled for these known local layouts. Ordinary prose, lists, tables, and code
 remain Markdown. Prefer a shorter sentence or split slide to shrinking fonts.
 Do not introduce a new colour-token or metadata grammar.
