@@ -1,3 +1,13 @@
+## v0.9.0 (2026-10-07)
+
+### Feat
+
+- let .label text use the credit size threshold
+
+### Fix
+
+- check slide text inside Marp's svg wrapper and against the content area
+
 ## v0.8.0 (2026-10-04)
 
 ### Feat
