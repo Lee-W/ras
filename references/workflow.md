@@ -105,6 +105,14 @@ the user confirms, while `--plan` produces one outline and stops.
   image. Record use evidence and whether creator/rightsholder credits are required
   in `sources.md`; place required wording in the audience-visible slides.
   Missing images, unknown rights, or missing required credits keep the deck unready.
+- On slides, write counts, quantities, and measurements as numerals (`3 retries`,
+  `9 steps`, `1,163 tokens`), not as words. Numerals read faster from the back of a
+  room. Pronouns such as "the one you already speak" stay words, and speaker notes
+  may spell numbers out.
+- When a slide title is too long for one line, break it on purpose with `<br>` at a
+  phrase boundary (`` `AgentOperator`:<br>a budget across every attempt ``) rather
+  than letting it wrap wherever the width runs out. An automatic wrap can strand a
+  single word on the second line.
 - The optional `profiles/wei.md` describes patterns observed in Wei's examples.
   Apply it when requested or clearly desired, not as universal presentation law.
 

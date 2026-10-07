@@ -131,6 +131,11 @@ are retained in `references/wei-style-study.md` in the RAS source checkout.
   update use other typography and layouts. Dark backgrounds are a common option,
   not a requirement for every Wei presentation.
 
+Wei's explicit preference (2026-10-07): numbers on slides are numerals, never
+spelled-out English words, because digits are easier to read.
+Also (2026-10-07): when a title is too long for one line, break it by hand with
+`<br>` at a phrase boundary rather than letting it wrap.
+
 ## Opening, introduction, and ending
 
 - Do not force an agenda and full biography before the hook. Several recent
