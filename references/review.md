@@ -9,6 +9,14 @@ audience assumptions, transitions, code/claim consistency, source attribution,
 and the payoff. Match the requested scope: review reports findings; create/revise
 can fix them. Identify findings by heading plus page number from the latest build.
 
+Page numbers in user feedback drift. The speaker often reads from a previous PDF,
+and any added or deleted slide shifts every later number. Before acting on
+page-numbered feedback, list the headings at those numbers in the current source
+and compare them with what the feedback describes; the described content usually
+identifies the slide. After the change, report the new total page count and say
+which build the speaker's numbers matched. When giving page numbers back, add the
+heading.
+
 Speaker notes are for delivery, not internal editing history. Check their meaning,
 not just their presence. Estimate section duration and suggest cuts; label estimates
 as untested until the speaker rehearses. Do not impose a fixed slides-per-minute rule.
@@ -33,6 +41,15 @@ count against Marp's count, and writes `dist/verification.json`. Presenter notes
 are also written to `dist/notes.txt`. Notes are not added as PDF annotations.
 The HTML presenter view includes notes; it is a speaker artifact, not a private
 notes channel. Choose a PDF when sharing audience-only slides.
+
+`npm run check` rebuilds `.ras/previews/` from scratch, so it never keeps
+orphans. Artifacts a deck keeps outside that folder (hand-exported screenshot
+folders, contact sheets, a separate PDF) do not follow deletions: a screenshot
+step that only overwrites same-numbered files leaves stale images of removed
+slides. After deleting slides, reconcile the three counts: slides in the source,
+pages in the PDF, and images in any kept screenshot folder. Remove files
+numbered above the slide count, then re-count. A passing HTML-versus-source check
+does not cover a screenshot folder.
 
 Do not modify generated HTML to repair layout. Do not weaken thresholds just to
 make a failure disappear. Intentional full-bleed images are allowed; unexpected

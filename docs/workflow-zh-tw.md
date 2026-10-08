@@ -153,6 +153,16 @@ node /path/to/ras/scripts/ras.mjs upgrade ./my-talk --yes    # 實際寫入
 只補上缺少的規則，既有內容不變。投影片、brief、大綱、來源、審閱紀錄、佈景主題、素材與其他檔案一律不動。
 完成後若套件檔有變更，先執行 `npm ci`，再執行 `npm run export`。
 
+更新工具請使用 `upgrade`，不要從新初始化的簡報手動複製工具檔。
+以 `npm run export` 結束碼為 0 確認結果。RAS 的修補版升級可能只改動
+`package.json` 與 `package-lock.json` 裡的版本字串。
+
+每場演講的專案放在使用者自己的簡報儲存庫或資料夾，一場演講一個目錄
+（例如 `decks/<YYYY-MM>-<topic>/source/`，整個 RAS 專案放在其中），
+不要放在演講主題所談軟體的儲存庫底下。直接把 `init` 執行到該位置，
+規劃筆記放在專案內的 `planning/` 資料夾。產生的輸出（`dist/`、PDF）不提交。
+提交與推送仍由使用者決定。
+
 ## 交付
 
 檢視最新畫面，在來源或主題修正版面問題，再重建並確認結果。
