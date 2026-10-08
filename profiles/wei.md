@@ -136,6 +136,25 @@ spelled-out English words, because digits are easier to read.
 Also (2026-10-07): when a title is too long for one line, break it by hand with
 `<br>` at a phrase boundary rather than letting it wrap.
 
+Type scale (feedback from several rounds): take the baseline from Wei's own
+previous deck, not from a general sense of how large slide text should be. Before
+styling, scan that deck's `<style>` (for example
+`grep -oE 'font-size:\s*[0-9]+px'`) and use the distribution as the bounds.
+Wei's June 2026 conference deck used 140 / 190 / 260 / 360 / 540 / 600px, with hero
+numbers at 260-360px. A theme built for dense tables and code (body and ASCII
+blocks at about 23px, roughly 3% of slide height) applied to a one-idea-per-slide
+deck drew "text too small" and "why so empty" comments in six separate messages;
+fixing slides one by one could not help because the cause was the theme. Compute
+the steps rather than guessing: content column width divided by the font's
+advance (about 0.5em for sans, 0.6em for monospace) gives how many characters
+each step holds. Keep the title at least 1.5 times the body size; closer sizes
+read as one crowd of similar text. Cap the title on slides with a picture or code
+block, or it crowds the content out.
+
+Language label: in English-facing material (slides, notes, docs) call Wei's
+language "Taiwanese Mandarin", never "Chinese", on any caption, label, or speaker
+note. Text in the language itself uses traditional characters and Taiwan wording.
+
 ## Opening, introduction, and ending
 
 - Do not force an agenda and full biography before the hook. Several recent

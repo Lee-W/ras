@@ -157,6 +157,17 @@ existing ones. It never changes slides, briefs, outlines, sources, reviews,
 theme, assets, or other files. Afterwards run `npm ci` if the package files
 changed, then `npm run export`.
 
+Use `upgrade` rather than hand-copying kit files from a freshly initialized deck.
+Confirm the result with `npm run export` exiting 0. A patch-level RAS bump may
+change nothing but the version strings in `package.json` and `package-lock.json`.
+
+Keep each talk's project in the user's own deck repository or folder, one
+directory per talk (for example `decks/<YYYY-MM>-<topic>/source/`, with the
+whole RAS project inside), not under the repository of the software the talk is
+about. Run `init` straight into that location and keep planning notes in a
+`planning/` folder inside the project. Generated output (`dist/`, PDF) is not
+committed. Committing and pushing remain the user's decision.
+
 ## Delivery
 
 Inspect the latest rendered pages. Fix faults in the source or theme, rebuild,
