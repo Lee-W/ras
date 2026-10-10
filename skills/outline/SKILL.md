@@ -23,6 +23,7 @@ description: 與使用者來回討論簡報的 brief 與 outline，確認後才�
 - 確認前，草稿只留在對話中，不寫任何檔案。
 - 確認後寫入 `outline.md`（LAYER 擁有）。只有在 brief 本身有經過確認的變動時，才修改 `brief.md`（CHU² 擁有）。
 - 保留使用者既有的編輯與這次沒有提到的段落。
+- `outline.md` 以頁面標題指稱投影片；頁碼只是方便參考（插頁會位移），不要引用 `slides.md` 的行號。
 - 不碰 `slides.md`、`sources.md`、`theme.css`。
 - 不建置、不匯出、不跑 review，也不渲染簡報。若共用工作流程要求渲染或匯出，本操作不執行。
 - 寫入 `outline.md`（或 `brief.md`）會改變 `contextHash`，既有的 review 會因此變成 stale。

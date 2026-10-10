@@ -79,6 +79,9 @@ Ask only for consequential missing information. State low-risk assumptions and
 continue. A supplied topic or outline is enough to start a draft.
 
 Keep `brief.md` as the evolving brief and `outline.md` as the narrative plan.
+In these files and in `sources.md` and review notes, refer to slides by heading;
+a page number is a convenience that shifts when slides are added or split, and
+`slides.md` line numbers go stale at once, so do not cite them.
 For `--plan`, stop after a concrete outline with section purposes, approximate
 time budget, visual opportunities, and missing sources. For a request to make
 the slides, continue through authoring, rendering, inspection, and fixes without
@@ -138,6 +141,9 @@ npm run preview
 Run commands with that deck as the working directory. `npm ci` installs pinned
 dependencies and Puppeteer's browser; dependency installation can need network
 access. `RAS_BROWSER_PATH` can select an existing supported Chrome/Chromium.
+When calling the Marp CLI by hand, pass `--no-stdin`; without it Marp waits for
+stdin to close when stdin is an open pipe, which hangs non-interactive shells.
+The RAS build already passes it.
 Read `references/marp.md` for the source conventions and `references/review.md`
 for the verification contract. Generated projects carry their own tools and lockfile;
 they build independently of the AI host.

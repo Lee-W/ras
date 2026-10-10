@@ -15,7 +15,7 @@ page-numbered feedback, list the headings at those numbers in the current source
 and compare them with what the feedback describes; the described content usually
 identifies the slide. After the change, report the new total page count and say
 which build the speaker's numbers matched. When giving page numbers back, add the
-heading.
+heading. Do not cite `slides.md` line numbers; they shift with every edit.
 
 Speaker notes are for delivery, not internal editing history. Check their meaning,
 not just their presence. Estimate section duration and suggest cuts; label estimates
