@@ -14,7 +14,8 @@ export { prepareFonts } from './fonts.mjs';
 
 const require = createRequire(import.meta.url);
 export const engineFile = fileURLToPath(new URL('./marp-engine.mjs', import.meta.url));
-export const defaults = { minTextSize: 24, minCodeSize: 18, minCreditSize: 14 };
+export const defaults = { minTextSize: 24, minCodeSize: 18, minCreditSize: 14, allowExportOnCheckFailure: false };
+const booleanSettings = new Set(['allowExportOnCheckFailure']);
 
 export async function browserPath() {
   const selected = process.env.RAS_BROWSER_PATH || await puppeteer.executablePath();
@@ -70,6 +71,7 @@ export async function readConfig(root) {
   const config = existsSync(file) ? JSON.parse(await readFile(file, 'utf8')) : {};
   for (const key of Object.keys(config)) {
     if (!(key in defaults)) throw new Error(`Unknown ras.config.json setting: ${key}`);
+    if (booleanSettings.has(key)) { if (typeof config[key] !== 'boolean') throw new Error(`${key} must be true or false`); continue; }
     if (!Number.isFinite(config[key]) || config[key] <= 0) throw new Error(`${key} must be a positive number`);
   }
   return { ...defaults, ...config };

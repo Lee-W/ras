@@ -41,7 +41,7 @@ export async function build(root = process.cwd()) {
   return { ...manifest, root, dist, source, theme, result };
 }
 
-export async function check(root = process.cwd()) {
+export async function check(root = process.cwd(), { tolerateFailure = false } = {}) {
   const built = await build(root);
   const config = await readConfig(built.root);
   const previews = path.join(built.root, '.ras', 'previews');
@@ -91,13 +91,15 @@ export async function check(root = process.cwd()) {
   await writeFile(path.join(built.root, '.ras', 'check.json'), JSON.stringify(report, null, 2) + '\n');
   for (const problem of report.problems) console.error(problem);
   for (const page of report.pages) for (const problem of page.problems) console.error(`Slide ${page.page}: ${problem}`);
-  if (!report.passed) throw new Error('Verification failed. See .ras/check.json');
-  console.log(`Checked ${report.slides} slides. Visual and factual review remain separate.`);
+  if (!report.passed && !tolerateFailure) throw new Error('Verification failed. See .ras/check.json');
+  if (report.passed) console.log(`Checked ${report.slides} slides. Visual and factual review remain separate.`);
   return { built, report };
 }
 
 export async function exportDeck(root = process.cwd()) {
-  const { built, report } = await check(root);
+  // allowExportOnCheckFailure keeps the failed report and the non-zero exit code; it only lets the PDF be produced.
+  const allowFailure = (await readConfig(path.resolve(root))).allowExportOnCheckFailure;
+  const { built, report } = await check(root, { tolerateFailure: allowFailure });
   await marp(['slides.md', '--no-config', '--html', '--theme-set', 'theme.css', '--allow-local-files', '--browser-path', await browserPath(), '--pdf', '--output', 'slides.pdf'], built.dist);
   const pdf = await PDFDocument.load(await readFile(path.join(built.dist, 'slides.pdf')));
   const pages = pdf.getPageCount();
@@ -105,6 +107,11 @@ export async function exportDeck(root = process.cwd()) {
   if (await projectHash(built.root) !== built.sourceHash) throw new Error('Source changed during export; export again');
   await writeFile(path.join(built.dist, 'verification.json'), JSON.stringify({ ...report, ...await reviewState(built.root), pdfPages: pages }, null, 2) + '\n');
   console.log(`Exported ${pages} PDF pages → dist/slides.pdf`);
+  if (!report.passed) {
+    const count = report.problems.length + report.pages.reduce((sum, page) => sum + page.problems.length, 0);
+    console.warn(`WARNING: exported despite ${count} failed check problem(s) (allowExportOnCheckFailure is true). The PDF is not verified; see .ras/check.json. Exiting with code 1.`);
+    process.exitCode = 1;
+  }
 }
 
 export async function preview(root = process.cwd(), port = 4173) {
