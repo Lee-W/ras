@@ -150,6 +150,13 @@ test('configuration rejects unknown settings, invalid limits, and malformed JSON
     await writeFile(path.join(root, 'ras.config.json'), JSON.stringify({ minTextSize: value }));
     await assert.rejects(readConfig(root), /positive number/);
   }
+  for (const value of [1, 'true', null]) {
+    await writeFile(path.join(root, 'ras.config.json'), JSON.stringify({ allowExportOnCheckFailure: value }));
+    await assert.rejects(readConfig(root), /must be true or false/);
+  }
+  await writeFile(path.join(root, 'ras.config.json'), JSON.stringify({ allowExportOnCheckFailure: true }));
+  assert.equal((await readConfig(root)).allowExportOnCheckFailure, true);
+  assert.equal(defaults.allowExportOnCheckFailure, false);
   await writeFile(path.join(root, 'ras.config.json'), '{"unknown": 24}');
   await assert.rejects(readConfig(root), /Unknown/);
   await writeFile(path.join(root, 'ras.config.json'), '{');

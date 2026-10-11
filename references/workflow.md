@@ -144,6 +144,13 @@ access. `RAS_BROWSER_PATH` can select an existing supported Chrome/Chromium.
 When calling the Marp CLI by hand, pass `--no-stdin`; without it Marp waits for
 stdin to close when stdin is an open pipe, which hangs non-interactive shells.
 The RAS build already passes it.
+By default `npm run export` stops when the layout check fails and writes no PDF.
+Set `"allowExportOnCheckFailure": true` in `ras.config.json` to still produce
+`dist/slides.pdf` for review while keeping the failure visible: `.ras/check.json`
+and `dist/verification.json` keep `passed: false`, the machine status stays
+`failed` (so `ready` is never true), a warning names the problem count, and the
+command still exits 1. `just build` stops on that exit code, but the PDF is
+already written.
 Read `references/marp.md` for the source conventions and `references/review.md`
 for the verification contract. Generated projects carry their own tools and lockfile;
 they build independently of the AI host.

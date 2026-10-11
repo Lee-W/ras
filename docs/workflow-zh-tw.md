@@ -140,6 +140,8 @@ npm run preview
 `npm ci` 安裝固定版本的相依套件與 Puppeteer 瀏覽器，可能需要網路。
 可用 `RAS_BROWSER_PATH` 指定既有、受支援的 Chrome／Chromium。
 手動呼叫 Marp CLI 時請加上 `--no-stdin`；沒加的話，只要標準輸入是開著的管線，Marp 就會等它關閉，在非互動環境卡住。RAS 的建置已經加了。
+預設情況下，版面檢查失敗時 `npm run export` 會中止，不產出 PDF。
+在 `ras.config.json` 設定 `"allowExportOnCheckFailure": true`，即可在檢查失敗時仍產出 `dist/slides.pdf` 供審閱，但失敗訊號不會消失：`.ras/check.json` 與 `dist/verification.json` 的 `passed` 仍為 `false`，機器檢查狀態維持 `failed`（`ready` 不會變成 true），並印出含問題數量的警告，結束碼仍為 1。`just build` 會因這個結束碼中止，但 PDF 已經寫出。
 專案自帶工具與鎖定檔，建置不依賴 AI 宿主。
 來源格式見 [Marp 撰寫指南](marp-zh-tw.md)，驗證方式見[審閱與驗證](review-zh-tw.md)。
 

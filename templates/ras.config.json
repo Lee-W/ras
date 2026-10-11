@@ -1,5 +1,6 @@
 {
   "minTextSize": 24,
   "minCodeSize": 18,
-  "minCreditSize": 14
+  "minCreditSize": 14,
+  "allowExportOnCheckFailure": false
 }
