@@ -6,7 +6,7 @@ import { pathToFileURL } from 'node:url';
 import { createServer } from 'node:http';
 import puppeteer from 'puppeteer';
 import { PDFDocument } from 'pdf-lib';
-import { browserPath, marp, render, projectHash, readConfig, prepareFonts, compileDiagrams } from './project.mjs';
+import { browserPath, marp, render, projectHash, readConfig, prepareFonts, compileDiagrams, kitCss } from './project.mjs';
 import { probeSlide } from './probe.mjs';
 import { reviewState } from './review.mjs';
 
@@ -26,7 +26,7 @@ export async function build(root = process.cwd()) {
   const themeSource = await readFile(path.join(root, 'theme.css'), 'utf8');
   const sourceHash = await projectHash(root);
   if (existsSync(path.join(root, 'assets'))) await cp(path.join(root, 'assets'), path.join(dist, 'assets'), { recursive: true });
-  const theme = themeSource + '\n' + await prepareFonts(dist);
+  const theme = themeSource + '\n' + kitCss + '\n' + await prepareFonts(dist);
   const source = await compileDiagrams(original, root, dist);
   const result = render(source, theme);
   if (!result.count) throw new Error('The source contains no slides');

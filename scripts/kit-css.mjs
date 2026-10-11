@@ -1,0 +1,13 @@
+// RAS kit styles, appended after theme.css at build time. Upgrade replaces this file,
+// so improvements reach existing decks. Kept as a module so it ships with the scripts.
+export const kitCss = `/* RAS kit styles. Appended after theme.css at build time; upgrade replaces this file. */
+/* Code highlight: python box fence with «…» (see references/marp.md). */
+section mark.box{background:transparent;color:inherit;border:2px solid var(--accent,#ffb32d);border-radius:4px;padding:0 6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+section .box-block{display:block;font-family:var(--box-strut-font,monospace);outline:2px solid var(--accent,#ffb32d);outline-offset:-2px;border-radius:4px}
+section .box-text{font-family:var(--box-code-font,'RAS Mono','RAS CJK',monospace)}
+/* Screenshot overlay: <div class="hlshot"><img …><span class="hl" style="left:..%;top:..%;width:..%;height:..%"></span></div> */
+section .hlshot{position:relative}
+section .hlin{display:inline-block;position:relative}
+section .hlin>img{display:block}
+section .hl{position:absolute;border:2px solid var(--accent,#ffb32d);border-radius:4px;box-sizing:border-box}
+`;
