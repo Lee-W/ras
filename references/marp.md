@@ -94,3 +94,52 @@ recoverable. Two other known formatter damages are MD026 stripping a heading's
 trailing punctuation (not recoverable) and MD009 stripping a bare `##`. Make the
 splitter refuse to build when it sees any `^### `. In converted RAS `slides.md`,
 notes live in HTML comments, which formatters leave alone.
+
+## Highlighting code
+
+To frame the part of a code block that a slide teaches, add the word `box` to
+the fence and wrap the part in `«` and `»`:
+
+````markdown
+```python box
+result = «fetch(url, retries=3)»
+```
+````
+
+The build removes the markers, lets Marp colour the code as usual, and puts the
+frame back around the marked characters. Highlight colours are kept, and the
+`<pre>` still scales down when the code is wide. Only fences with the word `box`
+in the info string are touched; every other fence renders exactly as before.
+Raw `<mark>` inside `<pre>` is no longer needed.
+
+- A range on one line becomes an inline frame, `<mark class="box">`, around just
+  that text, such as a whole call or one `retries=3`.
+- A range that crosses a line break becomes a block frame,
+  `<span class="box-block">`, around whole lines, from the first line's start to
+  the last line's end. The block is drawn with an outline, which takes no space,
+  so no line of code moves when the frame is added.
+- Several ranges per block are fine. Ranges must not nest.
+- To show a literal `«` or `»` inside a `box` fence, double it: `««` and `»»`.
+  Markers are read left to right and a doubled character is always the
+  literal, so `«x»»` is not a range closed after `x`; put a space or another
+  character between a marker and a literal of the same kind.
+- An unclosed `«`, a stray `»`, a nested `«` and an empty `«»` stop the build
+  with `Box code block at source line N (first line: "…")` and the reason.
+
+The frame colour is `var(--accent)` with a `#ffb32d` fallback, from the kit
+styles (`scripts/kit-css.mjs`). The build appends them after `theme.css`, so
+`ras upgrade` delivers them, and the engine, to existing decks without touching
+their own theme. A rule in `theme.css` for the same selector is harmless.
+
+To frame a region of a screenshot, put the image in `<span class="hlin">` and
+add one `<span class="hl">` per frame, positioned in percentages of the image:
+
+```html
+<span class="hlin"><img src="assets/dashboard.png" alt="Dashboard" width="900"><span class="hl" style="left:12%;top:30%;width:25%;height:8%"></span></span>
+```
+
+Measure the region in the image's own pixels with any viewer or editor, then
+divide: `left` = x / image width, `top` = y / image height, `width` and `height`
+likewise, each times 100. Do not reuse `.shot`, which is the theme's screenshot
+placeholder box. Check the rendered page: a frame that misses its target is
+only visible there.

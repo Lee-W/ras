@@ -150,6 +150,13 @@ test('configuration rejects unknown settings, invalid limits, and malformed JSON
     await writeFile(path.join(root, 'ras.config.json'), JSON.stringify({ minTextSize: value }));
     await assert.rejects(readConfig(root), /positive number/);
   }
+  for (const value of [1, 'true', null]) {
+    await writeFile(path.join(root, 'ras.config.json'), JSON.stringify({ allowExportOnCheckFailure: value }));
+    await assert.rejects(readConfig(root), /must be true or false/);
+  }
+  await writeFile(path.join(root, 'ras.config.json'), JSON.stringify({ allowExportOnCheckFailure: true }));
+  assert.equal((await readConfig(root)).allowExportOnCheckFailure, true);
+  assert.equal(defaults.allowExportOnCheckFailure, false);
   await writeFile(path.join(root, 'ras.config.json'), '{"unknown": 24}');
   await assert.rejects(readConfig(root), /Unknown/);
   await writeFile(path.join(root, 'ras.config.json'), '{');
@@ -199,5 +206,111 @@ test('every operation skill is registered in the CLI, docs, router and root skil
     assert.ok(sharedSources.has(`skills/${operation}/SKILL.md`), `${operation} must be a docs shared source`);
     assert.ok(router.includes(`[${operation}](../${operation}/SKILL.md)`), `${operation} must be routed`);
     assert.ok(root.includes(`ras:${operation}`), `${operation} must be mentioned in the root SKILL.md`);
+  }
+});
+
+// Highlighting code: ```lang box with «…» markers.
+const boxDeck = body => `---\nmarp: true\ntheme: ras\n---\n${body}\n`;
+const codeOf = html => html.match(/<pre[^>]*><code[^>]*>([\s\S]*?)<\/code><\/pre>/)[1];
+const textOf = html => html.replace(/<[^>]+>/g, '').replace(/&quot;/g, '"').replace(/&#x27;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+function assertNested(html) {
+  const stack = [];
+  for (const [, closing, name] of html.matchAll(/<(\/?)([a-z]+)\b[^>]*>/g)) {
+    if (!closing) stack.push(name);
+    else assert.equal(stack.pop(), name, `Unbalanced </${name}> in ${html}`);
+  }
+  assert.deepEqual(stack, [], `Unclosed tags in ${html}`);
+}
+
+test('box fences frame an inline range, keep highlighting, and drop the markers', async () => {
+  const theme = await readFile(path.join(pluginRoot, 'templates/theme.css'), 'utf8');
+  const result = render(boxDeck('```python box\nx = «f(a=1)» + 2\n```'), theme);
+  const html = result.html[0];
+  assert.match(html, /<pre is="marp-pre" data-auto-scaling="downscale-only"><code class="language-python">/);
+  assert.match(html, /<mark class="box">f\(a=<span class="hljs-number">1<\/span>\)<\/mark>/);
+  assert.match(html, /hljs-number">2</);
+  assert.doesNotMatch(codeOf(html), /[«»]/);
+  assert.equal(textOf(codeOf(html)), 'x = f(a=1) + 2\n');
+  assertNested(codeOf(html));
+});
+
+test('a box that starts or ends inside a highlight span keeps the HTML nested', async () => {
+  const theme = await readFile(path.join(pluginRoot, 'templates/theme.css'), 'utf8');
+  for (const [source, plain] of [
+    ['s = "ab«cd» ef"', 's = "abcd ef"'],
+    ['s = "«ab cd» ef" # «note»', 's = "ab cd ef" # note'],
+    ['«def f(x):» # c\n    return x', 'def f(x): # c\n    return x'],
+    ["«'a' + \"b»\"", "'a' + \"b\""],
+  ]) {
+    const code = codeOf(render(boxDeck('```python box\n' + source + '\n```'), theme).html[0]);
+    assertNested(code);
+    assert.equal(textOf(code), plain + '\n');
+    assert.match(code, /<mark class="box">/);
+    assert.match(code, /hljs-/);
+  }
+  const docstring = codeOf(render(boxDeck("```python box\n«'''doc\nmore»'''\n```"), theme).html[0]);
+  assertNested(docstring);
+  assert.equal(textOf(docstring), "'''doc\nmore'''\n");
+  assert.match(docstring, /box-block/);
+});
+
+test('a box across lines becomes a whole-line block box without adding lines', async () => {
+  const theme = await readFile(path.join(pluginRoot, 'templates/theme.css'), 'utf8');
+  const code = codeOf(render(boxDeck('```python box\nimport os\nresult = «fetch(\n    url,\n    retries=3,\n)» + 1\nprint(result)\n```'), theme).html[0]);
+  assertNested(code);
+  assert.match(code, /<span class="box-block"><span class="box-text">result = fetch\(\n    url,\n    retries=<span class="hljs-number">3<\/span>,\n\) \+ /);
+  assert.equal(code.split('<span class="box-block">').length, 2);
+  assert.doesNotMatch(code, /\n\n/, 'The block box must not create an empty line');
+  assert.equal(textOf(code), 'import os\nresult = fetch(\n    url,\n    retries=3,\n) + 1\nprint(result)\n');
+  assert.match(code, /\) \+ <span class="hljs-number">1<\/span>\n<\/span><\/span>/);
+});
+
+test('fences without the box word are rendered exactly as plain Marp renders them', async () => {
+  const theme = await readFile(path.join(pluginRoot, 'templates/theme.css'), 'utf8');
+  const { Marp } = await import('@marp-team/marp-core');
+  const source = boxDeck('```python\nx = «f(a=1)» + "»»"\n```\n\n```\n«plain»\n```\n\n```python boxed\ny = «1»\n```');
+  const plain = new Marp({ html: true });
+  plain.themeSet.add(theme);
+  assert.deepEqual(render(source, theme).html, plain.render(source, { htmlAsArray: true }).html);
+});
+
+test('box markers must pair up; the error names the block', async () => {
+  const theme = await readFile(path.join(pluginRoot, 'templates/theme.css'), 'utf8');
+  for (const [source, message] of [
+    ['x = «f(1)', /never closed/],
+    ['x = f(1)»', /without a matching/],
+    ['x = «f(«1»)»', /nested/],
+    ['x = «»', /empty/],
+  ]) {
+    assert.throws(() => render(boxDeck('# T\n\n```python box\n' + source + '\n```'), theme), error => {
+      assert.match(error.message, /Box code block at source line 7/);
+      assert.ok(error.message.includes(JSON.stringify(source.split('\n')[0])));
+      assert.match(error.message, message);
+      return true;
+    });
+  }
+});
+
+test('doubled markers are literal characters inside a box fence', async () => {
+  const theme = await readFile(path.join(pluginRoot, 'templates/theme.css'), 'utf8');
+  const code = codeOf(render(boxDeck('```python box\nprint("««x»» «y»")\n```'), theme).html[0]);
+  assertNested(code);
+  assert.equal(textOf(code), 'print("«x» y")\n');
+  assert.match(code, /<mark class="box"><span class="hljs-string">y<\/span><\/mark>/);
+});
+
+test('the Marp CLI engine file applies the same box plugin as render()', async t => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'ras-engine-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const theme = await readFile(path.join(pluginRoot, 'templates/theme.css'), 'utf8');
+  const source = boxDeck('```python box\nx = «f(a=1)»\nfor i in «range(\n    3\n)»:\n    pass\n```\n\n```python\ny = «1»\n```');
+  await writeFile(path.join(root, 'slides.md'), source);
+  await writeFile(path.join(root, 'theme.css'), theme);
+  const { marp } = await import('../scripts/project.mjs');
+  await marp(['slides.md', '--no-config', '--html', '--theme-set', 'theme.css', '--output', 'index.html'], root);
+  const cli = await readFile(path.join(root, 'index.html'), 'utf8');
+  for (const html of render(source, theme).html) {
+    const code = codeOf(html);
+    assert.ok(cli.includes(code), 'CLI output must contain the same code HTML as render()');
   }
 });

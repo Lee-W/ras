@@ -3,14 +3,19 @@ import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { Marp } from '@marp-team/marp-core';
 import puppeteer from 'puppeteer';
 import { diagramFonts } from './fonts.mjs';
+export { kitCss } from './kit-css.mjs';
+import { boxPlugin } from './marp-engine.mjs';
 export { prepareFonts } from './fonts.mjs';
 
 const require = createRequire(import.meta.url);
-export const defaults = { minTextSize: 24, minCodeSize: 18, minCreditSize: 14 };
+export const engineFile = fileURLToPath(new URL('./marp-engine.mjs', import.meta.url));
+export const defaults = { minTextSize: 24, minCodeSize: 18, minCreditSize: 14, allowExportOnCheckFailure: false };
+const booleanSettings = new Set(['allowExportOnCheckFailure']);
 
 export async function browserPath() {
   const selected = process.env.RAS_BROWSER_PATH || await puppeteer.executablePath();
@@ -29,11 +34,11 @@ export function run(command, args, options = {}) {
 }
 
 export async function marp(args, cwd) {
-  await run(process.execPath, [require.resolve('@marp-team/marp-cli/marp-cli.js'), '--no-stdin', ...args], { cwd });
+  await run(process.execPath, [require.resolve('@marp-team/marp-cli/marp-cli.js'), '--no-stdin', '--engine', engineFile, ...args], { cwd });
 }
 
 export function render(markdown, theme) {
-  const engine = new Marp({ html: true });
+  const engine = new Marp({ html: true }).use(boxPlugin);
   engine.themeSet.add(theme);
   const result = engine.render(markdown, { htmlAsArray: true });
   return { ...result, count: result.html.length };
@@ -66,6 +71,7 @@ export async function readConfig(root) {
   const config = existsSync(file) ? JSON.parse(await readFile(file, 'utf8')) : {};
   for (const key of Object.keys(config)) {
     if (!(key in defaults)) throw new Error(`Unknown ras.config.json setting: ${key}`);
+    if (booleanSettings.has(key)) { if (typeof config[key] !== 'boolean') throw new Error(`${key} must be true or false`); continue; }
     if (!Number.isFinite(config[key]) || config[key] <= 0) throw new Error(`${key} must be a positive number`);
   }
   return { ...defaults, ...config };

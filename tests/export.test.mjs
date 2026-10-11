@@ -76,3 +76,42 @@ test('export rejects a truncated PDF before publishing verification.json', async
   assert.equal(actual.getPageCount(), 1);
   await assert.rejects(access(path.join(deck, 'dist/verification.json')), { code: 'ENOENT' });
 });
+
+async function makeFailingDeck(t, allow) {
+  const deck = await makeDeck(t);
+  // A 10px paragraph sits below the 24px body-text threshold, so check must fail.
+  await writeFile(path.join(deck, 'slides.md'), '---\nmarp: true\ntheme: ras\n---\n# First beat\n\n<p style="font-size:10px">Too small to read</p>\n');
+  if (allow !== undefined) await writeFile(path.join(deck, 'ras.config.json'), JSON.stringify({ allowExportOnCheckFailure: allow }));
+  return deck;
+}
+
+test('export stops without a PDF when the check fails and allowExportOnCheckFailure is false or unset', async t => {
+  for (const allow of [undefined, false]) {
+    const deck = await makeFailingDeck(t, allow);
+    await assert.rejects(exportDeck(deck), /Verification failed/);
+    assert.equal(JSON.parse(await readFile(path.join(deck, '.ras/check.json'), 'utf8')).passed, false);
+    await assert.rejects(access(path.join(deck, 'dist/slides.pdf')), { code: 'ENOENT' });
+    await assert.rejects(access(path.join(deck, 'dist/verification.json')), { code: 'ENOENT' });
+  }
+});
+
+test('allowExportOnCheckFailure exports the PDF but keeps the failure signal', async t => {
+  const deck = await makeFailingDeck(t, true);
+  const previousExitCode = process.exitCode;
+  const warnings = [];
+  t.mock.method(console, 'warn', message => warnings.push(message));
+  t.mock.method(console, 'error', () => {});
+  t.after(() => { process.exitCode = previousExitCode; });
+  process.exitCode = undefined;
+  await exportDeck(deck);
+  assert.equal(process.exitCode, 1);
+  assert.match(warnings.join('\n'), /WARNING: exported despite \d+ failed check problem.*\.ras\/check\.json/);
+  assert.equal(JSON.parse(await readFile(path.join(deck, '.ras/check.json'), 'utf8')).passed, false);
+  const report = JSON.parse(await readFile(path.join(deck, 'dist/verification.json'), 'utf8'));
+  assert.equal(report.passed, false);
+  assert.equal(report.pdfPages, report.slides);
+  assert.ok((await readFile(path.join(deck, 'dist/slides.pdf'))).length > 0);
+  const current = await status(deck);
+  assert.equal(current.machine, 'failed');
+  assert.equal(current.ready, false);
+});

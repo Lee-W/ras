@@ -27,7 +27,7 @@ export async function makePrompt(operation, request = '', { chat = false } = {})
   return `# RAS — RAISE A SLIDE\n\nOperation: ${operation}\nPlugin root: ${pluginRoot}\n\nThese are shared RAS instructions for any model. Follow the current host's\npermissions and tool capabilities. Supporting instructions are expanded below.\nRelative script paths refer to the plugin root; deck commands run in the deck.\n\nWith filesystem and shell tools, carry out the operation and verify its output.\nWithout those tools, return a draft with separately labelled file contents\n(brief.md, outline.md, slides.md, sources.md, and any theme.css changes), plus\ncommands for the user to run in an initialized deck. Preserve existing files\nwhen revising. For review, return findings only. For export without tools, give\nthe build commands and say execution is still required. Never claim to have\nwritten files, inspected pages, checked facts, or exported a PDF without evidence.\nFor --plan, return the narrative plan only. Ask for the contents of referenced\nfiles when your host cannot read them. Never invent the contents of a brief.\n\n${sections.join('\n\n')}\n\n## User request\n\n${request || 'Ask for the presentation topic or the target deck.'}\n`;
 }
 
-const deckScripts = ['deck.mjs', 'project.mjs', 'probe.mjs', 'fonts.mjs', 'review.mjs', 'state.mjs', 'memory.mjs'];
+const deckScripts = ['deck.mjs', 'project.mjs', 'probe.mjs', 'fonts.mjs', 'marp-engine.mjs', 'kit-css.mjs', 'review.mjs', 'state.mjs', 'memory.mjs'];
 const deckPackageScripts = ['build', 'check', 'export', 'preview', 'doctor', 'status', 'review:record', 'memory'];
 const deckIgnore = ['node_modules/', 'dist/', '.ras/', '.DS_Store', '*.log'];
 const kitTemplates = ['justfile', 'licenses/README.md'];

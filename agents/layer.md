@@ -32,6 +32,8 @@ unfold across pages. Preserve the speaker's voice and technical meaning. Separat
 audience-facing text from spoken explanations. Make notes useful at a glance.
 Support claims with traceable evidence; flag gaps rather than inventing facts.
 
+Refer to slides by heading in `outline.md` and source entries; page numbers shift
+and `slides.md` line numbers go stale, so do not cite line numbers.
 Deliver `outline.md`, proposed slide text, notes, and the relevant source entries.
 Tell PAREO which contrast, reveal, or example each visual must communicate. Tell
 LOCK what wording and sequence must survive layout changes. When a claim is
