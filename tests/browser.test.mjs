@@ -97,3 +97,47 @@ test('fresh builds remove stale output and checks reject missing or remote resou
   assert.ok(report.problems.some(problem => problem.startsWith('Remote presentation resource:')));
   assert.ok(report.pages[0].problems.some(problem => problem.includes('Missing image')));
 });
+
+test('a block box frames whole lines without moving any line of code', async t => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'ras-box-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const deck = await initDeck(path.join(root, 'talk'));
+  const code = ['import os', 'result = fetch(', '    url,', '    retries=3,', ')', 'print(result)'];
+  const marked = [code[0], 'result = «fetch(', '    url,', '    retries=3,', ')»', code[5]];
+  const slide = (fence, lines) => `<!-- _class: code -->\n# Fetch\n\n\`\`\`${fence}\n${lines.join('\n')}\n\`\`\`\n`;
+  await writeFile(path.join(deck, 'slides.md'), `---\nmarp: true\ntheme: ras\n---\n\n${slide('python', code)}\n---\n\n${slide('python box', marked)}`);
+  await build(deck);
+  const page = await browser.newPage();
+  try {
+    await page.setViewport({ width: 1280, height: 720, deviceScaleFactor: 1 });
+    await page.goto(pathToFileURL(path.join(deck, 'dist/index.html')).href, { waitUntil: 'networkidle0' });
+    const measured = await page.evaluate(() => [...document.querySelectorAll('svg[data-marpit-svg] section')].map(section => {
+      const pre = section.querySelector('[is="marp-pre"]');
+      const code = pre.querySelector('code');
+      const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT);
+      const tops = [];
+      let atStart = true;
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        for (let index = 0; index < node.data.length; index++) {
+          if (atStart && node.data[index] !== '\n') {
+            const range = document.createRange();
+            range.setStart(node, index);
+            range.setEnd(node, index + 1);
+            const rect = range.getBoundingClientRect();
+            tops.push([Math.round(rect.top * 100) / 100, Math.round(rect.left * 100) / 100]);
+          }
+          atStart = node.data[index] === '\n';
+        }
+      }
+      return { tops, text: code.textContent, scaling: pre.dataset.autoScaling, is: pre.getAttribute('is'), box: section.querySelectorAll('.box-block').length };
+    }));
+    assert.equal(measured[0].tops.length, code.length);
+    assert.deepEqual(measured[1].tops, measured[0].tops, 'Every line must keep its position when boxed');
+    assert.equal(measured[1].text, measured[0].text);
+    assert.equal(measured[1].box, 1);
+    for (const slideInfo of measured) {
+      assert.equal(slideInfo.scaling, 'downscale-only');
+      assert.equal(slideInfo.is, 'marp-pre');
+    }
+  } finally { await page.close(); }
+});
