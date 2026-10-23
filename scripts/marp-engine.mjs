@@ -35,8 +35,9 @@ export function parseMarkers(source) {
 
 // Single-line ranges become inline boxes; ranges that cross a newline become
 // block boxes covering whole lines, trailing newline included. A block box has
-// an inner .box-text span so kit.css can give the block the font of the pre (its line strut) and the
-// text the code font; that keeps every line at the same height as outside the box.
+// an inner .box-text span so kit.css can give the block the same font stack as the pre (its line strut;
+// the block sits inside code, so it would otherwise inherit the mono font) and the text the code font;
+// that keeps every line at the same height as outside the box.
 function boxes(text, ranges) {
   const inline = [];
   const blocks = [];
