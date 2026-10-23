@@ -1,3 +1,14 @@
+## v0.11.0 (2026-10-23)
+
+### Feat
+
+- let export finish the PDF when the layout check fails
+- frame key snippets in code blocks with «…» markers
+
+### Fix
+
+- keep boxed code lines aligned on Linux
+
 ## v0.10.0 (2026-10-07)
 
 ### Feat
