@@ -3,7 +3,8 @@
 export const kitCss = `/* RAS kit styles. Appended after theme.css at build time; upgrade replaces this file. */
 /* Code highlight: python box fence with «…» (see references/marp.md). */
 section mark.box{background:transparent;color:inherit;border:2px solid var(--accent,#ffb32d);border-radius:4px;padding:0 6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-section .box-block{display:block;font-family:var(--box-strut-font,monospace);outline:2px solid var(--accent,#ffb32d);outline-offset:-2px;border-radius:4px}
+/* .box-block uses Marp's --fontStack-monospace, the same value as the default pre (its line strut), with the same fallback. A bare monospace resolves to a different font on Linux. */
+section .box-block{display:block;font-family:var(--fontStack-monospace,ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace);outline:2px solid var(--accent,#ffb32d);outline-offset:-2px;border-radius:4px}
 section .box-text{font-family:var(--box-code-font,'RAS Mono','RAS CJK',monospace)}
 /* Screenshot overlay: <div class="hlshot"><img …><span class="hl" style="left:..%;top:..%;width:..%;height:..%"></span></div> */
 section .hlshot{position:relative}
