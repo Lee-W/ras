@@ -151,6 +151,24 @@ and `dist/verification.json` keep `passed: false`, the machine status stays
 `failed` (so `ready` is never true), a warning names the problem count, and the
 command still exits 1. `just build` stops on that exit code, but the PDF is
 already written.
+
+To turn a finished deck into an article draft, run `npm run blog` in the deck.
+It converts `slides.md` mechanically (no model, no network) into `blog/index.md`:
+simple YAML frontmatter (title, date, optional description) plus plain Markdown.
+Headings are re-levelled, `box` code blocks lose their `«…»` markers, directive
+comments disappear, and speaker notes are kept as `<!-- note: … -->` comments after
+their slide so they can guide the rewrite without being published as body text.
+Raw HTML layouts such as `.columns` and every `.credit` are kept as they are; `hl`
+frames are dropped with a warning. Referenced images are copied under the same
+relative paths. An existing `index.md` is never replaced unless you pass `--force`
+(only `index.md` and the images are overwritten); `--out <dir>` chooses another
+folder. `--screenshots` puts a slide screenshot at the top of each section instead
+of the original images: it reuses current `npm run check` previews, otherwise it
+runs `check` first, which rebuilds `dist/` and removes any earlier PDF.
+The result is a draft. Conversion is not factual or visual review, and image
+permissions in `sources.md` were obtained for the presentation, so confirm them
+again before publishing the article.
+
 Read `references/marp.md` for the source conventions and `references/review.md`
 for the verification contract. Generated projects carry their own tools and lockfile;
 they build independently of the AI host.

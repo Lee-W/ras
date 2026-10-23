@@ -61,6 +61,7 @@ test('initialization copies a portable project and refuses to overwrite one', as
   const lock = JSON.parse(await readFile(path.join(target, 'package-lock.json'), 'utf8'));
   assert.deepEqual(pkg.dependencies, lock.packages[''].dependencies);
   assert.equal(pkg.scripts.export, 'node scripts/deck.mjs export');
+  assert.equal(pkg.scripts.blog, 'node scripts/blog.mjs');
   assert.equal(pkg.bin, undefined);
   assert.equal(pkg.license, 'UNLICENSED', 'Initialization must not license the speaker\'s own content');
   assert.equal(lock.packages[''].license, pkg.license);
@@ -83,7 +84,7 @@ test('initialization copies a portable project and refuses to overwrite one', as
       if (!/^https?:/.test(match[1])) await readFile(path.resolve(target, path.dirname(guide), match[1]));
     }
   }
-  for (const name of ['deck', 'project', 'probe', 'fonts', 'review', 'state', 'memory']) {
+  for (const name of ['deck', 'project', 'probe', 'fonts', 'review', 'state', 'memory', 'blog']) {
     const script = await readFile(path.join(target, `scripts/${name}.mjs`), 'utf8');
     assert.doesNotMatch(script, /\/Users\/|\.config\/|\.\.\/\.\.\/ras/);
   }

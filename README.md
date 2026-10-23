@@ -72,6 +72,7 @@ builds use local fonts, images, and pre-rendered Mermaid diagrams.
 | `npm run status` | Current machine/review states and stale evidence |
 | `npm run review:record -- <review.json>` | Record an actual visual or factual review |
 | `npm run memory -- list` | Read the selected project's saved preferences |
+| `npm run blog` | Draft a generic Markdown article in `blog/index.md` from `slides.md`; `--screenshots`, `--out <dir>`, `--force` |
 
 Generated projects also include an optional [Just](https://just.systems/man/en/)
 command entry point. Inside the generated project, `just deps` installs its

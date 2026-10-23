@@ -70,6 +70,7 @@ npm run preview
 | `npm run status` | 顯示機器檢查、審閱狀態，以及過期的證據 |
 | `npm run review:record -- <review.json>` | 記錄實際完成的視覺或事實審閱 |
 | `npm run memory -- list` | 讀取目前專案儲存的偏好 |
+| `npm run blog` | 由 `slides.md` 產生通用 Markdown 文章草稿 `blog/index.md`；可加 `--screenshots`、`--out <dir>`、`--force` |
 
 產生的專案也會附上 [Just](https://just.systems/man/en/) 指令入口。
 如果已安裝 Just，可在簡報專案內用 `just deps` 安裝套件、`just doctor` 診斷環境，

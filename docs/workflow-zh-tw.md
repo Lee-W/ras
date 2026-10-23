@@ -145,6 +145,16 @@ npm run preview
 專案自帶工具與鎖定檔，建置不依賴 AI 宿主。
 來源格式見 [Marp 撰寫指南](marp-zh-tw.md)，驗證方式見[審閱與驗證](review-zh-tw.md)。
 
+在簡報專案內執行 `npm run blog`，會用機械轉換（不呼叫模型、不連網）把 `slides.md` 轉成
+`blog/index.md`：簡單的 YAML frontmatter（title、date，有設定才輸出 description）加上通用 Markdown。
+標題層級會重新調整，`box` 程式碼區塊會拿掉 `«…»` 標記，指令註解會消失，講者備註則以
+`<!-- note: … -->` 註解留在該頁內容之後，改寫時可以參考，但不會當成正文發出去。
+`.columns` 等 raw HTML 版面與所有 `.credit` 會原樣保留；`hl` 定位框會刪除並印出警告。
+引用的圖片會複製到相同的相對路徑。已存在的 `index.md` 不會被取代，除非加 `--force`
+（只覆寫 `index.md` 與圖片）；`--out <dir>` 可指定其他資料夾。`--screenshots` 會在每一節最前面放該頁截圖，
+取代原圖：目前有效的 `npm run check` 預覽會直接沿用，否則先執行 `check`，這會重建 `dist/` 並移除先前的 PDF。
+輸出只是草稿：轉換不等於事實或視覺審閱；`sources.md` 的圖片授權是為簡報取得的，公開成文章前要重新確認。
+
 要把既有簡報的工具更新到目前的 RAS 版本：
 
 ```sh
@@ -156,6 +166,7 @@ node /path/to/ras/scripts/ras.mjs upgrade ./my-talk --yes    # 實際寫入
 `licenses/`、`README.md` 與複製進來的指南），並先把每個被替換的檔案備份到
 `.ras/upgrade-backup-<時間戳記>/`；`ras.config.json` 只補上缺少的設定、`.gitignore`
 只補上缺少的規則，既有內容不變。投影片、brief、大綱、來源、審閱紀錄、佈景主題、素材與其他檔案一律不動。
+
 完成後若套件檔有變更，先執行 `npm ci`，再執行 `npm run export`。
 
 更新工具請使用 `upgrade`，不要從新初始化的簡報手動複製工具檔。
