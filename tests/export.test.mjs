@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { PDFDocument } from 'pdf-lib';
 import { exportDeck, preview } from '../scripts/deck.mjs';
+import { exportBlog } from '../scripts/blog.mjs';
 import { initDeck } from '../scripts/ras.mjs';
 import { recordReview, status } from '../scripts/review.mjs';
 
@@ -114,4 +115,39 @@ test('allowExportOnCheckFailure exports the PDF but keeps the failure signal', a
   const current = await status(deck);
   assert.equal(current.machine, 'failed');
   assert.equal(current.ready, false);
+});
+
+test('blog screenshots reuse fresh check previews without rebuilding dist', async t => {
+  const deck = await makeDeck(t);
+  await exportDeck(deck);
+  const pdf = await readFile(path.join(deck, 'dist/slides.pdf'));
+  await exportBlog(deck, { screenshots: true });
+  assert.deepEqual(await readFile(path.join(deck, 'dist/slides.pdf')), pdf, 'a current export must keep its PDF');
+  for (const name of ['slide-001.png', 'slide-002.png']) {
+    assert.deepEqual(await readFile(path.join(deck, 'blog/slides', name)), await readFile(path.join(deck, '.ras/previews', name)));
+  }
+  assert.match(await readFile(path.join(deck, 'blog/index.md'), 'utf8'), /!\[First beat\]\(slides\/slide-001\.png\)/);
+});
+
+test('blog screenshots run check when previews are stale', async t => {
+  const deck = await makeDeck(t);
+  await exportDeck(deck);
+  await writeFile(path.join(deck, 'slides.md'), '---\nmarp: true\ntheme: ras\n---\n# First beat\n\n---\n\n# Second beat\n\n---\n\n# Third beat\n');
+  await exportBlog(deck, { screenshots: true });
+  for (const name of ['slide-001.png', 'slide-002.png', 'slide-003.png']) {
+    assert.deepEqual(await readFile(path.join(deck, 'blog/slides', name)), await readFile(path.join(deck, '.ras/previews', name)));
+  }
+  await assert.rejects(access(path.join(deck, 'blog/slides/slide-004.png')), { code: 'ENOENT' });
+});
+
+test('blog screenshots refuse to overwrite different existing screenshots without --force', async t => {
+  const deck = await makeDeck(t);
+  await exportDeck(deck);
+  await exportBlog(deck, { screenshots: true });
+  const shot = path.join(deck, 'blog/slides/slide-001.png');
+  await writeFile(shot, 'edited by hand');
+  await rm(path.join(deck, 'blog/index.md'));
+  await assert.rejects(exportBlog(deck, { screenshots: true }), error => /different content/.test(error.message) && error.message.includes(path.join('blog', 'slides', 'slide-001.png')) && /--force/.test(error.message));
+  assert.equal(await readFile(shot, 'utf8'), 'edited by hand');
+  await assert.rejects(access(path.join(deck, 'blog/index.md')), { code: 'ENOENT' });
 });

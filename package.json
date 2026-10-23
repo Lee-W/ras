@@ -22,6 +22,7 @@
     "status": "node scripts/review.mjs status",
     "review:record": "node scripts/review.mjs record",
     "memory": "node scripts/memory.mjs",
+    "blog": "node scripts/blog.mjs",
     "test": "node --test --test-concurrency=1 tests/*.test.mjs",
     "test:mutation": "node scripts/mutation-check.mjs",
     "test:release": "node scripts/release-check.mjs",
