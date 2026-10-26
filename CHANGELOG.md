@@ -1,3 +1,9 @@
+## v0.12.0 (2026-10-26)
+
+### Feat
+
+- turn a deck into a Markdown blog draft with npm run blog
+
 ## v0.11.0 (2026-10-23)
 
 ### Feat
