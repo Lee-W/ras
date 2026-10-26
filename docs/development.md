@@ -27,8 +27,7 @@ The documentation server is a repository tool and is not copied into generated d
 `.github/workflows/ci.yml` runs on pull requests and manual dispatch, and can be
 called by the main-branch release workflow. Its matrix covers Ubuntu 24.04 and
 macOS 15 on Node 22.18.0 and 26.9.0. Each job installs locked dependencies and the
-Puppeteer-pinned Chrome, validates repository source, runs tests and both
-export/preview mutations, and initializes/installs/exports a standalone starter
+Puppeteer-pinned Chrome, validates repository source, runs tests, and initializes/installs/exports a standalone starter
 deck outside the checkout. That export includes Mermaid, fonts, notes, PNGs,
 and a PDF. Generated media is temporary and is not committed or published.
 
@@ -43,7 +42,6 @@ Run locally:
 npm ci
 npm run validate
 npm test
-npm run test:mutation
 npm run test:release
 actionlint .github/workflows/ci.yml .github/workflows/bumpversion.yml
 ```

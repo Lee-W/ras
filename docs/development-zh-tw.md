@@ -22,7 +22,7 @@
 
 `.github/workflows/ci.yml` 在 PR 與手動觸發時執行，也可由主分支的發布工作流程呼叫。
 測試矩陣涵蓋 Ubuntu 24.04、macOS 15，以及 Node 22.18.0、26.9.0。
-每個工作會安裝鎖定版本的相依套件與 Puppeteer 指定的 Chrome、驗證儲存庫來源、執行測試及匯出／預覽突變測試，
+每個工作會安裝鎖定版本的相依套件與 Puppeteer 指定的 Chrome、驗證儲存庫來源、執行測試，
 並在 checkout 目錄外初始化、安裝與匯出獨立起始簡報。
 匯出涵蓋 Mermaid、字型、備註、PNG 與 PDF；產生的媒體只作暫存，不提交或發布。
 
@@ -51,7 +51,6 @@ flowchart TD
 npm ci
 npm run validate
 npm test
-npm run test:mutation
 npm run test:release
 actionlint .github/workflows/ci.yml .github/workflows/bumpversion.yml
 ```

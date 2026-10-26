@@ -57,14 +57,14 @@ pinned Chromium via Puppeteer 25.11.0. The Node 22.18.0 runtime was downloaded
 from nodejs.org and checked against the official SHA-256 manifest.
 
 - Plugin manifest validator and all six skill entries passed validation.
-- Full test suite: 31 tests passed on each Node version (including three preview and seven source-policy subtests). Node 26.9.0 used `npm test`; Node 22.18.0 used the same test files with `node --test --test-reporter=tap tests/*.test.mjs`. Coverage includes portable prompts, parsing/notes, initialization, source hashes, layout/asset failures, playback, PDF verification, encoded path traversal, source-file policy for indexed/unstaged/untracked contents, mutation-runner error handling, copied font licenses, and configuration/browser/child-process errors.
+- Full test suite: 31 tests passed on each Node version (including three preview and seven source-policy subtests). Node 26.9.0 used `npm test`; Node 22.18.0 used the same test files with `node --test --test-reporter=tap tests/*.test.mjs`. Coverage includes portable prompts, parsing/notes, initialization, source hashes, layout/asset failures, playback, PDF verification, encoded path traversal, source-file policy for indexed/unstaged/untracked contents, mutation-runner error handling (since removed), copied font licenses, and configuration/browser/child-process errors.
 - An independently initialized project outside the repository installed dependencies with `npm ci`. Full starter-deck export, including Mermaid, HTML, notes, ten PNGs, and a ten-page PDF, passed on both Node versions using that project's own dependencies.
 - All ten original starter-deck previews were visually inspected after the final theme changes. HTML/PNG counts and the actual PDF count agree.
 - Reference fixtures and their media are not retained in this repository. Dependencies, fonts, and generated artifacts are excluded from Git. Repository templates contain original generic examples only.
 
 The shared workflow has Codex/Claude Code manifests and a model-neutral prompt entry. Claude Code's [official plugin reference](https://code.claude.com/docs/en/plugins-reference#skills) confirms automatic discovery of the root `skills/` directory without a manifest `skills` field. The extra `skills`/`interface` fields are in `.codex-plugin/plugin.json`, not the portable root manifest. CLI syntax for Codex's local provider and Ollama was checked against installed CLI help. Plugin installation in new host sessions and real generation with a particular open model have not been exercised; prompt expansion and output generation are different checks. Direct Ollama uses explicit `--chat` mode and produces draft file contents for the user to save.
 
-## Regression and mutation checks
+## Regression checks
 
 The export test produces a real two-page PDF and asserts that `pdfPages` equals
 both the slide count and the parsed PDF count. A second test injects a valid,
@@ -77,34 +77,12 @@ paths. `/index.html` returns 200; `/%2e%2e%2fslides.md` and `/..%2fslides.md`
 return 404. A plain `/../../../etc/passwd` path is unsuitable because URL
 normalization can remove its traversal before the boundary check runs.
 
-`npm run test:mutation` runs a passing baseline and two mutations in a temporary
-copy created with `mkdtemp`. Each mutation starts from the original `deck.mjs`:
-
-| Mutation | Expected failing assertion |
-| --- | --- |
-| Remove the PDF page-count comparison | The truncated-PDF test reports a missing rejection |
-| Remove `startsWith(base + path.sep)` from the preview guard | Both encoded paths return 200 instead of 404 |
-
-Both mutations were caught on Node 26.9.0. Before/after workspace snapshots check
-SHA-256 contents, paths, file modes, and symlink targets for files selected by
-`git ls-files --cached --others --exclude-standard -z`. This includes tracked
-files and non-ignored untracked files, while omitting ignored local caches and
-assets. Cleanup and the final snapshot are both attempted after a test failure.
-A single error is rethrown unchanged; simultaneous test/cleanup/snapshot failures
-are retained together in an `AggregateError`. Repository source was not mutated.
-Changing `path.join` to `path.resolve` is not the tested mutation: the directory
-boundary check is the relevant guard.
-
-Three CLI regression tests deliberately fail a baseline in temporary Git
-repositories. Changes excluded by `.gitignore` or `.git/info/exclude` leave the
-snapshot unchanged; changes to tracked or non-ignored untracked files report both
-the original baseline failure and the snapshot failure. In a separate one-off
-manual verification on 2026-09-24, temporary copies removed ignore filtering or
-replaced `AggregateError` with the last error; the corresponding named regression
-assertions failed for both mutations. These two mutation procedures are not
-included in `npm test` or `npm run test:mutation`; `npm test` exercises the
-unmodified runner's regression tests, and `test:mutation` repeats only the two
-export/preview mutations listed above.
+Both guards are covered by negative tests in `npm test`
+(`tests/export.test.mjs` for the truncated PDF, `tests/preview.test.mjs` for the
+encoded paths). A former `test:mutation` script that removed each guard in a temporary
+copy and re-ran those tests was dropped: the negative tests already fail when a
+guard is removed, and the script duplicated them at the cost of a second runner
+to maintain.
 
 The file-policy check uses an allowlist of source paths plus regular-file and
 UTF-8 checks on staged blobs, tracked working copies, and non-ignored untracked
@@ -175,7 +153,7 @@ ok 21 - validation explicitly reports skipped source checks without Git metadata
 # duration_ms 8002.287125
 ```
 
-Separate output excerpts from `npm run test:mutation` on Node 26.9.0 (exit 0):
+Separate output excerpts from the retired `npm run test:mutation` on Node 26.9.0 (exit 0):
 
 ```text
 CAUGHT: PDF page-count guard — export rejects a truncated PDF before publishing verification.json
@@ -192,7 +170,7 @@ Validated locally on 2026-09-25, macOS arm64 with Node 26.9.0:
 
 - `npm test`: 31 passed, 0 failed, including complete role instructions in the
   portable and chat-only prompts.
-- `npm run test:mutation`: both export/preview mutations caught; all 48 tracked
+- `npm run test:mutation` (retired): both export/preview mutations caught; all 48 tracked
   and non-ignored untracked source files unchanged.
 - `npm run test:release`: an isolated first release synchronized all five version
   files, retained dependency pins, and generated the tag, changelog, and release
@@ -239,7 +217,7 @@ Validated locally on 2026-09-25, macOS arm64:
 - Memory tests cover project isolation, explicit replacement, preservation of
   unrelated entries, malformed state, symlink rejection, Git exclusion, portable
   CLI use, and remember/retro prompts in tool-capable and chat-only modes.
-- `npm run test:mutation` caught both named PDF/preview mutations and reported
+- `npm run test:mutation` (retired) caught both named PDF/preview mutations and reported
   `Workspace unchanged: 59 files checked (tracked and non-ignored untracked files).`
 - `npm run test:release` passed the first release, immediate rerun, docs-only
   follow-up, and later patch release on Node 26.9.0. The patch scenario preserves
@@ -291,7 +269,6 @@ Reproduce from the repository:
 npm ci
 npm run validate
 npm test
-npm run test:mutation
 node scripts/ras.mjs init /path/to/new-talk
 ```
 

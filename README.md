@@ -296,7 +296,6 @@ and the limits of model/host testing.
 npm ci
 npm run validate
 npm test
-npm run test:mutation
 ```
 
 GitHub CI runs these checks plus a standalone starter export on Ubuntu/macOS
