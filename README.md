@@ -121,7 +121,9 @@ command copies every file it replaces to `.ras/upgrade-backup-<timestamp>/` and
 prints that path. `ras.config.json` and `.gitignore` keep your values and only
 gain missing entries. Content (`slides.md`, `brief.md`, `outline.md`,
 `sources.md`, `review.md`, `theme.css`, `assets/`, `.ras/`, `dist/`, and any
-other file) is never touched. Directories whose `package.json` is not named
+other file) is never touched. If `upgrade` adds a new configuration key, the changed
+`ras.config.json` makes existing checks and reviews stale; rerun `npm run check`
+and redo the review. Directories whose `package.json` is not named
 `@ras/slide-kit` are refused.
 
 ## Use with Codex, Claude Code, or open models
@@ -240,9 +242,8 @@ review, export, and plan-only routes. Role files provide distinct voices and
 original example lines. Ask for plain output to omit the character labels and
 mannerisms. A single model uses successive passes and reports that honestly.
 
-Collaboration follows the user's language, defaulting to Taiwanese Mandarin when
-it is unclear, independently of slide language; an explicit request sets the
-conversation language. 🎧 CHU² frames the aim
+Collaboration language follows [the interaction rules](references/voice.md).
+🎧 CHU² frames the aim
 and delivery, while working roles respond to the preceding pass's concrete finding
 in their own rhythm. For example, 🎤 LAYER can propose keeping the conclusion on
 the slide and moving background into notes; 🎸 LOCK then picks up that decision
@@ -267,11 +268,8 @@ source, brief, outline, or sources change. Export includes those states and stay
 available for drafts. Live talk duration remains an estimate until rehearsed.
 See [the review contract](references/review.md).
 
-Follow [image rights and credits](references/image-rights.md) for every supplied
-or selected image, including screenshots and backgrounds. Record the use basis
-and whether a credit is required in `sources.md`; inspect required notices in
-the audience HTML/PDF. Unknown rights or missing credits keep the deck unverified.
-These are reviewer checks, not an automatic legal clearance by the build scripts.
+Every supplied or selected image follows [image rights and credits](references/image-rights.md);
+unknown rights or missing credits keep the deck unverified.
 Generated projects include the same guide. `licenses/README.md` explains the
 licence scope; `licenses/ras/MIT.txt` retains the standard MIT licence for the
 included RAS tools and templates. The speaker chooses terms for their own content.

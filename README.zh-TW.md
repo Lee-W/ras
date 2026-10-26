@@ -114,6 +114,7 @@ slide-kit 版本，並把每個工具檔標示為新增、更新、合併或不�
 `ras.config.json` 與 `.gitignore` 保留既有設定，只補上缺少的項目。
 內容檔（`slides.md`、`brief.md`、`outline.md`、`sources.md`、`review.md`、`theme.css`、
 `assets/`、`.ras/`、`dist/` 與其他任何檔案）一律不動。
+若 `upgrade` 補上新的設定鍵，`ras.config.json` 內容改變會讓既有 check 與 review 變 stale，需重跑 `npm run check` 並重做 review。
 `package.json` 名稱不是 `@ras/slide-kit` 的目錄會被拒絕。
 
 ## 搭配 Codex、Claude Code 或開放模型
@@ -213,7 +214,7 @@ RAS 不會代選或下載模型，也不會修改 provider 設定。
 講者決定演講內容，角色風格用於協作對話，投影片風格則依每份簡報選擇。
 若希望使用一般語氣，可以要求省略角色標籤與口吻。
 
-協作跟隨使用者的語言，無法判斷時預設臺灣華語，與投影片語言分開；使用者明確指定時依其要求。🎧 CHU² 定方向與收尾，
+協作語言依[互動規則](references/voice.md)；🎧 CHU² 定方向與收尾，
 工作角色則在交棒時接住前一輪的具體發現，用自己的節奏說明下一步。
 例如，🎤 LAYER 提出「結論留在頁面上，背景移到備註」後，
 🎸 LOCK 會接下這個決定並說明要如何修改與檢查。
@@ -252,9 +253,7 @@ flowchart TD
 匯出可用於草稿，驗證報告會保留實際狀態；上台時間在排練前都只是估計。
 詳見[審閱與驗證](docs/review-zh-tw.md)。
 
-所有提供或選用的圖片（含截圖與背景）都依[圖片權利與標示](docs/image-rights-zh-tw.md)查核。
-在 `sources.md` 記錄使用依據與標示判定，並在觀眾版 HTML／PDF 檢查必要文字。
-未知權利或漏標時，簡報維持未完成審閱；這是審閱者的查核，建置腳本不會自動判定合法使用。
+所有提供或選用的圖片都依[圖片權利與標示](docs/image-rights-zh-tw.md)查核；未知權利或漏標時，簡報維持未完成審閱。
 獨立專案自帶相同指南；`licenses/README.md` 說明授權適用範圍，
 `licenses/ras/MIT.txt` 保留隨附 RAS 工具與範本的標準 MIT 授權。講者自行決定內容的授權。
 建置與匯出會將此目錄保留在 `dist/licenses/`。
