@@ -165,9 +165,12 @@ node /path/to/ras/scripts/ras.mjs upgrade ./my-talk --yes    # 實際寫入
 升級只替換產生的工具檔（`scripts/`、`package.json`、`package-lock.json`、`justfile`、
 `licenses/`、`README.md` 與複製進來的指南），並先把每個被替換的檔案備份到
 `.ras/upgrade-backup-<時間戳記>/`；`ras.config.json` 只補上缺少的設定、`.gitignore`
-只補上缺少的規則，既有內容不變。投影片、brief、大綱、來源、審閱紀錄、佈景主題、素材與其他檔案一律不動。
+只補上缺少的規則，既有內容不變。`package.json` 採合併而非覆蓋：RAS 設定 `scripts`、`engines`、
+`type`、`overrides`、`version` 與自身相依套件的版本，你自己加的相依套件、script 與頂層欄位會保留。
+若簡報有額外相依套件，`package-lock.json` 不會被覆蓋，輸出會提示執行 `npm install`。
+`.gitignore` 裡舊的 `.ras/` 規則會換成 `.ras/*`，並重新納入 `reviews.json` 與 `memory.json`。投影片、brief、大綱、來源、審閱紀錄、佈景主題、素材與其他檔案一律不動。
 
-完成後若套件檔有變更，先執行 `npm ci`，再執行 `npm run export`。
+完成後若套件檔有變更，先執行 `npm ci`（輸出要求時改用 `npm install`），再執行 `npm run export`。
 
 更新工具請使用 `upgrade`，不要從新初始化的簡報手動複製工具檔。
 以 `npm run export` 結束碼為 0 確認結果。RAS 的修補版升級可能只改動

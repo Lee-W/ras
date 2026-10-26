@@ -1,9 +1,11 @@
 # Project memory and retrospectives
 
 Memory belongs to the selected presentation project. Store accepted entries in
-`.ras/memory.json`, which initialized projects exclude from Git. Never read a
-home-directory memory store or another project's memory implicitly. Moving a
-project without its ignored `.ras/` folder does not transfer its memory. To reuse
+`.ras/memory.json`. Initialized projects keep this file (and `.ras/reviews.json`)
+in Git while ignoring the rest of `.ras/`, so memory travels with a clone of the
+deck's repository. Never read a home-directory memory store or another project's
+memory implicitly. Moving a project without its `.ras/memory.json` (for example
+copying files rather than cloning) does not transfer its memory. To reuse
 an entry elsewhere, have the user select its text and destination explicitly.
 Memory is not bundled into exported slides or into the public plugin repository.
 

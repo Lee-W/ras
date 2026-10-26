@@ -249,7 +249,7 @@ flowchart TD
 `licenses/ras/MIT.txt` 保留隨附 RAS 工具與範本的標準 MIT 授權。講者自行決定內容的授權。
 建置與匯出會將此目錄保留在 `dist/licenses/`。
 
-`ras:remember` 將明確要求記住的偏好存入所選專案的 `.ras/memory.json`，該檔案由 Git 忽略。
+`ras:remember` 將明確要求記住的偏好存入所選專案的 `.ras/memory.json`，該檔案納入簡報的 Git 儲存庫。
 `ras:retro` 從實際工作階段提出經驗，儲存使用者選定的項目。
 相關條目會協助後續操作，但不會蓋過目前需求；也不會讀取家目錄記憶庫或隨投影片匯出。
 詳見[專案記憶](docs/memory-zh-tw.md)。
