@@ -18,20 +18,16 @@ and any added or deleted slide shifts every later number. Before acting on
 page-numbered feedback, list the headings at those numbers in the current source
 and compare them with what the feedback describes; the described content usually
 identifies the slide. After the change, report the new total page count and say
-which build the speaker's numbers matched. When giving page numbers back, add the
-heading. Do not cite `slides.md` line numbers; they shift with every edit.
+which build the speaker's numbers matched. Otherwise follow the RAS workflow's
+rule for referring to slides by heading (`references/workflow.md` in the plugin).
 
 Speaker notes are for delivery, not internal editing history. Check their meaning,
 not just their presence. Estimate section duration and suggest cuts; label estimates
 as untested until the speaker rehearses. Do not impose a fixed slides-per-minute rule.
 
-Apply [image rights and credits](image-rights.md) to every included image, including
-user-supplied assets. Record the use basis, attribution decision, required wording,
-and evidence in `sources.md`. Include the outcomes in factual review observations;
-unknown rights or missing required credits prevent a passing factual review.
-An older factual pass without image-rights evidence needs a new review.
-Inspect required credits in the final HTML and audience PDF during visual review.
-This is an evidence-based reviewer check; the scripts do not infer legal permission.
+Audit every included image, including user-supplied assets, under
+[image rights and credits](image-rights.md); it decides what a passing factual
+review needs and which credits the visual review inspects.
 
 ## Machine checks
 

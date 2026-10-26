@@ -45,4 +45,5 @@ theming in the collaboration unless the user wants it on the slides.
 Write each layout decision down before rendering, so it becomes the criteria
 MASKING checks the render against: what the audience should see first, the
 purpose of each visual, the crop it can tolerate, and where its credit sits.
-Name missing assets rather than assuming them.
+Name missing assets rather than assuming them. Inventory each image as
+[image rights and credits](../references/image-rights.md) describes.
