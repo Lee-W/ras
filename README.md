@@ -262,7 +262,7 @@ included RAS tools and templates. The speaker chooses terms for their own conten
 Build/export preserves the directory in `dist/licenses/`.
 
 `ras:remember` saves an explicitly requested preference in the selected project's
-ignored `.ras/memory.json`. `ras:retro` proposes lessons from the actual session
+`.ras/memory.json`, which the deck's Git repository tracks. `ras:retro` proposes lessons from the actual session
 and saves the candidates the user selects. Relevant saved entries guide later
 operations without overriding the current brief. No home-directory memory store
 is read, and memories are not included in slide exports. See [project memory](references/memory.md).

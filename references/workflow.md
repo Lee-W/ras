@@ -184,8 +184,13 @@ Upgrade replaces only generated tool files (`scripts/`, `package.json`,
 `package-lock.json`, `justfile`, `licenses/`, `README.md`, copied guides), backs
 up every replaced file to `.ras/upgrade-backup-<timestamp>/`, and adds missing
 keys to `ras.config.json` and missing rules to `.gitignore` without changing
-existing ones. It never changes slides, briefs, outlines, sources, reviews,
-theme, assets, or other files. Afterwards run `npm ci` if the package files
+existing ones. `package.json` is merged rather than replaced: RAS sets its
+scripts, `engines`, `type`, `overrides`, `version`, and the versions of its own
+dependencies, while dependencies, scripts, and top-level fields you added stay.
+If the deck has extra dependencies, `package-lock.json` is left alone and the
+output asks you to run `npm install`. An old `.ras/` rule in `.gitignore` is
+replaced by `.ras/*` plus re-includes for `reviews.json` and `memory.json`. It never changes slides, briefs, outlines, sources, reviews,
+theme, assets, or other files. Afterwards run `npm ci` (or `npm install` when the output says so) if the package files
 changed, then `npm run export`.
 
 Use `upgrade` rather than hand-copying kit files from a freshly initialized deck.

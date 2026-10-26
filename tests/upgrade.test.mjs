@@ -102,7 +102,7 @@ test('upgrade keeps existing configuration values and ignore rules while adding 
   assert.equal(config.minCreditSize, template.minCreditSize);
   assert.deepEqual(Object.keys(config).sort(), Object.keys(template).sort());
   const ignore = (await readFile(path.join(deck, '.gitignore'), 'utf8')).split('\n');
-  for (const line of ['notes-private/', 'node_modules/', '.ras/']) assert.ok(ignore.includes(line), line);
+  for (const line of ['notes-private/', 'node_modules/', '.ras/*', '!.ras/reviews.json', '!.ras/memory.json']) assert.ok(ignore.includes(line), line);
 });
 
 test('upgrade refuses directories that are not RAS decks, including the RAS repository', async t => {
@@ -136,4 +136,46 @@ test('every template file is classified as either deck content or upgradeable ki
   }
   for (const file of ['slides.md', 'theme.css', 'brief.md', 'sources.md']) assert.ok(!kit.has(file));
   for (const file of kit.keys()) assert.ok(!file.startsWith('assets/') && !file.startsWith('.ras/') && !file.startsWith('dist/'), file);
+});
+
+test('upgrade keeps dependencies and scripts the speaker added and leaves the lockfile alone', async t => {
+  const { deck, reference, currentVersion } = await staleDeck(t);
+  const pkg = JSON.parse(await readFile(path.join(deck, 'package.json'), 'utf8'));
+  pkg.description = 'My own talk';
+  pkg.dependencies['left-pad'] = '1.3.0';
+  pkg.dependencies['@marp-team/marp-core'] = '0.0.1';
+  pkg.devDependencies = { 'my-lint': '2.0.0' };
+  pkg.scripts.lint = 'my-lint .';
+  pkg.scripts.build = 'echo not the kit build';
+  await writeFile(path.join(deck, 'package.json'), JSON.stringify(pkg, null, 2) + '\n');
+  const lockBefore = await readFile(path.join(deck, 'package-lock.json'));
+  const result = upgrade(deck, '--yes');
+  assert.equal(result.status, 0, result.stderr);
+  const merged = JSON.parse(await readFile(path.join(deck, 'package.json'), 'utf8'));
+  const kit = JSON.parse(await readFile(path.join(reference, 'package.json'), 'utf8'));
+  assert.equal(merged.dependencies['left-pad'], '1.3.0');
+  assert.deepEqual(merged.devDependencies, { 'my-lint': '2.0.0' });
+  assert.equal(merged.scripts.lint, 'my-lint .');
+  assert.equal(merged.scripts.build, kit.scripts.build, 'Kit script keys belong to the kit');
+  assert.equal(merged.dependencies['@marp-team/marp-core'], kit.dependencies['@marp-team/marp-core'], 'Kit dependency versions belong to the kit');
+  assert.equal(merged.description, 'My own talk');
+  assert.equal(merged.version, currentVersion);
+  assert.deepEqual(merged.engines, kit.engines);
+  assert.deepEqual(merged.overrides, kit.overrides);
+  assert.deepEqual(await readFile(path.join(deck, 'package-lock.json')), lockBefore, 'The kit lockfile cannot describe extra dependencies');
+  assert.match(result.stdout, /npm install/);
+  assert.match(result.stdout, /left-pad/);
+});
+
+test('upgrade without extra dependencies writes the kit lockfile and replaces a whole-directory .ras/ rule', async t => {
+  const { deck, reference } = await staleDeck(t);
+  await writeFile(path.join(deck, 'package-lock.json'), '{}\n');
+  await writeFile(path.join(deck, '.gitignore'), 'node_modules/\n.ras/\n');
+  const result = upgrade(deck, '--yes');
+  assert.equal(result.status, 0, result.stderr);
+  assert.deepEqual(await readFile(path.join(deck, 'package-lock.json')), await readFile(path.join(reference, 'package-lock.json')));
+  assert.doesNotMatch(result.stdout, /npm install/);
+  const ignore = (await readFile(path.join(deck, '.gitignore'), 'utf8')).split('\n');
+  assert.ok(!ignore.includes('.ras/'), 'A directory rule would defeat the re-include lines');
+  for (const line of ['.ras/*', '!.ras/reviews.json', '!.ras/memory.json']) assert.ok(ignore.includes(line), line);
 });

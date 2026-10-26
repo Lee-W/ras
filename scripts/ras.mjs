@@ -29,7 +29,9 @@ export async function makePrompt(operation, request = '', { chat = false } = {})
 
 const deckScripts = ['deck.mjs', 'project.mjs', 'probe.mjs', 'fonts.mjs', 'marp-engine.mjs', 'kit-css.mjs', 'review.mjs', 'state.mjs', 'memory.mjs', 'blog.mjs'];
 const deckPackageScripts = ['build', 'check', 'export', 'preview', 'doctor', 'status', 'review:record', 'memory', 'blog'];
-const deckIgnore = ['node_modules/', 'dist/', '.ras/', '.DS_Store', '*.log'];
+// .ras/ holds disposable build output plus the two files that carry the
+// speaker's review evidence and memory; those two travel with the deck's repo.
+const deckIgnore = ['node_modules/', 'dist/', '.ras/*', '!.ras/reviews.json', '!.ras/memory.json', '.DS_Store', '*.log'];
 const kitTemplates = ['justfile', 'licenses/README.md'];
 // The speaker owns these after initialization; upgrade never replaces them.
 export const contentTemplates = ['brief.md', 'slides.md', 'sources.md', 'theme.css', 'ras.config.json'];
@@ -89,6 +91,35 @@ export async function initDeck(destination) {
   return target;
 }
 
+// The kit owns its scripts, engines, type, overrides, and the versions of its
+// own dependencies. The speaker keeps added dependencies and scripts plus
+// descriptive top-level keys. version records the installed kit release, so
+// it follows the kit.
+const kitOwnedKeys = new Set(['name', 'version', 'type', 'engines', 'overrides']);
+const dependencySections = ['dependencies', 'devDependencies'];
+
+export function mergePackage(deck, kit) {
+  const merged = {};
+  const extras = [];
+  for (const [key, value] of Object.entries(kit)) {
+    if (kitOwnedKeys.has(key)) merged[key] = value;
+    else if (key === 'scripts') merged.scripts = { ...value, ...Object.fromEntries(Object.entries(deck.scripts ?? {}).filter(([name]) => !(name in value))) };
+    else if (dependencySections.includes(key)) {
+      const added = Object.entries(deck[key] ?? {}).filter(([name]) => !(name in value));
+      extras.push(...added.map(([name]) => name));
+      merged[key] = Object.fromEntries(Object.entries({ ...value, ...Object.fromEntries(added) }).sort(([a], [b]) => a.localeCompare(b)));
+    } else merged[key] = key in deck ? deck[key] : value;
+  }
+  for (const [key, value] of Object.entries(deck)) {
+    if (key in merged || kitOwnedKeys.has(key)) continue;
+    if (dependencySections.includes(key)) {
+      extras.push(...Object.keys(value ?? {}));
+      merged[key] = value;
+    } else merged[key] = value;
+  }
+  return { merged, extras: [...new Set(extras)] };
+}
+
 async function readDeckVersion(file) {
   try { return JSON.parse(await readFile(file, 'utf8')).version || 'unknown'; } catch { return 'unknown'; }
 }
@@ -111,11 +142,15 @@ async function mergeIgnore(target) {
   const file = path.join(target, '.gitignore');
   if (!existsSync(file)) return { action: 'add', bytes: Buffer.from(deckIgnore.join('\n') + '\n') };
   const current = await readFile(file, 'utf8');
-  const lines = new Set(current.split(/\r?\n/).map(line => line.trim()));
+  // A whole-directory `.ras/` rule cannot be partly re-included, so it is replaced.
+  const legacy = current.split(/\r?\n/).some(line => line.trim() === '.ras/');
+  const base = legacy ? current.split(/\r?\n/).filter(line => line.trim() !== '.ras/').join('\n') : current;
+  const lines = new Set(base.split(/\r?\n/).map(line => line.trim()));
   const missing = deckIgnore.filter(line => !lines.has(line));
-  if (!missing.length) return { action: 'unchanged' };
-  const separator = current === '' || current.endsWith('\n') ? '' : '\n';
-  return { action: 'merge', bytes: Buffer.from(current + separator + missing.join('\n') + '\n'), detail: `adds ${missing.join(', ')}; existing rules kept` };
+  if (!missing.length && !legacy) return { action: 'unchanged' };
+  const separator = base === '' || base.endsWith('\n') ? '' : '\n';
+  const detail = `adds ${missing.join(', ')}${legacy ? '; replaces .ras/' : ''}; other rules kept`;
+  return { action: 'merge', bytes: Buffer.from(base + separator + missing.join('\n') + (missing.length ? '\n' : '')), detail };
 }
 
 export async function upgradeDeck(directory, { apply = false, log = console.log, now = new Date() } = {}) {
@@ -130,8 +165,14 @@ export async function upgradeDeck(directory, { apply = false, log = console.log,
   const from = deckPackage.version || 'unknown';
   const to = JSON.parse(await readFile(path.join(pluginRoot, 'package.json'), 'utf8')).version;
 
+  const files = await kitFiles();
+  const { merged, extras } = mergePackage(deckPackage, JSON.parse(files.get('package.json')));
+  files.set('package.json', Buffer.from(JSON.stringify(merged, null, 2) + '\n'));
+  // A kit lockfile cannot describe dependencies the kit does not know about.
+  if (extras.length) files.delete('package-lock.json');
+
   const changes = [];
-  for (const [file, bytes] of await kitFiles()) {
+  for (const [file, bytes] of files) {
     const full = path.join(target, file);
     if (!existsSync(full)) changes.push({ file, action: 'add', bytes });
     else if (!(await readFile(full)).equals(bytes)) changes.push({ file, action: 'update', bytes, detail: from === to ? `local edits differ from RAS ${to}` : `differs from RAS ${to}` });
@@ -154,6 +195,7 @@ export async function upgradeDeck(directory, { apply = false, log = console.log,
   const legacy = legacyKitFiles.filter(file => existsSync(path.join(target, file)));
   if (legacy.length) log(`Left in place (no longer used by RAS; remove if unneeded): ${legacy.join(', ')}`);
   const reinstall = pending.some(change => ['package.json', 'package-lock.json'].includes(change.file));
+  if (extras.length) log(`Kept your own dependencies (${extras.join(', ')}); package-lock.json was not replaced. Run npm install to update the lockfile.`);
   if (!pending.length) {
     log(`Already up to date with RAS ${to}. Nothing written.`);
     return { target, from, to, changes, applied: false };
@@ -174,7 +216,7 @@ export async function upgradeDeck(directory, { apply = false, log = console.log,
   if (replaced.length) log(`Backup of replaced files: ${backup}`);
   const count = action => pending.filter(change => change.action === action).length;
   log(`Upgraded to RAS ${to}: ${count('add')} added, ${count('update')} updated, ${count('merge')} merged.`);
-  log(`Next: ${reinstall ? 'npm ci, then ' : ''}npm run export`);
+  log(`Next: ${reinstall ? (extras.length ? 'npm install, then ' : 'npm ci, then ') : ''}npm run export`);
   return { target, from, to, changes, applied: true, backup: replaced.length ? backup : undefined };
 }
 
@@ -194,5 +236,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.
       const args = process.argv.slice(4);
       process.stdout.write(await makePrompt(process.argv[3], args.filter(arg => arg !== '--chat').join(' '), { chat: args.includes('--chat') }));
     } else throw new Error(`Usage: node scripts/ras.mjs init <new-directory> | upgrade <deck-directory> [--dry-run | --yes] | prompt <${operations.join('|')}> [--chat] [request]`);
-  } catch (error) { console.error(error.message); process.exitCode = 1; }
+  } catch (error) { console.error(`[${process.argv[2] ?? 'ras'}] ${process.env.RAS_DEBUG ? error.stack : error.message}`); process.exitCode = 1; }
 }

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'node:fs/promises';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import { listMemories, saveMemory, removeMemory } from '../scripts/memory.mjs';
@@ -35,7 +35,7 @@ test('memory stays project-local, rejects accidental replacement, and preserves 
   }
 });
 
-test('private state refuses symlinks and generated decks exclude memories from Git', async t => {
+test('private state refuses symlinks and generated decks keep memories and reviews in Git but ignore other state', async t => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'ras-memory-boundary-'));
   t.after(() => rm(root, { recursive: true, force: true }));
   await symlink(root, path.join(root, '.ras'));
@@ -44,7 +44,10 @@ test('private state refuses symlinks and generated decks exclude memories from G
   const deck = await initDeck(path.join(root, 'talk'));
   await saveMemory(deck, example);
   execFileSync('git', ['init', '--quiet'], { cwd: deck });
-  assert.equal(execFileSync('git', ['check-ignore', '.ras/memory.json'], { cwd: deck, encoding: 'utf8' }).trim(), '.ras/memory.json');
+  const ignored = file => spawnSync('git', ['check-ignore', '--quiet', file], { cwd: deck }).status === 0;
+  assert.equal(ignored('.ras/memory.json'), false, 'memory travels with the deck repository');
+  assert.equal(ignored('.ras/reviews.json'), false, 'review evidence travels with the deck repository');
+  for (const file of ['.ras/check.json', '.ras/previews/slide-001.png', '.ras/probe.html']) assert.equal(ignored(file), true, file);
   const cli = JSON.parse(execFileSync(process.execPath, [path.join(deck, 'scripts/memory.mjs'), 'list'], { cwd: deck, encoding: 'utf8' }));
   assert.equal(cli[0].id, example.id);
 });
