@@ -32,7 +32,7 @@ CVE 編號來自表中的維護者公告。這些描述的是相依套件問題�
 
 `puppeteer-core` 與 Puppeteer 25.11.0 對齊，供 Marp／Mermaid 工具鏈使用。
 修改固定版本時，需實際測試 HTML、Mermaid 與 PDF 匯出。
-既有測試在 macOS arm64、Node 22.18.0 與 26.9.0 執行；不能據此推論中間所有 Node 版本或其他作業系統都測過。
+CI 在 ubuntu-24.04 與 macos-15 上以 Node 22.18.0 與 26.9.0 執行測試（`.github/workflows/ci.yml`）；不能據此推論中間所有 Node 版本、作業系統版本或 CPU 架構都測過。
 
 ## 繁體字的臺灣華語字型
 

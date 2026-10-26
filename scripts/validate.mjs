@@ -20,6 +20,11 @@ assert.equal(lock.packages[''].version, pkg.version);
 assert.equal(pkg.license, 'MIT');
 assert.equal(lock.packages[''].license, pkg.license);
 assert.deepEqual(lock.packages[''].dependencies, pkg.dependencies);
+// A second copy would mean two browser or engine versions in one deck.
+for (const name of ['puppeteer-core', '@marp-team/marp-core']) {
+  const nodes = Object.keys(lock.packages).filter(key => key === `node_modules/${name}` || key.endsWith(`/node_modules/${name}`));
+  assert.equal(nodes.length, 1, `package-lock.json must contain exactly one ${name} node; found ${nodes.length}: ${nodes.join(', ')}`);
+}
 for (const folder of await readdir(path.join(root, 'skills'))) {
   const file = path.join(root, 'skills', folder, 'SKILL.md');
   const text = await readFile(file, 'utf8');

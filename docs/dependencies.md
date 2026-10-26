@@ -33,8 +33,9 @@ in the originally resolved 0.9.10 version.
 
 `puppeteer-core` is aligned with Puppeteer 25.11.0 for the Marp/Mermaid browser
 toolchain. Exercise HTML, Mermaid, and PDF export when changing these pins.
-Tests run on macOS arm64 with Node 22.18.0 and 26.9.0; this is not a claim that
-every intermediate Node release or operating system has been tested.
+CI runs the tests on ubuntu-24.04 and macos-15 with Node 22.18.0 and 26.9.0
+(`.github/workflows/ci.yml`); this is not a claim that every intermediate Node
+release, operating system release, or CPU architecture has been tested.
 
 ## Fonts for Taiwanese Mandarin in traditional characters
 

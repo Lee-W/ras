@@ -43,5 +43,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.
     else if (command === 'save' && file && !extra.length && (!flag || flag === '--replace')) console.log(JSON.stringify(await saveMemory(process.cwd(), JSON.parse(await readFile(file, 'utf8')), { replace: flag === '--replace' }), null, 2));
     else if (command === 'remove' && file && !flag) { await removeMemory(process.cwd(), file); console.log(`Removed ${file}`); }
     else throw new Error('Usage: node scripts/memory.mjs list | save <entry.json> [--replace] | remove <id>');
-  } catch (error) { console.error(error.message); process.exitCode = 1; }
+  } catch (error) { console.error(`[memory] ${process.env.RAS_DEBUG ? error.stack : error.message}`); process.exitCode = 1; }
 }
