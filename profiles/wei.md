@@ -39,7 +39,8 @@ outvote newer work through their page counts. Within the recent examples, choose
 the talk closest to the new audience and purpose.
 
 The complete inventory, per-deck observations, and reviewed PDF SHA-256 hashes
-are retained in `references/wei-style-study.md` in the RAS source checkout.
+are retained in the [style study](wei-style-study.md). Conversions of Wei's
+older decks follow the [legacy format notes](wei-legacy-format.md).
 
 ## Narrative and pacing
 
@@ -131,10 +132,15 @@ are retained in `references/wei-style-study.md` in the RAS source checkout.
   update use other typography and layouts. Dark backgrounds are a common option,
   not a requirement for every Wei presentation.
 
-Wei's explicit preference (2026-10-07): numbers on slides are numerals, never
-spelled-out English words, because digits are easier to read.
+Wei's explicit preference (2026-10-07): write counts, quantities, and
+measurements on slides as numerals (`3 retries`, `9 steps`, `1,163 tokens`),
+never as spelled-out English words, because digits read faster from the back of
+a room. Pronouns such as "the one you already speak" stay words, and speaker
+notes may spell numbers out.
 Also (2026-10-07): when a title is too long for one line, break it by hand with
-`<br>` at a phrase boundary rather than letting it wrap.
+`<br>` at a phrase boundary (`` `AgentOperator`:<br>a budget across every attempt ``)
+rather than letting it wrap wherever the width runs out; an automatic wrap can
+strand a single word on the second line.
 
 Type scale (feedback from several rounds): take the baseline from Wei's own
 previous deck, not from a general sense of how large slide text should be. Before

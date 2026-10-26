@@ -142,16 +142,12 @@ confirms, while `--plan` produces one outline and stops.
   source code and record the version/date. Distinguish released behaviour,
   proposals, examples, and assumptions. Mark unresolved claims for review.
 - Check every supplied or selected image under [image rights and credits](image-rights.md).
-- On slides, write counts, quantities, and measurements as numerals (`3 retries`,
-  `9 steps`, `1,163 tokens`), not as words. Numerals read faster from the back of a
-  room. Pronouns such as "the one you already speak" stay words, and speaker notes
-  may spell numbers out.
-- When a slide title is too long for one line, break it on purpose with `<br>` at a
-  phrase boundary (`` `AgentOperator`:<br>a budget across every attempt ``) rather
-  than letting it wrap wherever the width runs out. An automatic wrap can strand a
-  single word on the second line.
-- The optional `profiles/wei.md` describes patterns observed in Wei's examples.
-  Apply it when requested or clearly desired, not as universal presentation law.
+- Typographic preferences, such as how numbers are written or where a long title
+  breaks, follow the active profile; without a profile, follow the ordinary
+  conventions of the slide language.
+- A profile is the speaker's own preference file, found as
+  [project memory](memory.md#memory-layers) describes. `profiles/wei.md` is an
+  example of one, not a default: apply it only when it is the active profile.
 
 ## Tool workflow
 
