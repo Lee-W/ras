@@ -24,8 +24,8 @@ The documentation server is a repository tool and is not copied into generated d
 
 ## CI
 
-`.github/workflows/ci.yml` runs on pull requests and manual dispatch, and can be
-called by the main-branch release workflow. Its matrix covers Ubuntu 24.04 and
+`.github/workflows/ci.yml` runs on pull requests and manual dispatch; the main-branch
+release workflow does not repeat it. Its matrix covers Ubuntu 24.04 and
 macOS 15 on Node 22.18.0 and 26.9.0. Each job installs locked dependencies and the
 Puppeteer-pinned Chrome, validates repository source, runs tests, and initializes/installs/exports a standalone starter
 deck outside the checkout. That export includes Mermaid, fonts, notes, PNGs,
@@ -48,8 +48,8 @@ actionlint .github/workflows/ci.yml .github/workflows/bumpversion.yml
 
 ## Versions and releases
 
-`.github/workflows/bumpversion.yml` runs the shared CI on pushes to `main`.
-After it passes, Commitizen 4.16.2 reads Conventional Commits using `.cz.toml`:
+`.github/workflows/bumpversion.yml` does not repeat the CI matrix on pushes to `main`
+(pull requests already ran it). Commitizen 4.16.2 reads Conventional Commits using `.cz.toml`:
 `feat` changes bump the minor version; `fix` changes bump the patch version;
 other commits without a release-eligible change do not create a release.
 The package remains at major version zero while `major_version_zero` is enabled.
@@ -58,8 +58,10 @@ The [npm version provider](https://github.com/commitizen-tools/commitizen/blob/v
 updates `package.json` and both root version entries in `package-lock.json`.
 The explicit version-file list updates `plugin.json`, `.claude-plugin/plugin.json`,
 and `.codex-plugin/plugin.json`. Commitizen also updates `CHANGELOG.md`, creates
-a bump commit and an annotated `v…` tag. The workflow validates the changed
-metadata, prepares release notes, atomically pushes the commit/tag, then creates
+a bump commit and an annotated `v…` tag. The commitizen package and the no-op exit codes are workflow `env` values that
+`npm run test:release` reads, so the workflow is their only source. After a bump the
+workflow validates the changed metadata, installs dependencies, exports a standalone
+starter deck from the bumped kit, prepares release notes, atomically pushes the commit/tag, then creates
 a GitHub Release in the same job. It does not publish to npm.
 
 `npm run test:release` requires Git and uv. It copies repository source into a

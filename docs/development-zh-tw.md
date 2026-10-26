@@ -20,7 +20,7 @@
 
 ## CI
 
-`.github/workflows/ci.yml` 在 PR 與手動觸發時執行，也可由主分支的發布工作流程呼叫。
+`.github/workflows/ci.yml` 在 PR 與手動觸發時執行；主分支的發布工作流程不再重跑。
 測試矩陣涵蓋 Ubuntu 24.04、macOS 15，以及 Node 22.18.0、26.9.0。
 每個工作會安裝鎖定版本的相依套件與 Puppeteer 指定的 Chrome、驗證儲存庫來源、執行測試，
 並在 checkout 目錄外初始化、安裝與匯出獨立起始簡報。
@@ -32,15 +32,12 @@ Ubuntu 使用限縮範圍的 AppArmor profile，允許 CI 瀏覽器快取中的�
 
 ```mermaid
 flowchart TD
-  A["PR 或手動執行 CI"] --> C["共用 CI：檢查與獨立匯出"]
-  B["推送至 main 或手動重試發布"] --> C
-  C --> D{"通過且屬於 main 發布流程？"}
-  D -->|否| E["結束或回報失敗"]
-  D -->|是| F["Commitizen 檢查提交紀錄"]
+  A["PR 或手動執行 CI"] --> C["CI：檢查與獨立匯出"]
+  B["推送至 main 或手動重試發布"] --> F["Commitizen 檢查提交紀錄"]
   F --> G{"需要新版本？"}
   G -->|否| H["結束，不建立版本"]
   G -->|是| I["同步版本、更新 changelog、建立 commit 與 tag"]
-  I --> J["驗證 metadata，準備發布說明"]
+  I --> J["驗證 metadata，匯出起始簡報，準備發布說明"]
   J --> K["一次推送 commit 與 tag"]
   K --> L["建立 GitHub Release"]
 ```
@@ -60,8 +57,8 @@ actionlint .github/workflows/ci.yml .github/workflows/bumpversion.yml
 
 ## 版本與發布
 
-推送至 `main` 時，`.github/workflows/bumpversion.yml` 先執行共用 CI。
-通過後，由 Commitizen 4.16.2 依 `.cz.toml` 解析 Conventional Commits：
+推送至 `main` 時，`.github/workflows/bumpversion.yml` 不再重跑 CI 矩陣（PR 已執行過）。
+由 Commitizen 4.16.2 依 `.cz.toml` 解析 Conventional Commits：
 `feat` 提升次版本，`fix` 提升修訂版本；沒有符合發布條件的變更時不建立版本。
 `major_version_zero` 啟用期間，套件維持主版本零。
 
@@ -69,7 +66,8 @@ actionlint .github/workflows/ci.yml .github/workflows/bumpversion.yml
 更新 `package.json` 與 `package-lock.json` 的兩個根版本欄位；
 明列的版本檔案清單會更新 `plugin.json`、`.claude-plugin/plugin.json` 與 `.codex-plugin/plugin.json`。
 Commitizen 也更新 `CHANGELOG.md`、建立版本提交與附註式 `v…` tag。
-工作流程驗證更新後的 metadata、準備發布說明，再以原子操作推送 commit／tag，於同一工作建立 GitHub Release。
+Commitizen 套件版本與不視為失敗的結束碼定義在工作流程的 `env`，`npm run test:release` 從那裡讀取，因此工作流程是唯一來源。
+版本更新後，工作流程驗證 metadata、安裝相依套件、以新版工具組匯出獨立起始簡報、準備發布說明，再以原子操作推送 commit／tag，於同一工作建立 GitHub Release。
 這個流程不發布到 npm。
 
 `npm run test:release` 將儲存庫來源複製到暫存 Git 儲存庫，以固定版本的 Commitizen 測試：
