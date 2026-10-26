@@ -178,7 +178,8 @@ ollama run YOUR_MODEL < ras-chat.md
 純聊天模式只會提供檔案內容與待執行指令，無法自行寫檔、瀏覽來源、檢視圖片或匯出。
 
 `prompt outline`、`prompt revise`、`prompt review`、`prompt export`、`prompt remember` 與 `prompt retro`
-會展開對應操作；建立簡報時加上 `--plan` 仍只產生計畫。
+會展開對應操作；建立簡報時加上 `--plan` 仍只產生計畫。每個操作只展開它用到的參考檔與角色。
+加上 `--profile <path>` 可把 `profiles/wei.md` 之類的講者 profile 附在最後的「Active profile」段落。
 聊天模式的記憶操作只提出條目與儲存步驟，不會宣稱已儲存。
 
 若要透過 Codex 本機 provider 使用具備工具能力的模型：

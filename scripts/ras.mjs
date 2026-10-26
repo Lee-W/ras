@@ -14,7 +14,16 @@ await runMain(import.meta.url, args => args[0] ?? 'ras', async args => {
     }
     await upgradeDeck(positional[0], { apply: flags.includes('--yes') });
   } else if (args[0] === 'prompt') {
-    const rest = args.slice(2);
-    process.stdout.write(await makePrompt(args[1], rest.filter(arg => arg !== '--chat').join(' '), { chat: rest.includes('--chat') }));
-  } else throw new Error(`Usage: node scripts/ras.mjs init <new-directory> | upgrade <deck-directory> [--dry-run | --yes] | prompt <${operations.join('|')}> [--chat] [request]`);
+    const request = [];
+    let chat = false;
+    let profile;
+    for (let index = 2; index < args.length; index++) {
+      if (args[index] === '--chat') chat = true;
+      else if (args[index] === '--profile') {
+        profile = args[++index];
+        if (!profile) throw new Error('--profile needs a file path');
+      } else request.push(args[index]);
+    }
+    process.stdout.write(await makePrompt(args[1], request.join(' '), { chat, profile }));
+  } else throw new Error(`Usage: node scripts/ras.mjs init <new-directory> | upgrade <deck-directory> [--dry-run | --yes] | prompt <${operations.join('|')}> [--chat] [--profile <path>] [request]`);
 });
