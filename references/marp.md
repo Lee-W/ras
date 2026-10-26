@@ -25,6 +25,8 @@ title: My talk
 ![An informative description](assets/example.png)
 ```
 
+## Themes and notes
+
 Available theme classes: `title`, `section`, `statement`, `image`, `code`,
 `compare`, and `closing`. A slide without a class is a heading plus body.
 Use `_class` to keep a class on one slide. `class` persists to later slides.
@@ -45,11 +47,15 @@ HTML comments become presenter notes unless Marp recognizes them as directives.
 Keep note comments free of `-->`. Use fenced code for examples containing HTML
 comment syntax. Notes must be associated with the correct page after edits.
 
+## Mermaid and diagrams
+
 Mermaid fences are compiled to local SVG during build, using the pinned Mermaid
 CLI and browser. SVG is embedded through an ordinary image reference in the
 generated source. Keep the fence in editable `slides.md`. Existing SVGs and
 screenshots go in `assets/`. Plain ASCII diagrams use `text` fences; coloured
 ones can use escaped `<pre class="ascii">` with colour spans.
+
+## Local assets and fonts
 
 Local media lives under `assets/`; filenames with spaces must use valid Markdown
 URL escaping or angle brackets. Pinned Latin fonts and Noto Sans TC Variable are
