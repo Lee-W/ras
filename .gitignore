@@ -6,3 +6,5 @@ dist/
 demo/
 /assets/
 /local/
+.maigo/
+.worktrees/
