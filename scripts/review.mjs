@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { readFile, realpath } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
-import { renderHash } from './project.mjs';
+import { renderHash } from './hash.mjs';
+import { runMain } from './cli.mjs';
 import { readState, writeState } from './state.mjs';
 
 const kinds = ['visual', 'factual'];
@@ -83,11 +83,8 @@ export async function recordReview(root, candidate) {
   return status(root);
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.argv[1])).href) {
-  try {
-    const [command, file, ...extra] = process.argv.slice(2);
-    if (command === 'status' && !file) console.log(JSON.stringify(await status(process.cwd()), null, 2));
-    else if (command === 'record' && file && !extra.length) console.log(JSON.stringify(await recordReview(process.cwd(), JSON.parse(await readFile(file, 'utf8'))), null, 2));
-    else throw new Error('Usage: node scripts/review.mjs status | record <review.json>');
-  } catch (error) { console.error(`[review] ${process.env.RAS_DEBUG ? error.stack : error.message}`); process.exitCode = 1; }
-}
+await runMain(import.meta.url, 'review', async ([command, file, ...extra]) => {
+  if (command === 'status' && !file) console.log(JSON.stringify(await status(process.cwd()), null, 2));
+  else if (command === 'record' && file && !extra.length) console.log(JSON.stringify(await recordReview(process.cwd(), JSON.parse(await readFile(file, 'utf8'))), null, 2));
+  else throw new Error('Usage: node scripts/review.mjs status | record <review.json>');
+});

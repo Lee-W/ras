@@ -5,7 +5,8 @@ import { mkdtemp, readdir, readFile, writeFile, rm, mkdir, access } from 'node:f
 import { spawnSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
-import { initDeck, pluginRoot } from '../scripts/ras.mjs';
+import { initDeck } from '../scripts/scaffold.mjs';
+import { pluginRoot } from '../scripts/plugin-root.mjs';
 
 const cli = path.join(pluginRoot, 'scripts/ras.mjs');
 const upgrade = (...args) => spawnSync(process.execPath, [cli, 'upgrade', ...args], { encoding: 'utf8', timeout: 30_000 });
@@ -128,7 +129,7 @@ test('upgrade refuses directories that are not RAS decks, including the RAS repo
 });
 
 test('every template file is classified as either deck content or upgradeable kit', async () => {
-  const { contentTemplates, kitFiles } = await import('../scripts/ras.mjs');
+  const { contentTemplates, kitFiles } = await import('../scripts/scaffold.mjs');
   const kit = await kitFiles();
   const templates = Object.keys(await snapshot(path.join(pluginRoot, 'templates')));
   for (const file of templates) {

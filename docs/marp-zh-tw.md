@@ -139,7 +139,7 @@ result = «fetch(url, retries=3)»
   訊息為 `Box code block at source line N (first line: "…")` 加上原因。
 
 框線顏色是 `var(--accent)`，沒有定義時用 `#ffb32d`，樣式來自套件樣式
-（`scripts/kit-css.mjs`）。建置時會附加在 `theme.css` 之後，因此
+（`scripts/kit.css`）。建置時會附加在 `theme.css` 之後，因此
 `ras upgrade` 會把樣式與引擎送進既有簡報，不會動到簡報自己的主題。
 `theme.css` 中有同名規則也無妨。
 

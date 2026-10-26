@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseDeck, slidesToArticle, exportBlog, parseBlogArgs } from '../scripts/blog.mjs';
-import { initDeck } from '../scripts/ras.mjs';
+import { initDeck } from '../scripts/scaffold.mjs';
 import { render } from '../scripts/project.mjs';
 
 const pluginRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');

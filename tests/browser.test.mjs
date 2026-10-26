@@ -5,10 +5,11 @@ import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import puppeteer from 'puppeteer';
-import { browserPath, defaults } from '../scripts/project.mjs';
+import { browserPath } from '../scripts/project.mjs';
+import { defaults } from '../scripts/config.mjs';
 import { probeSlide } from '../scripts/probe.mjs';
 import { build, check } from '../scripts/deck.mjs';
-import { initDeck } from '../scripts/ras.mjs';
+import { initDeck } from '../scripts/scaffold.mjs';
 
 let browser;
 before(async () => { browser = await puppeteer.launch({ executablePath: await browserPath(), headless: true }); });

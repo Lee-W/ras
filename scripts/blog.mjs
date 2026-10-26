@@ -8,10 +8,10 @@
 import { copyFile, mkdir, readFile, realpath, stat, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { Marp } from '@marp-team/marp-core';
 import { parseMarkers } from './marp-engine.mjs';
-import { renderHash } from './project.mjs';
+import { renderHash } from './hash.mjs';
+import { runMain } from './cli.mjs';
 
 const USAGE = 'Usage: node scripts/blog.mjs [--screenshots] [--out <dir>] [--force]';
 const HR = /^ {0,3}([-*_])( *\1){2,} *$/;
@@ -405,6 +405,4 @@ export async function exportBlog(root = process.cwd(), { out = 'blog', screensho
   return { ...article, warnings, out: target, indexFile };
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.argv[1])).href) {
-  try { await exportBlog(process.cwd(), parseBlogArgs(process.argv.slice(2))); } catch (error) { console.error(error.message); process.exitCode = 1; }
-}
+await runMain(import.meta.url, 'blog', async args => { await exportBlog(process.cwd(), parseBlogArgs(args)); });

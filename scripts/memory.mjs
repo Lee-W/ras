@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { readFile, realpath } from 'node:fs/promises';
-import { pathToFileURL } from 'node:url';
+import { readFile } from 'node:fs/promises';
+import { runMain } from './cli.mjs';
 import { readState, writeState } from './state.mjs';
 
 function validateEntry(entry) {
@@ -36,12 +36,9 @@ export async function removeMemory(root, id) {
   await writeState(root, 'memory.json', { schemaVersion: 1, entries: entries.filter(entry => entry.id !== id) });
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.argv[1])).href) {
-  try {
-    const [command, file, flag, ...extra] = process.argv.slice(2);
-    if (command === 'list' && !file) console.log(JSON.stringify(await listMemories(process.cwd()), null, 2));
-    else if (command === 'save' && file && !extra.length && (!flag || flag === '--replace')) console.log(JSON.stringify(await saveMemory(process.cwd(), JSON.parse(await readFile(file, 'utf8')), { replace: flag === '--replace' }), null, 2));
-    else if (command === 'remove' && file && !flag) { await removeMemory(process.cwd(), file); console.log(`Removed ${file}`); }
-    else throw new Error('Usage: node scripts/memory.mjs list | save <entry.json> [--replace] | remove <id>');
-  } catch (error) { console.error(`[memory] ${process.env.RAS_DEBUG ? error.stack : error.message}`); process.exitCode = 1; }
-}
+await runMain(import.meta.url, 'memory', async ([command, file, flag, ...extra]) => {
+  if (command === 'list' && !file) console.log(JSON.stringify(await listMemories(process.cwd()), null, 2));
+  else if (command === 'save' && file && !extra.length && (!flag || flag === '--replace')) console.log(JSON.stringify(await saveMemory(process.cwd(), JSON.parse(await readFile(file, 'utf8')), { replace: flag === '--replace' }), null, 2));
+  else if (command === 'remove' && file && !flag) { await removeMemory(process.cwd(), file); console.log(`Removed ${file}`); }
+  else throw new Error('Usage: node scripts/memory.mjs list | save <entry.json> [--replace] | remove <id>');
+});

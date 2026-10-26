@@ -127,7 +127,7 @@ Raw `<mark>` inside `<pre>` is no longer needed.
   with `Box code block at source line N (first line: "…")` and the reason.
 
 The frame colour is `var(--accent)` with a `#ffb32d` fallback, from the kit
-styles (`scripts/kit-css.mjs`). The build appends them after `theme.css`, so
+styles (`scripts/kit.css`). The build appends them after `theme.css`, so
 `ras upgrade` delivers them, and the engine, to existing decks without touching
 their own theme. A rule in `theme.css` for the same selector is harmless.
 

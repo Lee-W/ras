@@ -8,7 +8,11 @@ import { createServer } from 'node:http';
 import puppeteer from 'puppeteer';
 const require = createRequire(import.meta.url);
 import { PDFDocument } from 'pdf-lib';
-import { browserPath, marp, render, renderHash, contentHash, toolingHash, readConfig, prepareFonts, compileDiagrams, kitCss } from './project.mjs';
+import { browserPath, marp, render, compileDiagrams } from './project.mjs';
+import { renderHash, contentHash, toolingHash } from './hash.mjs';
+import { readConfig } from './config.mjs';
+import { prepareFonts } from './fonts.mjs';
+import { runMain } from './cli.mjs';
 import { probeSlide } from './probe.mjs';
 import { reviewState } from './review.mjs';
 
@@ -30,6 +34,7 @@ export async function build(root = process.cwd()) {
   const content = await contentHash(root);
   const tooling = await toolingHash(root);
   if (existsSync(path.join(root, 'assets'))) await cp(path.join(root, 'assets'), path.join(dist, 'assets'), { recursive: true });
+  const kitCss = await readFile(new URL('./kit.css', import.meta.url), 'utf8');
   const theme = themeSource + '\n' + kitCss + '\n' + await prepareFonts(dist);
   const source = await compileDiagrams(original, root, dist);
   const result = render(source, theme);
@@ -172,14 +177,11 @@ export async function doctor(root = process.cwd(), log = console.log) {
   log('Doctor: all checks passed.');
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.argv[1])).href) {
-  const mode = process.argv[2];
-  try {
-    if (mode === 'build') await build();
-    else if (mode === 'check') await check();
-    else if (mode === 'export') await exportDeck();
-    else if (mode === 'preview') await preview(process.cwd(), Number(process.env.PORT || 4173));
-    else if (mode === 'doctor') await doctor();
-    else throw new Error('Usage: node scripts/deck.mjs build|check|export|preview|doctor');
-  } catch (error) { console.error(`[${mode ?? 'deck'}] ${process.env.RAS_DEBUG ? error.stack : error.message}`); process.exitCode = 1; }
-}
+await runMain(import.meta.url, args => args[0] ?? 'deck', async ([mode]) => {
+  if (mode === 'build') await build();
+  else if (mode === 'check') await check();
+  else if (mode === 'export') await exportDeck();
+  else if (mode === 'preview') await preview(process.cwd(), Number(process.env.PORT || 4173));
+  else if (mode === 'doctor') await doctor();
+  else throw new Error('Usage: node scripts/deck.mjs build|check|export|preview|doctor');
+});

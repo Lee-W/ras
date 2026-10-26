@@ -5,7 +5,8 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import { listMemories, saveMemory, removeMemory } from '../scripts/memory.mjs';
-import { initDeck, makePrompt } from '../scripts/ras.mjs';
+import { initDeck } from '../scripts/scaffold.mjs';
+import { makePrompt } from '../scripts/prompt.mjs';
 
 const example = { id: 'short-opening', type: 'feedback', text: 'Keep this opening under one minute.', source: 'Explicit speaker feedback in the test fixture.' };
 

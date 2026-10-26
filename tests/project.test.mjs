@@ -5,9 +5,14 @@ import { createRequire } from 'node:module';
 import { execFileSync, spawnSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
-import { initDeck, makePrompt, operations, pluginRoot } from '../scripts/ras.mjs';
+import { initDeck } from '../scripts/scaffold.mjs';
+import { makePrompt, operations } from '../scripts/prompt.mjs';
+import { pluginRoot } from '../scripts/plugin-root.mjs';
 import { sharedSources } from '../scripts/docs-pages.mjs';
-import { renderHash, contentHash, toolingHash, render, prepareFonts, readConfig, browserPath, run, defaults } from '../scripts/project.mjs';
+import { render, browserPath, run } from '../scripts/project.mjs';
+import { renderHash, contentHash, toolingHash } from '../scripts/hash.mjs';
+import { readConfig, defaults } from '../scripts/config.mjs';
+import { prepareFonts } from '../scripts/fonts.mjs';
 
 test('all portable operations carry the shared interaction contract in tool and chat hosts', async () => {
   const voice = await readFile(path.join(pluginRoot, 'skills/orchestrator-voice/SKILL.md'), 'utf8');
