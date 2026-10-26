@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 import { cp, mkdir, readFile, writeFile, stat, realpath, rm } from 'node:fs/promises';
+import { createRequire } from 'node:module';
 import { existsSync, createReadStream } from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createServer } from 'node:http';
 import puppeteer from 'puppeteer';
+const require = createRequire(import.meta.url);
 import { PDFDocument } from 'pdf-lib';
-import { browserPath, marp, render, projectHash, readConfig, prepareFonts, compileDiagrams, kitCss } from './project.mjs';
+import { browserPath, marp, render, renderHash, contentHash, toolingHash, readConfig, prepareFonts, compileDiagrams, kitCss } from './project.mjs';
 import { probeSlide } from './probe.mjs';
 import { reviewState } from './review.mjs';
 
@@ -24,7 +26,9 @@ export async function build(root = process.cwd()) {
   }
   const original = await readFile(path.join(root, 'slides.md'), 'utf8');
   const themeSource = await readFile(path.join(root, 'theme.css'), 'utf8');
-  const sourceHash = await projectHash(root);
+  const sourceHash = await renderHash(root);
+  const content = await contentHash(root);
+  const tooling = await toolingHash(root);
   if (existsSync(path.join(root, 'assets'))) await cp(path.join(root, 'assets'), path.join(dist, 'assets'), { recursive: true });
   const theme = themeSource + '\n' + kitCss + '\n' + await prepareFonts(dist);
   const source = await compileDiagrams(original, root, dist);
@@ -35,7 +39,8 @@ export async function build(root = process.cwd()) {
   await marp(['slides.md', '--no-config', '--html', '--theme-set', 'theme.css', '--output', 'index.html'], dist);
   const notes = result.comments.map((comments, index) => `Slide ${index + 1}\n${comments.join('\n\n')}`).join('\n\n---\n\n');
   await writeFile(path.join(dist, 'notes.txt'), notes + '\n');
-  const manifest = { sourceHash, slides: result.count, builtAt: new Date().toISOString() };
+  // sourceHash is the render hash, the key reviews and machine checks compare against.
+  const manifest = { sourceHash, contentHash: content, toolingHash: tooling, slides: result.count, builtAt: new Date().toISOString() };
   await writeFile(path.join(dist, 'build.json'), JSON.stringify(manifest, null, 2) + '\n');
   console.log(`Built ${result.count} slides → dist/index.html`);
   return { ...manifest, root, dist, source, theme, result };
@@ -47,7 +52,7 @@ export async function check(root = process.cwd(), { tolerateFailure = false } = 
   const previews = path.join(built.root, '.ras', 'previews');
   await rm(previews, { recursive: true, force: true });
   await mkdir(previews, { recursive: true });
-  const report = { sourceHash: built.sourceHash, slides: built.slides, checkedAt: new Date().toISOString(), passed: false, problems: [], pages: [] };
+  const report = { sourceHash: built.sourceHash, contentHash: built.contentHash, toolingHash: built.toolingHash, slides: built.slides, checkedAt: new Date().toISOString(), passed: false, problems: [], pages: [] };
   const browser = await puppeteer.launch({ executablePath: await browserPath(), headless: true });
   try {
     const page = await browser.newPage();
@@ -84,9 +89,9 @@ export async function check(root = process.cwd(), { tolerateFailure = false } = 
     }
     for (const url of requests) report.problems.push(`Remote presentation resource: ${url}`);
   } finally { await browser.close(); }
-  if (await projectHash(built.root) !== built.sourceHash) report.problems.push('Source changed during verification; run check again');
+  if (await renderHash(built.root) !== built.sourceHash) report.problems.push('Source changed during verification; run check again');
   report.passed = !report.problems.length && report.pages.every(page => !page.problems.length);
-  const reviews = await reviewState(built.root);
+  const reviews = await reviewState(built.root, built.sourceHash);
   Object.assign(report, { contextHash: reviews.contextHash, visualReview: reviews.visualReview, factualReview: reviews.factualReview });
   await writeFile(path.join(built.root, '.ras', 'check.json'), JSON.stringify(report, null, 2) + '\n');
   for (const problem of report.problems) console.error(problem);
@@ -104,8 +109,8 @@ export async function exportDeck(root = process.cwd()) {
   const pdf = await PDFDocument.load(await readFile(path.join(built.dist, 'slides.pdf')));
   const pages = pdf.getPageCount();
   if (pages !== built.slides) throw new Error(`PDF has ${pages} pages; expected ${built.slides}`);
-  if (await projectHash(built.root) !== built.sourceHash) throw new Error('Source changed during export; export again');
-  await writeFile(path.join(built.dist, 'verification.json'), JSON.stringify({ ...report, ...await reviewState(built.root), pdfPages: pages }, null, 2) + '\n');
+  if (await renderHash(built.root) !== built.sourceHash) throw new Error('Source changed during export; export again');
+  await writeFile(path.join(built.dist, 'verification.json'), JSON.stringify({ ...report, ...await reviewState(built.root, built.sourceHash), pdfPages: pages }, null, 2) + '\n');
   console.log(`Exported ${pages} PDF pages → dist/slides.pdf`);
   if (!report.passed) {
     const count = report.problems.length + report.pages.reduce((sum, page) => sum + page.problems.length, 0);
@@ -120,7 +125,8 @@ export async function preview(root = process.cwd(), port = 4173) {
   let current = false;
   try {
     const manifest = JSON.parse(await readFile(path.join(dist, 'build.json'), 'utf8'));
-    current = manifest?.sourceHash === await projectHash(root)
+    current = manifest?.sourceHash === await renderHash(root)
+      && manifest?.toolingHash === await toolingHash(root)
       && (await stat(path.join(dist, 'index.html'))).isFile();
   } catch (error) {
     if (error.code !== 'ENOENT' && !(error instanceof SyntaxError)) throw error;
@@ -143,14 +149,37 @@ export async function preview(root = process.cwd(), port = 4173) {
   return server;
 }
 
+// Launch the browser and resolve the toolchain once, listing every failure.
+export async function doctor(root = process.cwd(), log = console.log) {
+  const failures = [];
+  log(`Node ${process.version}\nProject: ${root}`);
+  const attempt = async (name, work) => {
+    try { log(`${name}: ${await work()}`); }
+    catch (error) { failures.push(`${name}: ${error.message}`); log(`${name}: FAILED - ${error.message}`); }
+  };
+  await attempt('Browser', async () => {
+    const executablePath = await browserPath();
+    const browser = await puppeteer.launch({ executablePath, headless: true });
+    try { return `${executablePath} (${await browser.version()})`; } finally { await browser.close(); }
+  });
+  await attempt('Marp CLI', async () => require.resolve('@marp-team/marp-cli/marp-cli.js'));
+  await attempt('Fonts', async () => {
+    const packages = ['@fontsource-variable/noto-sans-tc', '@fontsource/roboto', '@fontsource/roboto-condensed', '@fontsource/roboto-mono'];
+    return packages.map(name => { require.resolve(`${name}/package.json`); return name; }).join(', ');
+  });
+  await attempt('Config', async () => { await readConfig(root); return 'valid'; });
+  if (failures.length) throw new Error(`Doctor found ${failures.length} problem(s):\n  ${failures.join('\n  ')}`);
+  log('Doctor: all checks passed.');
+}
+
 if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.argv[1])).href) {
+  const mode = process.argv[2];
   try {
-    const mode = process.argv[2];
     if (mode === 'build') await build();
     else if (mode === 'check') await check();
     else if (mode === 'export') await exportDeck();
     else if (mode === 'preview') await preview(process.cwd(), Number(process.env.PORT || 4173));
-    else if (mode === 'doctor') { console.log(`Node ${process.version}\nBrowser: ${await browserPath()}\nProject: ${process.cwd()}`); await readConfig(process.cwd()); }
+    else if (mode === 'doctor') await doctor();
     else throw new Error('Usage: node scripts/deck.mjs build|check|export|preview|doctor');
-  } catch (error) { console.error(error.message); process.exitCode = 1; }
+  } catch (error) { console.error(`[${mode ?? 'deck'}] ${process.env.RAS_DEBUG ? error.stack : error.message}`); process.exitCode = 1; }
 }

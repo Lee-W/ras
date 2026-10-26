@@ -64,8 +64,13 @@ HTML 與來源的比對通過，並不涵蓋截圖資料夾。
 機器檢查與各類審閱的有效性，以及 `ready`。
 這個指令只讀取狀態，不建置、不看圖，也不修改專案。
 
+雜湊只涵蓋講者自己的內容（投影片、佈景主題、設定、`assets/`、`images/`）；複製進來的工具
+（`scripts/`、`package.json`、`package-lock.json`、`justfile`、`licenses/`）另外計算，
+因此升級 RAS 不會讓既有審閱失效。
+
 `sourceHash` 涵蓋繪製輸入；`contextHash` 另外涵蓋 `brief.md`、`outline.md` 與 `sources.md`，
-包括這些檔案的新增或刪除。觀眾或場地改變也可能影響視覺適切性，因此脈絡變更會讓兩種審閱失效。
+包括這些檔案的新增或刪除；兩者合起來追蹤所有內容輸入。
+`.ras/build.json` 與 `.ras/check.json` 另外記錄 `contentHash`（全部內容）與 `toolingHash`（工具）。觀眾或場地改變也可能影響視覺適切性，因此脈絡變更會讓兩種審閱失效。
 若繪製輸入沒變，機器檢查仍有效。
 
 ```mermaid
@@ -109,7 +114,7 @@ npm run status
 ```
 
 工具會拒絕過期雜湊、缺少觀察、無效頁碼，以及沒有涵蓋全頁的通過紀錄。
-接受的紀錄保存在 `.ras/reviews.json`。
+接受的紀錄保存在 `.ras/reviews.json`；初始化的專案會把它納入 Git（其餘 `.ras/` 內容忽略），審閱證據因此隨簡報儲存庫一起走。
 
 | 狀態 | 意義 |
 | --- | --- |

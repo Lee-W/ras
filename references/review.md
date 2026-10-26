@@ -72,9 +72,14 @@ Never report a previous render's review as evidence for a newer source hash.
 
 Run `npm run status` in the deck. It reports the current `sourceHash` and
 `contextHash`, machine-check freshness, each review's state, and `ready`.
-It does not build, inspect, or mutate the deck. The source hash covers rendering
-inputs. The context hash additionally covers `brief.md`, `outline.md`, and
-`sources.md`, including their creation/deletion. A context change invalidates
+It does not build, inspect, or mutate the deck. Hashes cover the speaker's
+content only (slides, theme, configuration, `assets/`, `images/`); the copied
+kit (`scripts/`, `package.json`, `package-lock.json`, `justfile`, `licenses/`)
+is tracked separately, so upgrading RAS does not invalidate a review. The source
+hash covers rendering inputs. The context hash additionally covers `brief.md`,
+`outline.md`, and `sources.md`, including their creation/deletion, so together
+they track every content input. `.ras/build.json` and `.ras/check.json` also
+record a `contentHash` (all content) and a `toolingHash` (the kit). A context change invalidates
 both reviews because audience and venue changes can affect visual suitability.
 It does not invalidate a machine check when rendered inputs are unchanged.
 
@@ -105,7 +110,7 @@ npm run status
 
 The helper rejects outdated hashes, missing observations, invalid page ranges,
 and a passing review without full page coverage. It stores accepted records in
-`.ras/reviews.json`. States are `pending`, `passed`, `needs_changes`, `stale`, or
+`.ras/reviews.json`, which initialized projects keep in Git so review evidence travels with the deck's repository (the rest of `.ras/` is ignored). States are `pending`, `passed`, `needs_changes`, `stale`, or
 `invalid`; machine checks additionally use `failed`. `ready` requires a current
 passing machine check and both current passing reviews. The records are reviewer
 attestations, not proof that a person/model actually performed the work.
