@@ -13,8 +13,7 @@ description: 使用 RAS 從主題、brief、outline 或素材建立 Marp 簡報�
 
 建立新簡報時，用 `scripts/ras.mjs init` 初始化 deck，更新它的 brief、outline、來源紀錄、
 投影片文字與講者備註，並選擇主題。初始化產生的範例只是可用的樣板，不是使用者完成的內容。
-所有使用者提供與自行選用的圖片，都要依[圖片權利與出處標示](../../references/image-rights.md)檢查。
-把授權證據與必要的出處文字記錄在 `sources.md`，包含使用者提供的圖片；必要的聲明要放進觀眾看得到的投影片。
+所有使用者提供與自行選用的圖片，都依[圖片權利與出處標示](../../references/image-rights.md)檢查。
 接著依[審查與驗證](../../references/review.md)繼續，修正問題，並交付 Markdown、HTML、PDF 與實際的驗證證據。
 
 若使用者提供 profile 路徑，請讀該檔；要求沿用 Wei 先前的演講風格時，該檔是 [Wei 的 profile](../../profiles/wei.md)。

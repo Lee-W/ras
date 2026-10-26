@@ -1,10 +1,8 @@
 # RAS workflow
 
 RAS means **RAISE A SLIDE**. It creates a presentation for a speaker, audience,
-and occasion. Marp Markdown is the editable source. Follow the shared
-[collaboration voice](voice.md): default to Taiwanese
-Mandarin (臺灣華語) for the conversation, while keeping slide language and spoken
-language separate. An explicit conversation-language request takes precedence.
+and occasion. Marp Markdown is the editable source. Conversation language and
+register follow the shared [collaboration voice](voice.md).
 
 Resolve the plugin root from the skill file's location. All scripts and templates
 are relative to that root. Work on the target deck, never on plugin templates when
@@ -14,6 +12,23 @@ and sources.
 Read [project memory](memory.md) for accepted preferences in the selected deck.
 Use relevant entries within the current brief; do not load unrelated personal
 stores. `remember` and `retro` use that reference's dedicated flow.
+
+## Where rules live
+
+Each rule has one owning file. Other files link to the owner and keep only what
+is particular to them: when the rule applies there, or a verdict that only that
+operation gives. Change a rule in its owner, then check the links.
+
+| Topic | Owner |
+| --- | --- |
+| Operation flow, roles, handoffs, and referring to slides | this file |
+| Review criteria, review records, and source/context hashes | [review and verification](review.md) |
+| Marp source conventions and layout mechanics | [Marp authoring](marp.md) |
+| Image rights, evidence, and credits | [image rights and credits](image-rights.md) |
+| Project memory, the profile layer, and retrospectives | [project memory](memory.md) |
+| Conversation voice and language | [collaboration voice](voice.md) |
+
+A speaker's own preferences belong in their profile, not in these shared files.
 
 ## Roles
 
@@ -100,10 +115,11 @@ reach, or the request names none and no deck is active), ask which one before
 reading or writing it; do not guess.
 
 Keep `brief.md` as the evolving brief and `outline.md` as the narrative plan,
-following the [outline template](../templates/outline.md). In these files and in
-`sources.md` and review notes, refer to slides by heading; a page number is a
-convenience that shifts when slides are added or split, and `slides.md` line
-numbers go stale at once, so do not cite them. For `--plan`, stop after a
+following the [outline template](../templates/outline.md). Refer to slides by
+heading everywhere: in these files, `sources.md`, review findings and notes, and
+replies to the speaker. A page number can accompany the heading as a convenience,
+but it shifts when slides are added or split, and `slides.md` line numbers go
+stale at once, so do not cite them. For `--plan`, stop after a
 concrete outline in the template's format. For a request to make the slides,
 continue through authoring, rendering, inspection, and fixes without requiring
 another approval for each reversible step. `outline` differs from `--plan`: it
@@ -125,10 +141,7 @@ confirms, while `--plan` produces one outline and stops.
 - For new time-sensitive technical claims, verify primary documentation or
   source code and record the version/date. Distinguish released behaviour,
   proposals, examples, and assumptions. Mark unresolved claims for review.
-- Follow [image rights and credits](image-rights.md) for every supplied or selected
-  image. Record use evidence and whether creator/rightsholder credits are required
-  in `sources.md`; place required wording in the audience-visible slides.
-  Missing images, unknown rights, or missing required credits keep the deck unready.
+- Check every supplied or selected image under [image rights and credits](image-rights.md).
 - On slides, write counts, quantities, and measurements as numerals (`3 retries`,
   `9 steps`, `1,163 tokens`), not as words. Numerals read faster from the back of a
   room. Pronouns such as "the one you already speak" stay words, and speaker notes

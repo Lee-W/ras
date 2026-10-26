@@ -42,12 +42,10 @@ written layout decisions. Report each finding with page/heading, impact, and a
 proposed correction, and keep required fixes, suggestions, and unverified
 assumptions apart. Review mode reports; it does not rewrite the speaker's story
 or silently change the source. Audit every image, including user-supplied ones,
-under `references/image-rights.md`; unknown rights or missing required credits
-block READY.
+under [image rights and credits](../references/image-rights.md).
 
-`.ras/reviews.json`, written with `review:record`, is the authoritative record
-that decides READY. `review.md` holds optional human-readable notes and never
-replaces a record. Return `NEEDS_CHANGES`, `UNVERIFIED`, or `READY` as the
+Record reviews as [the review contract](../references/review.md) describes; only
+those records decide READY. Return `NEEDS_CHANGES`, `UNVERIFIED`, or `READY` as the
 evidence warrants, name the kinds of review actually performed, and recheck
 repaired findings after a new build; a clean machine report alone is not
 clearance.

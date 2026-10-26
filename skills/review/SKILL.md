@@ -11,8 +11,7 @@ description: 審查 Marp 簡報的敘事清晰度、證據、節奏與渲染後�
 目標 deck 不唯一時，依[共用工作流程的規則](../../references/workflow.md#inputs-and-decisions)先問。
 讀使用者的 brief、完整的 deck 與備註、來源紀錄與最新的輸出。在 deck 目錄中執行檢查，並檢視渲染後的頁面。
 讀 [MASKING 的角色檔](../../roles/masking.md)，了解審查的語氣與裁定。
-依[圖片權利與出處標示](../../references/image-rights.md)稽核所有納入的圖片。
-驗證使用證據與必要的出處文字，再檢查實際 HTML/PDF 中的出處位置。
+依[圖片權利與出處標示](../../references/image-rights.md)稽核所有納入的圖片；
 缺少證據或必要聲明時，不能給出通過的事實審查。
 
 回報必修項目、建議與未驗證的部分，並附上目前的頁碼、標題、原因與具體的修正方式。
