@@ -17,8 +17,9 @@ precedence over all of them; within the layers, the narrower one wins.
 1. **Project:** `.ras/memory.json` in the selected deck, described below. It holds
    what applies to this talk.
 2. **User profile:** one Markdown file the speaker maintains for preferences that
-   hold across their decks. Its path comes from the `profile` key in the deck's
-   `ras.config.json` (relative to the deck directory), from
+   hold across their decks. Its path comes from a `"profile": "<path>"` key you add to the deck's
+   `ras.config.json` yourself (relative to the deck directory; the template does not
+   include it), from
    `ras prompt <operation> --profile <path>`, or from a path the user names in the
    request. The file can live outside any repository. There is no default profile:
    read one only when one of these names it. `profiles/wei.md` in the plugin is an
