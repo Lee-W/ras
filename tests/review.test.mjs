@@ -85,3 +85,24 @@ test('recording rejects incomplete coverage, missing observations, and malformed
   await writeFile(path.join(root, '.ras/check.json'), '{}');
   assert.equal((await status(root)).machine, 'invalid');
 });
+
+test('reviews survive tooling changes but not content changes', async t => {
+  const { root, candidate } = await fixture(t);
+  await recordReview(root, candidate('visual'));
+  await mkdir(path.join(root, 'scripts'));
+  await writeFile(path.join(root, 'scripts/deck.mjs'), '// upgraded kit\n');
+  await writeFile(path.join(root, 'package.json'), '{"version":"9.9.9"}');
+  assert.equal((await status(root)).visualReview, 'passed', 'tooling edits do not stale a review');
+  await writeFile(path.join(root, 'slides.md'), '# Edited\n');
+  assert.equal((await status(root)).visualReview, 'stale');
+});
+
+test('status accepts a precomputed hash and explains an invalid machine report', async t => {
+  const { root } = await fixture(t);
+  const fake = 'a'.repeat(64);
+  assert.equal((await status(root, fake)).sourceHash, fake);
+  await writeFile(path.join(root, '.ras/check.json'), '{}');
+  const invalid = await status(root);
+  assert.equal(invalid.machine, 'invalid');
+  assert.match(invalid.machineError, /Invalid machine report/);
+});

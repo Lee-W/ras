@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { initDeck, makePrompt, operations, pluginRoot } from '../scripts/ras.mjs';
 import { sharedSources } from '../scripts/docs-pages.mjs';
-import { projectHash, render, prepareFonts, readConfig, browserPath, run, defaults } from '../scripts/project.mjs';
+import { renderHash, contentHash, toolingHash, render, prepareFonts, readConfig, browserPath, run, defaults } from '../scripts/project.mjs';
 
 test('all portable operations carry the shared interaction contract in tool and chat hosts', async () => {
   const voice = await readFile(path.join(pluginRoot, 'skills/orchestrator-voice/SKILL.md'), 'utf8');
@@ -111,22 +111,40 @@ test('CLI entry points execute through a symlinked installation directory', asyn
   assert.match(docs.stderr, /port/i);
 });
 
-test('verification hash changes with assets, configuration, scripts, and source', async t => {
+test('content and tooling hashes track different inputs', async t => {
   const root = await mkdtemp(path.join(os.tmpdir(), 'ras-hash-'));
   t.after(() => rm(root, { recursive: true, force: true }));
-  await mkdir(path.join(root, 'assets'));
-  await mkdir(path.join(root, 'scripts'));
-  await mkdir(path.join(root, 'licenses', 'ras'), { recursive: true });
-  let previous = await projectHash(root);
-  for (const file of ['slides.md', 'theme.css', 'ras.config.json', 'package.json', 'package-lock.json', 'justfile', 'RAS-LICENSE', 'RAS-NOTICE.md', 'licenses/README.md', 'licenses/ras/MIT.txt', 'licenses/ras/NOTICE.md', 'assets/image.svg', 'scripts/deck.mjs']) {
-    await writeFile(path.join(root, file), `changed ${file}`);
-    const current = await projectHash(root);
-    assert.notEqual(current, previous, `${file} must invalidate prior evidence`);
-    previous = current;
+  for (const folder of ['assets', 'images', 'scripts', 'licenses/ras']) await mkdir(path.join(root, folder), { recursive: true });
+  const layers = [
+    [contentHash, ['brief.md', 'outline.md', 'slides.md', 'sources.md', 'theme.css', 'ras.config.json', 'assets/image.svg', 'images/photo.svg']],
+    [toolingHash, ['package.json', 'package-lock.json', 'justfile', 'RAS-LICENSE', 'RAS-NOTICE.md', 'licenses/README.md', 'licenses/ras/MIT.txt', 'licenses/ras/NOTICE.md', 'scripts/deck.mjs']],
+  ];
+  for (const [hash, files] of layers) {
+    const other = layers.find(([candidate]) => candidate !== hash)[0];
+    let previous = await hash(root);
+    for (const file of files) {
+      const otherBefore = await other(root);
+      await writeFile(path.join(root, file), `changed ${file}`);
+      const current = await hash(root);
+      assert.notEqual(current, previous, `${file} must invalidate its own layer`);
+      assert.equal(await other(root), otherBefore, `${file} must not touch the other layer`);
+      previous = current;
+    }
   }
+  const rendering = await renderHash(root);
+  for (const file of ['brief.md', 'outline.md', 'sources.md']) {
+    await writeFile(path.join(root, file), `context ${file}`);
+    assert.equal(await renderHash(root), rendering, `${file} is review context, not rendering input`);
+  }
+  await writeFile(path.join(root, 'slides.md'), 'rendering change');
+  assert.notEqual(await renderHash(root), rendering);
   await mkdir(path.join(root, 'dist'));
   await writeFile(path.join(root, 'dist/index.html'), 'generated');
-  assert.equal(await projectHash(root), previous);
+  await mkdir(path.join(root, '.ras'));
+  await writeFile(path.join(root, '.ras/check.json'), '{}');
+  const before = [await contentHash(root), await toolingHash(root)];
+  await writeFile(path.join(root, 'dist/index.html'), 'regenerated');
+  assert.deepEqual([await contentHash(root), await toolingHash(root)], before, 'generated output is not hashed');
 });
 
 test('font output retains the exact upstream license for each font family', async t => {
@@ -185,7 +203,7 @@ test('source hashing rejects asset symlinks outside the project', async t => {
   await mkdir(path.join(root, 'assets'));
   await writeFile(path.join(root, 'outside.txt'), 'outside asset');
   await symlink(path.join(root, 'outside.txt'), path.join(root, 'assets/link.txt'));
-  await assert.rejects(projectHash(root), /rather than symlinks/);
+  await assert.rejects(contentHash(root), /rather than symlinks/);
 });
 
 test('outline prompt expands its own skill in tool and chat hosts', async () => {

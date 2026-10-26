@@ -11,7 +11,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { Marp } from '@marp-team/marp-core';
 import { parseMarkers } from './marp-engine.mjs';
-import { projectHash } from './project.mjs';
+import { renderHash } from './project.mjs';
 
 const USAGE = 'Usage: node scripts/blog.mjs [--screenshots] [--out <dir>] [--force]';
 const HR = /^ {0,3}([-*_])( *\1){2,} *$/;
@@ -337,7 +337,7 @@ async function previewsFor(root, count, warnings) {
   let report;
   try {
     const saved = JSON.parse(await readFile(reportFile, 'utf8'));
-    const fresh = saved.sourceHash === await projectHash(root)
+    const fresh = saved.sourceHash === await renderHash(root)
       && saved.pages?.length === count
       && saved.pages.every(page => page.preview && existsSync(path.join(root, page.preview)));
     if (fresh) report = saved;

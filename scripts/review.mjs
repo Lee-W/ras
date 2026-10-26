@@ -3,14 +3,14 @@ import { createHash } from 'node:crypto';
 import { readFile, realpath } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { projectHash } from './project.mjs';
+import { renderHash } from './project.mjs';
 import { readState, writeState } from './state.mjs';
 
 const kinds = ['visual', 'factual'];
 const digest = /^[a-f0-9]{64}$/;
 
 export async function reviewContextHash(root, sourceHash = undefined) {
-  const inputs = [['sourceHash', sourceHash ?? await projectHash(root)]];
+  const inputs = [['sourceHash', sourceHash ?? await renderHash(root)]];
   for (const file of ['brief.md', 'outline.md', 'sources.md']) {
     try { inputs.push([file, await readFile(path.join(root, file), 'utf8')]); }
     catch (error) { if (error.code !== 'ENOENT') throw error; inputs.push([file, null]); }
@@ -27,8 +27,10 @@ function validateRecord(record) {
   assert.equal(new Set(record.pages).size, record.pages.length, 'Review pages must be unique');
 }
 
-export async function reviewState(root) {
-  const sourceHash = await projectHash(root);
+// sourceHash is the render hash: kit tooling upgrades do not invalidate reviews.
+// Callers that already hold it (a fresh build) pass it in to avoid rehashing.
+export async function reviewState(root, sourceHash = undefined) {
+  sourceHash ??= await renderHash(root);
   const contextHash = await reviewContextHash(root, sourceHash);
   const state = { sourceHash, contextHash, visualReview: 'pending', factualReview: 'pending' };
   let saved;
@@ -42,17 +44,18 @@ export async function reviewState(root) {
     const record = saved?.records[kind];
     if (!record) continue;
     try { validateRecord(record); assert.equal(record.kind, kind); }
-    catch { state[`${kind}Review`] = 'invalid'; continue; }
+    catch (error) { state[`${kind}Review`] = 'invalid'; state[`${kind}ReviewError`] = error.message; continue; }
     // Context changes invalidate both kinds: audience/venue changes affect visuals too.
     state[`${kind}Review`] = record.sourceHash !== sourceHash || record.contextHash !== contextHash ? 'stale' : record.verdict;
   }
   return state;
 }
 
-export async function status(root) {
-  const state = await reviewState(root);
+export async function status(root, sourceHash = undefined) {
+  const state = await reviewState(root, sourceHash);
   let machine = 'pending';
   let slides = null;
+  let machineError;
   try {
     const report = await readState(root, 'check.json');
     if (report) {
@@ -60,8 +63,8 @@ export async function status(root) {
       machine = report.sourceHash === state.sourceHash ? (report.passed ? 'passed' : 'failed') : 'stale';
       if (machine !== 'stale') slides = report.slides;
     }
-  } catch { machine = 'invalid'; }
-  return { ...state, machine, slides, ready: machine === 'passed' && state.visualReview === 'passed' && state.factualReview === 'passed' };
+  } catch (error) { machine = 'invalid'; machineError = error.message; }
+  return { ...state, machine, ...(machineError ? { machineError } : {}), slides, ready: machine === 'passed' && state.visualReview === 'passed' && state.factualReview === 'passed' };
 }
 
 export async function recordReview(root, candidate) {
@@ -86,5 +89,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.
     if (command === 'status' && !file) console.log(JSON.stringify(await status(process.cwd()), null, 2));
     else if (command === 'record' && file && !extra.length) console.log(JSON.stringify(await recordReview(process.cwd(), JSON.parse(await readFile(file, 'utf8'))), null, 2));
     else throw new Error('Usage: node scripts/review.mjs status | record <review.json>');
-  } catch (error) { console.error(error.message); process.exitCode = 1; }
+  } catch (error) { console.error(`[review] ${process.env.RAS_DEBUG ? error.stack : error.message}`); process.exitCode = 1; }
 }
