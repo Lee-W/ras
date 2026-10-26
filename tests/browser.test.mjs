@@ -141,3 +141,24 @@ test('a block box frames whole lines without moving any line of code', async t =
     }
   } finally { await page.close(); }
 });
+
+test('a failing Mermaid diagram is reported by slide and position', async t => {
+  const root = await mkdtemp(path.join(os.tmpdir(), 'ras-mermaid-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const deck = await initDeck(path.join(root, 'talk'));
+  const fence = body => `\`\`\`mermaid\n${body}\n\`\`\``;
+  await writeFile(path.join(deck, 'slides.md'), `---\nmarp: true\ntheme: ras\n---\n\n# One\n\n---\n\n# Two\n\n${fence('flowchart TD\n  A --> B')}\n\n${fence('this is not valid mermaid ((')}\n`);
+  await assert.rejects(build(deck), /Mermaid diagram 2 on slide 2 \(source line \d+\) failed to compile/);
+});
+
+test('doctor launches the browser and lists each failing check separately', async () => {
+  const { doctor } = await import('../scripts/deck.mjs');
+  const lines = [];
+  await doctor(process.cwd(), line => lines.push(line));
+  assert.match(lines.join('\n'), /Browser: .*\(Chrome\/.*\)/);
+  assert.match(lines.join('\n'), /Doctor: all checks passed/);
+  const previous = process.env.RAS_BROWSER_PATH;
+  process.env.RAS_BROWSER_PATH = '/nonexistent/browser';
+  try { await assert.rejects(doctor(process.cwd(), () => {}), /1 problem\(s\):\n\s+Browser: Browser missing/); }
+  finally { if (previous === undefined) delete process.env.RAS_BROWSER_PATH; else process.env.RAS_BROWSER_PATH = previous; }
+});

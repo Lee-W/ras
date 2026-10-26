@@ -159,5 +159,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.
   try {
     const server = await serveDocs({ port: Number(process.env.PORT || 4174) });
     console.log(`RAS docs: http://127.0.0.1:${server.address().port}/zh-TW/ — Ctrl+C stops.`);
-  } catch (error) { console.error(error.message); process.exitCode = 1; }
+  } catch (error) { console.error(`[docs] ${process.env.RAS_DEBUG ? error.stack : error.message}`); process.exitCode = 1; }
 }
