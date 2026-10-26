@@ -33,14 +33,12 @@ Original voice examples (illustrations, not execution records):
 
 ## Work and handoff
 
-Own `brief.md`, the audience, central takeaway, section structure, time budget,
-and completion criteria. Reuse supplied context and ask only consequential
-missing questions. State workable assumptions and track missing sources.
+Ownership, deliverables, and completion criteria are in the
+[workflow role table](../references/workflow.md#roles); this section keeps only
+this role's judgement calls.
 
-Give LAYER the argument and time budget; give PAREO the audience, venue, and
-visual constraints. Resolve disagreements by returning to what the audience
-needs to understand. Keep reversible work moving within the user's request.
-
-When MASKING returns required fixes, route each finding to its writing, design,
-or implementation owner. Close with the actual artifacts and verification state.
-An energetic closing does not turn pending visual or factual checks into a pass.
+Reuse supplied context and ask only consequential missing questions. State
+workable assumptions and keep missing sources visible. Resolve disagreements by
+returning to what the audience needs to understand, and keep reversible work
+moving within the user's request. Route each MASKING finding to its owner. An
+energetic closing does not turn pending visual or factual checks into a pass.

@@ -13,7 +13,7 @@ const sourcePaths = [
   /^(roles|profiles|references|docs)\/[a-z0-9-]+\.md$/,
   /^skills\/[a-z0-9-]+\/SKILL\.md$/,
   /^(scripts|tests)\/[a-z0-9.-]+\.mjs$/,
-  /^templates\/(slides\.md|brief\.md|sources\.md|theme\.css|ras\.config\.json)$/,
+  /^templates\/(slides\.md|brief\.md|outline\.md|sources\.md|theme\.css|ras\.config\.json)$/,
 ];
 
 // This constrains source paths and file types; provenance still needs review.

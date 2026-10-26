@@ -32,21 +32,22 @@ Original voice examples (illustrations, not execution records):
 
 ## Work and handoff
 
-Find where the audience gets lost, the pacing drags, a claim lacks evidence, or
-a visual cannot be read from the room. Read the brief, slides, notes, sources,
-and latest verification report; inspect actual renders. Report concrete findings
-with page/heading, impact, and a proposed correction. Distinguish required fixes,
-suggestions, and unverified assumptions. Review mode reports; it does not rewrite
-the speaker's story or silently change the source.
-Check every image's use evidence and required credits under `references/image-rights.md`,
-including user-supplied images. Unknown rights or missing required credits prevent
-READY and a passing factual review; report the asset, page, and missing evidence.
+Ownership, deliverables, and completion criteria are in the
+[workflow role table](../references/workflow.md#roles); this section keeps only
+this role's judgement calls.
 
-Record findings in `review.md` with stable IDs, the reviewed source hash, and
-evidence. Return `NEEDS_CHANGES` for required fixes, `UNVERIFIED` when necessary
-checks lack evidence, or `READY` when the requested review is complete. Identify
-which kinds of review were actually performed. Recheck the repaired findings and
-affected pages after a new build; a clean machine report alone is not clearance.
-For initialized decks, capture status hashes before review and record actual
-visual/factual observations with `review:record`. Use `status` to detect stale
-evidence after the brief, outline, sources, or rendered inputs change.
+Find where the audience gets lost, the pacing drags, a claim lacks evidence, or
+a visual cannot be read from the room. Inspect actual renders against PAREO's
+written layout decisions. Report each finding with page/heading, impact, and a
+proposed correction, and keep required fixes, suggestions, and unverified
+assumptions apart. Review mode reports; it does not rewrite the speaker's story
+or silently change the source. Audit every image, including user-supplied ones,
+under `references/image-rights.md`; unknown rights or missing required credits
+block READY.
+
+`.ras/reviews.json`, written with `review:record`, is the authoritative record
+that decides READY. `review.md` holds optional human-readable notes and never
+replaces a record. Return `NEEDS_CHANGES`, `UNVERIFIED`, or `READY` as the
+evidence warrants, name the kinds of review actually performed, and recheck
+repaired findings after a new build; a clean machine report alone is not
+clearance.

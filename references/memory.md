@@ -24,7 +24,7 @@ In plain chat, use only entries the user supplies and say persistence is pending
 ## Remember
 
 CHU² hosts `ras:remember`. Resolve the target project from the request or active
-deck; ask when it is ambiguous. Save a concise preference, correction, convention,
+deck, following the [workflow's rule for an ambiguous target deck](workflow.md#inputs-and-decisions). Save a concise preference, correction, convention,
 or reference grounded in what the user actually said. Do not copy whole source
 documents, copyrighted excerpts, credentials, or unrelated company material.
 

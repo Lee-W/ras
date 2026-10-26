@@ -213,16 +213,18 @@ quality; this adapter does not certify every model.
 | --- | --- |
 | 🎧 CHU² | Decisive producer: brief, argument, coordination, completion |
 | 🎤 LAYER | Calm writer: slide text, transitions, speaker notes |
-| 🎹 PAREO | Bright, attentive designer: theme, hierarchy, visual inspection |
+| 🎹 PAREO | Bright, attentive designer: theme, hierarchy, layout decisions |
 | 🎸 LOCK | Earnest implementer: Marp source, builds, concrete repairs |
-| 🥁 MASKING | Direct, dependable reviewer: clarity, pacing, evidence |
+| 🥁 MASKING | Direct, dependable reviewer: clarity, pacing, evidence, rendered pages, image rights |
 
 Roles are responsibilities, not five compulsory agent calls. The host may execute
 them sequentially. The speaker controls what the talk says. Character theming stays
 in the collaboration; the slide theme is chosen per presentation.
 
-Creation follows **CHU² → LAYER → PAREO → LOCK → visual inspection → MASKING →
-CHU²**. Review findings return to the responsible role, then the changed deck is
+Each role owns one set of deck files and a checkable deliverable; see the
+[role table](references/workflow.md#roles). Creation follows **CHU² → LAYER →
+PAREO → LOCK → MASKING → CHU²**, with MASKING inspecting the rendered pages
+against PAREO's written layout decisions. Review findings return to the responsible role, then the changed deck is
 rebuilt and rechecked. Each handoff carries artifact paths and actual evidence.
 The [shared workflow](references/workflow.md) defines the shorter revision,
 review, export, and plan-only routes. Role files provide distinct voices and

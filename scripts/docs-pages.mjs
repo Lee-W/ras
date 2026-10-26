@@ -40,7 +40,7 @@ export const pages = [
 
 export const sharedSources = new Set([
   'SKILL.md', 'profiles/wei.md', 'LICENSE', 'NOTICE.md',
-  'references/voice.md',
+  'references/voice.md', 'templates/outline.md',
   ...['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `roles/${role}.md`),
   ...operations.map(skill => `skills/${skill}/SKILL.md`),
 ]);

@@ -8,6 +8,7 @@ description: 建置、驗證並將既有的 RAS Marp 專案匯出為含備註與
 開場前先讀[協作語氣](../../references/voice.md)。
 再讀[共用工作流程](../../references/workflow.md)與
 [審查規範](../../references/review.md)。找出既有的 deck 目錄，檢視它的建置說明，並執行它的 doctor／export 指令。
+目標 deck 不唯一時，依[共用工作流程的規則](../../references/workflow.md#inputs-and-decisions)先問。
 只有在既有 review 的來源雜湊與脈絡雜湊都仍然相符時（`npm run status`），才能採用它。
 檢視最終的渲染結果，並回報缺少的驗證。回傳原始檔、HTML、PDF、備註與證據的連結。
 使用共用的匯出流程，並在每個啟用角色進場前先讀它的角色檔。

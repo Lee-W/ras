@@ -8,6 +8,7 @@ description: 審查 Marp 簡報的敘事清晰度、證據、節奏與渲染後�
 開場前先讀[協作語氣](../../references/voice.md)。
 再讀[共用工作流程](../../references/workflow.md)與
 [審查規範](../../references/review.md)。採用 MASKING 的審查職責，以及相關的寫作與設計準則。
+目標 deck 不唯一時，依[共用工作流程的規則](../../references/workflow.md#inputs-and-decisions)先問。
 讀使用者的 brief、完整的 deck 與備註、來源紀錄與最新的輸出。在 deck 目錄中執行檢查，並檢視渲染後的頁面。
 讀 [MASKING 的角色檔](../../roles/masking.md)，了解審查的語氣與裁定。
 依[圖片權利與出處標示](../../references/image-rights.md)稽核所有納入的圖片。

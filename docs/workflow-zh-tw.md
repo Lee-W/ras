@@ -18,9 +18,21 @@ RAS 是 **RAISE A SLIDE**，目標是為特定講者、觀眾與場合製作簡�
 | --- | --- |
 | 🎧 CHU² | [協調、需求與交付](../roles/chu2.md) |
 | 🎤 LAYER | [敘事、文字與備註](../roles/layer.md) |
-| 🎹 PAREO | [設計與視覺檢查](../roles/pareo.md) |
+| 🎹 PAREO | [主題、視覺層次與版面決策](../roles/pareo.md) |
 | 🎸 LOCK | [實作、建置與修正](../roles/lock.md) |
-| 🥁 MASKING | [內容、節奏與證據審閱](../roles/masking.md) |
+| 🥁 MASKING | [內容、節奏、證據、畫面與圖片權利審閱](../roles/masking.md) |
+
+每個簡報檔案只有一位負責人；其他角色把自己的貢獻交給負責人寫入，不直接編輯該檔。
+
+| 角色 | 擁有的檔案 | 交付物 | 完成判準 |
+| --- | --- | --- | --- |
+| 🎧 CHU² | `brief.md` | brief | 聽眾、一句核心訊息、時間與場地限制都已寫明 |
+| 🎤 LAYER | `outline.md`、`sources.md` | 依 [outline 樣板](../templates/outline.md)寫成的 outline（含每頁的 `layout:` 欄位）；交給 LOCK 寫進 `slides.md` 的投影片文字與備註；來源條目 | 每頁只有一個目的；每個主張與圖片都能追到來源條目 |
+| 🎹 PAREO | `theme.css` | `theme.css` 的變更；每頁 `layout:` 欄位的值，由 LAYER 寫進 `outline.md`；圖片條目，由 LAYER 寫進 `sources.md` | 版面決策在渲染前就寫下來，LOCK 與 MASKING 可以拿渲染結果對照 |
+| 🎸 LOCK | `slides.md`、建置產物（`dist/`、`.ras/` 的建置與檢查檔） | 來源雜湊、報告路徑，以及實際執行過的指令與結果 | 用回報的指令能從來源建置出這份簡報 |
+| 🥁 MASKING | `review.md`（可選的人讀筆記）、`.ras/reviews.json`（權威） | 以 `review:record` 寫入的紀錄 | 每個問題都有頁面標題、影響與修正方式；渲染後檢查與圖片權利稽核都有紀錄 |
+
+渲染後的畫面檢查與圖片權利稽核只歸 MASKING。PAREO 的版面決策是 MASKING 對照渲染結果的準則。
 
 角色是責任分工，不強制呼叫五次模型。依宿主的委派規則執行；
 無法或不需要委派時，由目前代理依序完成各輪工作。
@@ -57,8 +69,7 @@ flowchart TD
   C -->|是| D["交付計畫與待補來源"]
   C -->|否| E["PAREO：設計主題與版面"]
   E --> F["LOCK：實作與建置檢查"]
-  F --> G["PAREO：檢視最新畫面"]
-  G --> H["MASKING：審閱內容與證據"]
+  F --> H["MASKING：檢視最新畫面、審閱內容與證據"]
   H --> I{"審閱結果"}
   I -->|NEEDS_CHANGES| J["CHU²：分派修正"]
   J --> K["負責角色修正來源或主題"]
@@ -69,26 +80,26 @@ flowchart TD
 
 | 操作 | 工作順序 | 完成條件 |
 | --- | --- | --- |
-| `create` | CHU² 釐清需求 → LAYER 敘事 → PAREO 設計 → LOCK 建置 → PAREO 看圖 → MASKING 審閱 → CHU² 交付 | 最新來源、產出與審閱證據 |
+| `create` | CHU² 釐清需求 → LAYER 敘事 → PAREO 設計 → LOCK 建置 → MASKING 看圖並審閱 → CHU² 交付 | 最新來源、產出與審閱證據 |
 | `create --plan` | CHU² 釐清需求 → LAYER 大綱，必要時加入 PAREO 的視覺建議 | 大綱、時間預算、假設與待補來源 |
 | `outline` | CHU² 與使用者釐清 brief → LAYER 草擬並迭代 outline，必要時加入 PAREO 的視覺建議 → 使用者確認 | 確認過的 `outline.md`（brief 有變動時含 `brief.md`）；不渲染投影片；既有審閱會變成 stale |
 | `revise` | CHU² 確認回饋範圍 → 相關寫作／設計工作 → LOCK 更新 → MASKING 複查 | 完成指定修改並檢查最新畫面 |
 | `review` | MASKING 主導，按需要參照 LAYER／PAREO 的準則 | 提出問題與審閱狀態，保留可編輯來源原樣 |
-| `export` | LOCK 建置／檢查／匯出 → PAREO／MASKING 檢視或確認相符的既有審閱 → CHU² 交付 | 產出與實際驗證狀態 |
+| `export` | LOCK 建置／檢查／匯出 → MASKING 檢視或確認相符的既有審閱 → CHU² 交付 | 產出與實際驗證狀態 |
 | `remember` | CHU² 確認目標專案，儲存已授權條目 | 已存條目與路徑，或明確說明尚未儲存 |
 | `retro` | CHU² 提出有依據的經驗 → 使用者選擇 → remember 儲存 | 實際儲存的 ID 與尚未決定的候選項目 |
 
 交接內容包括檔案路徑、修改頁面的標題、可取得的來源雜湊、要保留的決定、
 實際執行的檢查，以及未解決的問題。
 `brief.md` 與 `outline.md` 記錄意圖，`sources.md` 記錄證據與素材來源，
-`review.md` 記錄問題及修正情形，這些檔案都留在簡報專案內。
+`.ras/reviews.json` 記錄審閱結果，`review.md` 是可選的問題與修正筆記，這些檔案都留在簡報專案內。
 
 遇到 `NEEDS_CHANGES`，由 CHU² 分派責任，修正後由 LOCK 重建，再交 MASKING 檢查。
 同一問題經過兩次修正仍存在時，說明嘗試過的方法與缺少的決定或能力，避免原地重複。
 `UNVERIFIED` 表示應完成能做的部分並指出待檢查項目；`READY` 必須有清楚的範圍與證據。
 
 單一模型的多輪工作不能稱為獨立審閱或多代理對話。
-真正委派時，交付實際檔案，並讓每個編輯中的檔案只有一位負責人。
+真正委派時，交付實際檔案，並依上方角色表讓每個編輯中的檔案只有一位負責人。
 不能捏造交接、代理回覆或平行執行；純聊天模式中的交接只代表草稿內容，繪製與檢查仍待執行。
 
 ## 輸入與決策
@@ -97,10 +108,13 @@ flowchart TD
 確認觀眾與先備知識、演講時間、核心訊息、場合與日期、投影片語言、口說語言及指定範本。
 低風險假設可以明確說明後繼續；只有主題或大綱也足以開始草稿。
 
-`brief.md` 隨需求更新，`outline.md` 保存敘事計畫。
+目標簡報不唯一時（觸及多個簡報目錄，或需求沒有指定、也沒有正在操作的簡報），
+讀寫之前先問是哪一份，不要猜。
+
+`brief.md` 隨需求更新，`outline.md` 依 [outline 樣板](../templates/outline.md)保存敘事計畫。
 這些檔案與 `sources.md`、審閱紀錄都以標題指稱投影片；頁碼只是方便參考，插頁或拆頁就會位移，
 `slides.md` 的行號更會立刻過期，所以不要引用行號。
-`--plan` 交付各段目的、約略時間、視覺機會與待補來源後停止。
+`--plan` 交付符合樣板格式的大綱後停止。
 使用者要求製作投影片時，持續完成撰寫、繪製、檢查與修正，不必為每個可還原步驟重複詢問。
 `outline` 與 `--plan` 不同：`outline` 是來回討論，使用者確認後才寫入 `outline.md`；`--plan` 則是一次產出大綱後就停止。
 

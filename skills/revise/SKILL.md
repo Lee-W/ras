@@ -8,6 +8,7 @@ description: 依內容、節奏或視覺回饋修改既有的 Marp 投影片與�
 開場前先讀[協作語氣](../../references/voice.md)。
 再讀[共用工作流程](../../references/workflow.md)與
 [Marp 慣例](../../references/marp.md)。讀 deck、brief 與要求的修改。
+目標 deck 不唯一時，依[共用工作流程的規則](../../references/workflow.md#inputs-and-decisions)先問。
 保留不相關的內容、揭露順序、備註與使用者自己的編輯。
 使用共用的修訂流程，並在每個啟用角色進場前先讀它的角色檔。
 
