@@ -15,18 +15,18 @@ import { readConfig, defaults } from '../scripts/config.mjs';
 import { prepareFonts } from '../scripts/fonts.mjs';
 
 test('all portable operations carry the shared interaction contract in tool and chat hosts', async () => {
-  const voice = await readFile(path.join(pluginRoot, 'skills/orchestrator-voice/SKILL.md'), 'utf8');
+  const voice = await readFile(path.join(pluginRoot, 'references/voice.md'), 'utf8');
   for (const operation of ['create', 'outline', 'revise', 'review', 'export', 'remember', 'retro']) {
     for (const chat of [false, true]) {
       const prompt = await makePrompt(operation, '投影片用英文，繼續用臺灣華語討論。', { chat });
       assert.ok(prompt.includes(voice), `${operation} (chat=${chat}) must expand the full interaction contract`);
-      assert.equal(prompt.split('## Source: skills/orchestrator-voice/SKILL.md').length - 1, 1);
+      assert.equal(prompt.split('## Source: references/voice.md').length - 1, 1);
     }
   }
 });
 
 test('portable prompts expand the selected workflow without requiring a vendor', async () => {
-  const roleFiles = ['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `agents/${role}.md`);
+  const roleFiles = ['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `roles/${role}.md`);
   const roles = await Promise.all(roleFiles.map(file => readFile(path.join(pluginRoot, file), 'utf8')));
   const imageRights = await readFile(path.join(pluginRoot, 'references/image-rights.md'), 'utf8');
   for (const operation of ['create', 'outline', 'revise', 'review', 'export']) {
@@ -221,14 +221,12 @@ test('outline prompt expands its own skill in tool and chat hosts', async () => 
 });
 
 test('every operation skill is registered in the CLI, docs, router and root skill', async () => {
-  const internal = ['command-router', 'orchestrator-voice'];
   const entries = (await readdir(path.join(pluginRoot, 'skills'), { withFileTypes: true })).filter(entry => entry.isDirectory()).map(entry => entry.name);
-  assert.deepEqual(entries.filter(name => !internal.includes(name)).sort(), [...operations].sort());
-  const router = await readFile(path.join(pluginRoot, 'skills/command-router/SKILL.md'), 'utf8');
+  assert.deepEqual(entries.sort(), [...operations].sort());
   const root = await readFile(path.join(pluginRoot, 'SKILL.md'), 'utf8');
   for (const operation of operations) {
     assert.ok(sharedSources.has(`skills/${operation}/SKILL.md`), `${operation} must be a docs shared source`);
-    assert.ok(router.includes(`[${operation}](../${operation}/SKILL.md)`), `${operation} must be routed`);
+    assert.ok(root.includes(`[${operation}](skills/${operation}/SKILL.md)`), `${operation} must be routed`);
     assert.ok(root.includes(`ras:${operation}`), `${operation} must be mentioned in the root SKILL.md`);
   }
 });

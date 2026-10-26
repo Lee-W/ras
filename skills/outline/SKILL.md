@@ -5,9 +5,9 @@ description: 與使用者來回討論簡報的 brief 與 outline，確認後才�
 
 # RAS — outline
 
-開場前先讀[協作語氣](../orchestrator-voice/SKILL.md)。
-再讀[共用工作流程](../../references/workflow.md)、[CHU² 的角色](../../agents/chu2.md)與
-[LAYER 的角色](../../agents/layer.md)；只有在需要視覺建議時，才讀 PAREO 的角色檔。
+開場前先讀[協作語氣](../../references/voice.md)。
+再讀[共用工作流程](../../references/workflow.md)、[CHU² 的角色](../../roles/chu2.md)與
+[LAYER 的角色](../../roles/layer.md)；只有在需要視覺建議時，才讀 PAREO 的角色檔。
 以使用者的請求或附帶的參數作為討論起點。這個操作的產物是確認過的 `outline.md`，不是簡報。
 
 ## 流程

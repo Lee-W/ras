@@ -16,11 +16,11 @@ RAS 是 **RAISE A SLIDE**，目標是為特定講者、觀眾與場合製作簡�
 
 | 角色 | 職責與指示 |
 | --- | --- |
-| 🎧 CHU² | [協調、需求與交付](../agents/chu2.md) |
-| 🎤 LAYER | [敘事、文字與備註](../agents/layer.md) |
-| 🎹 PAREO | [設計與視覺檢查](../agents/pareo.md) |
-| 🎸 LOCK | [實作、建置與修正](../agents/lock.md) |
-| 🥁 MASKING | [內容、節奏與證據審閱](../agents/masking.md) |
+| 🎧 CHU² | [協調、需求與交付](../roles/chu2.md) |
+| 🎤 LAYER | [敘事、文字與備註](../roles/layer.md) |
+| 🎹 PAREO | [設計與視覺檢查](../roles/pareo.md) |
+| 🎸 LOCK | [實作、建置與修正](../roles/lock.md) |
+| 🥁 MASKING | [內容、節奏與證據審閱](../roles/masking.md) |
 
 角色是責任分工，不強制呼叫五次模型。依宿主的委派規則執行；
 無法或不需要委派時，由目前代理依序完成各輪工作。
@@ -28,7 +28,7 @@ RAS 是 **RAISE A SLIDE**，目標是為特定講者、觀眾與場合製作簡�
 純聊天模式應提供標示檔名的草稿與執行步驟，不能宣稱已寫檔、繪製或檢查畫面。
 沒有外掛探索功能的宿主，可用 `scripts/ras.mjs prompt <operation> <request>` 展開相同指示。
 
-每個操作在開場前讀取[共用互動規則](../skills/orchestrator-voice/SKILL.md)，
+每個操作在開場前讀取[共用互動規則](../references/voice.md)，
 開始角色工作前再讀取該角色檔案。🎧 CHU² 負責定方向與交付，
 各工作角色在交接時用一至兩句保留實際觀察、自己的反應與下一步；
 接棒者接住上一輪的具體決定，不只報「完成，換下一位」。

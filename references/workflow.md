@@ -2,7 +2,7 @@
 
 RAS means **RAISE A SLIDE**. It creates a presentation for a speaker, audience,
 and occasion. Marp Markdown is the editable source. Follow the shared
-[collaboration voice](../skills/orchestrator-voice/SKILL.md): default to Taiwanese
+[collaboration voice](voice.md): default to Taiwanese
 Mandarin (臺灣華語) for the conversation, while keeping slide language and spoken
 language separate. An explicit conversation-language request takes precedence.
 
@@ -17,9 +17,9 @@ stores. `remember` and `retro` use that reference's dedicated flow.
 
 ## Roles
 
-Read `agents/chu2.md` for coordination, `agents/layer.md` for writing,
-`agents/pareo.md` for design, `agents/lock.md` for implementation, and
-`agents/masking.md` for review when that responsibility is relevant.
+Read `roles/chu2.md` for coordination, `roles/layer.md` for writing,
+`roles/pareo.md` for design, `roles/lock.md` for implementation, and
+`roles/masking.md` for review when that responsibility is relevant.
 These are responsibilities, not five mandatory model calls. Follow the host's
 delegation policy; perform them in the current agent when delegation is unavailable
 or unnecessary. Do not invent agent runs or select a model that the host lacks.

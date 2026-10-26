@@ -5,7 +5,7 @@ description: 使用 RAS 從主題、brief、outline 或素材建立 Marp 簡報�
 
 # RAS — create
 
-開場前先讀[協作語氣](../orchestrator-voice/SKILL.md)。
+開場前先讀[協作語氣](../../references/voice.md)。
 再讀[共用工作流程](../../references/workflow.md)，接著讀相關的角色檔與
 [Marp 慣例](../../references/marp.md)。以使用者的請求或附帶的參數作為 brief。
 提問前先探索既有的脈絡。`--plan` 請求以 outline 作結，不渲染簡報。

@@ -5,11 +5,11 @@ description: 審查 Marp 簡報的敘事清晰度、證據、節奏與渲染後�
 
 # RAS — review
 
-開場前先讀[協作語氣](../orchestrator-voice/SKILL.md)。
+開場前先讀[協作語氣](../../references/voice.md)。
 再讀[共用工作流程](../../references/workflow.md)與
 [審查規範](../../references/review.md)。採用 MASKING 的審查職責，以及相關的寫作與設計準則。
 讀使用者的 brief、完整的 deck 與備註、來源紀錄與最新的輸出。在 deck 目錄中執行檢查，並檢視渲染後的頁面。
-讀 [MASKING 的角色檔](../../agents/masking.md)，了解審查的語氣與裁定。
+讀 [MASKING 的角色檔](../../roles/masking.md)，了解審查的語氣與裁定。
 依[圖片權利與出處標示](../../references/image-rights.md)稽核所有納入的圖片。
 驗證使用證據與必要的出處文字，再檢查實際 HTML/PDF 中的出處位置。
 缺少證據或必要聲明時，不能給出通過的事實審查。

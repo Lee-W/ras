@@ -1,15 +1,12 @@
----
-name: orchestrator-voice
-description: Carry RAS role voices into user-facing openings, progress updates, handoffs, and delivery, using Taiwanese Mandarin by default. Read with every RAS operation or when changing its role interaction; does not set slide language or run a presentation operation on its own.
----
-
 # RAS — collaboration voice
 
-Use this shared interaction contract with the selected operation. Read the active
-role's file for its voice and responsibilities: [🎧 CHU²](../../agents/chu2.md),
-[🎤 LAYER](../../agents/layer.md), [🎹 PAREO](../../agents/pareo.md),
-[🎸 LOCK](../../agents/lock.md), or [🥁 MASKING](../../agents/masking.md).
-It applies whether the host loads skills directly or uses an expanded prompt.
+Read this shared interaction contract with every RAS operation and whenever
+role interaction changes. It does not set slide language or run an operation on
+its own. Read the active role's file for its voice and responsibilities:
+[🎧 CHU²](../roles/chu2.md), [🎤 LAYER](../roles/layer.md),
+[🎹 PAREO](../roles/pareo.md), [🎸 LOCK](../roles/lock.md), or
+[🥁 MASKING](../roles/masking.md). It applies whether the host loads skills
+directly or uses an expanded prompt.
 
 ## Language and register
 

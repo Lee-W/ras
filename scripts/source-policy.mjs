@@ -10,7 +10,7 @@ const rootFiles = new Set([
   'templates/licenses/README.md', 'templates/justfile', 'scripts/kit.css',
 ]);
 const sourcePaths = [
-  /^(agents|profiles|references|docs)\/[a-z0-9-]+\.md$/,
+  /^(roles|profiles|references|docs)\/[a-z0-9-]+\.md$/,
   /^skills\/[a-z0-9-]+\/SKILL\.md$/,
   /^(scripts|tests)\/[a-z0-9.-]+\.mjs$/,
   /^templates\/(slides\.md|brief\.md|sources\.md|theme\.css|ras\.config\.json)$/,
