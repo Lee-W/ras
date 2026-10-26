@@ -38,7 +38,7 @@ RAS 是 **RAISE A SLIDE**，目標是為特定講者、觀眾與場合製作簡�
 無法或不需要委派時，由目前代理依序完成各輪工作。
 流程支援 Codex、Claude Code 與具備工具能力的開放模型，不要求特定供應商或 API。
 純聊天模式應提供標示檔名的草稿與執行步驟，不能宣稱已寫檔、繪製或檢查畫面。
-沒有外掛探索功能的宿主，可用 `scripts/ras.mjs prompt <operation> <request>` 展開相同指示。
+沒有外掛探索功能的宿主，可用 `scripts/ras.mjs prompt <operation> [--profile <path>] <request>` 展開該操作用到的指示。
 
 每個操作在開場前讀取[共用互動規則](../references/voice.md)，
 開始角色工作前再讀取該角色檔案。🎧 CHU² 負責定方向與交付，

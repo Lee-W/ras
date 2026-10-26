@@ -6,7 +6,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import { initDeck } from '../scripts/scaffold.mjs';
-import { makePrompt, operations } from '../scripts/prompt.mjs';
+import { makePrompt, operations, promptFiles } from '../scripts/prompt.mjs';
 import { pluginRoot } from '../scripts/plugin-root.mjs';
 import { sharedSources } from '../scripts/docs-pages.mjs';
 import { render, browserPath, run } from '../scripts/project.mjs';
@@ -26,26 +26,61 @@ test('all portable operations carry the shared interaction contract in tool and 
 });
 
 test('portable prompts expand the selected workflow without requiring a vendor', async () => {
-  const roleFiles = ['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `roles/${role}.md`);
-  const roles = await Promise.all(roleFiles.map(file => readFile(path.join(pluginRoot, file), 'utf8')));
-  const imageRights = await readFile(path.join(pluginRoot, 'references/image-rights.md'), 'utf8');
-  for (const operation of ['create', 'outline', 'revise', 'review', 'export']) {
+  const read = file => readFile(path.join(pluginRoot, file), 'utf8');
+  const imageRights = await read('references/image-rights.md');
+  const role = name => `roles/${name}.md`;
+  const allRoles = ['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role);
+  const expected = {
+    create: ['references/workflow.md', 'templates/outline.md', 'references/marp.md', 'references/review.md', 'references/image-rights.md', 'references/memory.md', ...allRoles],
+    outline: ['references/workflow.md', 'templates/outline.md', role('chu2'), role('layer')],
+    revise: ['references/workflow.md', 'references/marp.md', 'references/review.md', 'references/image-rights.md', 'references/memory.md', ...allRoles],
+    review: ['references/workflow.md', 'references/review.md', 'references/image-rights.md', role('masking'), role('lock')],
+    export: ['references/workflow.md', 'references/marp.md', 'references/review.md', 'references/image-rights.md', role('lock'), role('masking')],
+  };
+  for (const [operation, files] of Object.entries(expected)) {
+    const sources = ['references/voice.md', `skills/${operation}/SKILL.md`, ...files];
+    assert.deepEqual(promptFiles(operation), sources, `${operation} expands exactly the files it needs`);
     const prompt = await makePrompt(operation, 'Explain retries --plan');
+    assert.deepEqual([...prompt.matchAll(/^## Source: (.+)$/gm)].map(match => match[1]), sources);
     assert.ok(prompt.includes(`# RAS — ${operation}`));
-    assert.match(prompt, /# Marp authoring contract/);
-    assert.match(prompt, /# Review and verification/);
-    assert.ok(prompt.includes(imageRights), 'Every presentation operation must include the image-rights review');
+    for (const file of sources) assert.ok(prompt.includes(await read(file)), `${operation} must include the complete ${file}`);
     assert.match(prompt, /Without those tools, return a draft/);
     assert.match(prompt, /Explain retries --plan/);
     assert.doesNotMatch(prompt, /ANTHROPIC_API_KEY|OPENAI_API_KEY/);
-    for (const role of roles) assert.ok(prompt.includes(role), 'Portable prompts must include the complete role instructions');
+    assert.doesNotMatch(prompt, /## Active profile/);
+  }
+  for (const operation of ['create', 'revise', 'review', 'export']) {
+    assert.ok((await makePrompt(operation)).includes(imageRights), `${operation} must include the image-rights review`);
   }
   await assert.rejects(makePrompt('../secrets'), /Choose an operation/);
   const chat = await makePrompt('create', 'A short talk', { chat: true });
   assert.match(chat, /Active host: chat only/);
   assert.match(chat, /Do not simulate tool calls/);
-  for (const role of roles) assert.ok(chat.includes(role), 'Chat mode must preserve role voices and handoffs');
+  for (const file of allRoles) assert.ok(chat.includes(await read(file)), 'Chat mode must preserve role voices and handoffs');
   assert.ok(chat.includes(imageRights), 'Chat mode must retain image-rights checks and their evidence limits');
+});
+
+test('prompt appends a supplied profile only when --profile is given', async t => {
+  const folder = await mkdtemp(path.join(os.tmpdir(), 'ras-profile-'));
+  t.after(() => rm(folder, { recursive: true, force: true }));
+  const profile = path.join(folder, 'speaker.md');
+  await writeFile(profile, '# Speaker profile\n\nShort sentences; one idea per slide.\n');
+  for (const chat of [false, true]) {
+    const withProfile = await makePrompt('create', 'A short talk', { chat, profile });
+    assert.match(withProfile, /## Active profile\n\nSource: .*speaker\.md/);
+    assert.ok(withProfile.trimEnd().endsWith('Short sentences; one idea per slide.'), 'The profile is the final section');
+    assert.doesNotMatch(await makePrompt('create', 'A short talk', { chat }), /## Active profile/);
+  }
+  await assert.rejects(makePrompt('create', '', { profile: path.join(folder, 'missing.md') }), /Cannot read profile/);
+  const cli = args => spawnSync(process.execPath, [path.join(pluginRoot, 'scripts/ras.mjs'), 'prompt', ...args], { encoding: 'utf8' });
+  const result = cli(['outline', '--profile', profile, 'Discuss', 'retries']);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /## Active profile/);
+  assert.match(result.stdout, /## User request\n\nDiscuss retries\n/);
+  assert.doesNotMatch(cli(['outline', 'Discuss']).stdout, /## Active profile/);
+  const missing = cli(['outline', '--profile']);
+  assert.equal(missing.status, 1);
+  assert.match(missing.stderr, /--profile needs a file path/);
 });
 
 test('Marp keeps fenced separators, untitled pages, reveal order, and speaker notes', async () => {

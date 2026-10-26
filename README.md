@@ -192,7 +192,9 @@ into a deck created with `init`, then run `npm run export`. Chat mode explicitly
 returns file contents and commands; it cannot write files, browse sources, inspect
 images, or export on its own. `prompt outline`, `prompt revise`, `prompt review`, `prompt export`,
 `prompt remember`, and `prompt retro` expand the matching shared operations;
-`--plan` remains plan-only for creation. Memory prompts in chat mode propose
+`--plan` remains plan-only for creation. Each operation expands only the
+references and roles it uses. Add `--profile <path>` to append a speaker profile
+such as `profiles/wei.md` as a final "Active profile" section. Memory prompts in chat mode propose
 entries and saving steps without claiming to persist them.
 
 For a tool-capable model through Codex's local provider instead:

@@ -41,8 +41,8 @@ or unnecessary. Do not invent agent runs or select a model that the host lacks.
 The workflow supports Codex, Claude Code, and tool-capable open models. No role
 requires a particular model vendor or API. In a chat-only host, return clearly
 labelled draft file contents and execution steps; do not claim local actions or
-visual checks. `scripts/ras.mjs prompt <operation> <request>` expands these same
-instructions for hosts without plugin or skill discovery.
+visual checks. `scripts/ras.mjs prompt <operation> [--profile <path>] <request>` expands the
+instructions that operation uses for hosts without plugin or skill discovery.
 
 Read the shared collaboration voice before the opening and the active role file
 before its pass. Keep that role's observation and response in visible handoffs,
