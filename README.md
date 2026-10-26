@@ -313,7 +313,7 @@ and the limits of model/host testing.
 | [Review and verification](references/review.md) | Machine checks, visual/factual review, and record freshness |
 | [Image rights and credits](references/image-rights.md) | Use basis for supplied images, rightsholder credits, and final-output checks |
 | [Project memory](references/memory.md) | Memory layers, remember, retro, storage scope, and precedence |
-| [Wei profile](profiles/wei.md) | An example speaker profile, with its [style study](profiles/wei-style-study.md) and [legacy format notes](profiles/wei-legacy-format.md) |
+| [Wei profile](profiles/wei.md) | An example speaker profile, with its [style study](profiles/wei-style-study.md) and legacy deck format notes |
 | [Development](docs/development.md) | Local checks, CI, versions, and releases |
 | [Dependencies](docs/dependencies.md) | Pinned versions, CVE notes, and fonts |
 | [Validation record](docs/validation.md) | Executed checks, historical evidence, and testing limits |

@@ -288,7 +288,7 @@ Mermaid 會內嵌標籤字型。其他文字系統或品牌字型可放入專案
 | [審閱與驗證](docs/review-zh-tw.md) | 機器檢查、視覺／事實審閱與紀錄有效性 |
 | [圖片權利與標示](docs/image-rights-zh-tw.md) | 提供圖片的使用依據、權利人標示與最終產出查核 |
 | [專案記憶](docs/memory-zh-tw.md) | 記憶的三層、remember、retro、儲存範圍與優先順序 |
-| [Wei profile](profiles/wei.md) | 講者 profile 範例，另有[風格研究](profiles/wei-style-study.md)與[舊格式說明](profiles/wei-legacy-format.md)（英文） |
+| [Wei profile](profiles/wei.md) | 講者 profile 範例，另有[風格研究](profiles/wei-style-study.md)，舊格式說明在同一份 profile 內（英文） |
 | [開發與自動化](docs/development-zh-tw.md) | 本機檢查、CI、版本與發布 |
 | [相依套件版本](docs/dependencies-zh-tw.md) | 固定版本、CVE 對照與字型 |
 | [驗證紀錄](docs/validation-zh-tw.md) | 已執行的驗證、歷史證據與測試限制 |
