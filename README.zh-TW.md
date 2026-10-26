@@ -22,18 +22,11 @@ RAS 的原創程式碼、文件與範本採 [MIT 授權](LICENSE)。這是非官
 AI 宿主提供模型與工具；JavaScript 腳本負責建置及驗證，不會呼叫 AI API。
 創作流程需要 AI 宿主，產生的簡報專案則可以自行建置。
 
-## 在本機閱讀文件
+## 搭配 AI 宿主快速開始
 
-在本儲存庫執行一次 `npm ci`，再啟動文件網站：
-
-```sh
-npm run docs
-```
-
-開啟[臺灣華語文件](http://127.0.0.1:4174/zh-TW/)或 [English documentation](http://127.0.0.1:4174/en/)。
-頁首切換語言時會保留目前文件，導覽與內容一起切換，Mermaid 也在本機繪製。
-修改 Markdown 後重新整理即可，可用 `PORT` 改變連接埠。
-這個指令預覽儲存庫文件；下方的簡報預覽指令則在初始化後的簡報專案內執行。
+把 RAS 安裝為 AI 宿主的外掛（見下方「搭配 Codex、Claude Code 或開放模型」），
+接著提出需求：`/ras:create 為新手工程師準備 15 分鐘的重試機制演講`，或直接用自然語言說。
+只能純聊天時，改執行 `node scripts/ras.mjs prompt create --chat '…'`，再貼上輸出。
 
 ## 建立獨立簡報
 
@@ -86,6 +79,19 @@ npm run preview
 預覽服務提供 `dist/` 的內容；修改來源後需重新建置並重新整理頁面。
 可用 `PORT` 指定其他本機連接埠。Marp HTML 支援鍵盤換頁與講者模式。
 **HTML 包含講者備註；只要提供觀眾投影片時，請使用 PDF。**
+
+## 在本機閱讀文件
+
+在本儲存庫執行一次 `npm ci`，再啟動文件網站：
+
+```sh
+npm run docs
+```
+
+開啟[臺灣華語文件](http://127.0.0.1:4174/zh-TW/)或 [English documentation](http://127.0.0.1:4174/en/)。
+頁首切換語言時會保留目前文件，導覽與內容一起切換，Mermaid 也在本機繪製。
+修改 Markdown 後重新整理即可，可用 `PORT` 改變連接埠。
+這個指令預覽儲存庫文件；上方的簡報預覽指令則在初始化後的簡報專案內執行。
 
 ## 升級既有簡報
 
@@ -207,7 +213,7 @@ RAS 不會代選或下載模型，也不會修改 provider 設定。
 講者決定演講內容，角色風格用於協作對話，投影片風格則依每份簡報選擇。
 若希望使用一般語氣，可以要求省略角色標籤與口吻。
 
-協作預設使用臺灣華語，與投影片語言分開。🎧 CHU² 定方向與收尾，
+協作跟隨使用者的語言，無法判斷時預設臺灣華語，與投影片語言分開；使用者明確指定時依其要求。🎧 CHU² 定方向與收尾，
 工作角色則在交棒時接住前一輪的具體發現，用自己的節奏說明下一步。
 例如，🎤 LAYER 提出「結論留在頁面上，背景移到備註」後，
 🎸 LOCK 會接下這個決定並說明要如何修改與檢查。
@@ -233,7 +239,9 @@ flowchart TD
 [工作流程](docs/workflow-zh-tw.md)另有修改、審閱、匯出與只做計畫的路線。
 單一模型依序執行時，會如實說明，不能宣稱有獨立代理審閱。
 
-可選用的 [Wei profile](profiles/wei.md)整理了短句、大字、逐步揭露、程式碼／圖表與推進敘事的幽默等風格觀察。
+講者 profile 是你自己的一份 Markdown，存放跨簡報都成立的偏好；
+在 `ras.config.json` 設定 `profile`，或加上 `--profile`，就能讓簡報使用它（見[記憶的三層](docs/memory-zh-tw.md#記憶的三層)）。
+[Wei profile](profiles/wei.md)是範例，不是預設，整理了短句、大字、逐步揭露、程式碼／圖表與推進敘事的幽默等風格觀察。
 研討會、公司識別與個人插圖屬於各簡報專案。
 
 ## 品質與範圍
@@ -276,11 +284,12 @@ Mermaid 會內嵌標籤字型。其他文字系統或品牌字型可放入專案
 
 | 文件 | 內容 |
 | --- | --- |
-| [工作流程](docs/workflow-zh-tw.md) | 角色分工、各操作路線與交付方式 |
+| [工作流程](docs/workflow-zh-tw.md) | 角色分工、各操作路線、交付方式，以及每條規則放在哪裡 |
 | [Marp 撰寫指南](docs/marp-zh-tw.md) | 投影片、備註、主題、Mermaid 與本機素材 |
 | [審閱與驗證](docs/review-zh-tw.md) | 機器檢查、視覺／事實審閱與紀錄有效性 |
 | [圖片權利與標示](docs/image-rights-zh-tw.md) | 提供圖片的使用依據、權利人標示與最終產出查核 |
-| [專案記憶](docs/memory-zh-tw.md) | remember、retro、儲存範圍與優先順序 |
+| [專案記憶](docs/memory-zh-tw.md) | 記憶的三層、remember、retro、儲存範圍與優先順序 |
+| [Wei profile](profiles/wei.md) | 講者 profile 範例，另有[風格研究](profiles/wei-style-study.md)與[舊格式說明](profiles/wei-legacy-format.md)（英文） |
 | [開發與自動化](docs/development-zh-tw.md) | 本機檢查、CI、版本與發布 |
 | [相依套件版本](docs/dependencies-zh-tw.md) | 固定版本、CVE 對照與字型 |
 | [驗證紀錄](docs/validation-zh-tw.md) | 已執行的驗證、歷史證據與測試限制 |
