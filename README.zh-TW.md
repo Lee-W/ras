@@ -291,7 +291,6 @@ Mermaid 會內嵌標籤字型。其他文字系統或品牌字型可放入專案
 npm ci
 npm run validate
 npm test
-npm run test:mutation
 ```
 
 GitHub CI 在 Ubuntu／macOS、Node 22.18.0／26.9.0 上執行檢查，並匯出獨立起始專案。
