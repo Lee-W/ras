@@ -29,8 +29,6 @@ title: 我的演講
 
 範例圖片路徑需要替換成自己提供的素材。
 
-## 主題與備註
-
 可用的主題 class 包括 `title`、`section`、`statement`、`image`、`code`、`compare` 與 `closing`。
 沒有 class 的投影片採用標題加內文版型。
 `_class` 只影響當頁，`class` 會持續套用到後面的頁面。
@@ -48,8 +46,6 @@ HTML 註解會成為講者備註，除非 Marp 將它辨識為指令。
 備註內容避免包含 `-->`；示範 HTML 註解語法時，請放進 fenced code block。
 編輯後要確認備註仍對應正確頁面。
 
-## Mermaid 與圖表
-
 在可編輯的 `slides.md` 保留 Mermaid 程式碼區塊：
 
 ````markdown
@@ -63,8 +59,6 @@ flowchart LR
 再以一般圖片引用放進產生的來源。既有 SVG 與截圖放在 `assets/`。
 純文字 ASCII 圖使用 `text` 程式碼區塊；彩色 ASCII 圖可用已跳脫特殊字元的
 `<pre class="ascii">` 搭配色彩 span。
-
-## 本機素材與字型
 
 圖片等素材放在 `assets/`。檔名含空格時，使用合法的 Markdown URL 跳脫或角括號。
 建置會複製固定版本的拉丁字型與 Noto Sans TC Variable，並保留授權。

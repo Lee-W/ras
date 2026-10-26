@@ -24,20 +24,12 @@ The AI host supplies the model and tools. The JavaScript scripts build and verif
 slides; they do not call an AI API. The plugin's creative workflow requires an
 AI host, while an exported project builds on its own.
 
-## Browse the documentation locally
+## Quick start with an AI host
 
-From this repository, run `npm ci` once, then:
-
-```sh
-npm run docs
-```
-
-Open [English documentation](http://127.0.0.1:4174/en/) or
-[臺灣華語文件](http://127.0.0.1:4174/zh-TW/). The language switcher keeps the
-current page while translating navigation and content. Mermaid renders locally.
-Refresh after editing Markdown; use `PORT` to select a different port.
-This command previews the repository documentation. Deck preview commands below
-run inside an initialized presentation project.
+Install RAS as a plugin in your AI host (see *Use with Codex, Claude Code, or open
+models* below), then ask for a talk: `/ras:create a 15-minute talk on retries for
+junior engineers`, or say the same thing in plain words. In a chat-only interface,
+run `node scripts/ras.mjs prompt create --chat '…'` and paste its output instead.
 
 ## Start a standalone deck
 
@@ -90,6 +82,21 @@ and remove any previous PDF; export again afterward if needed.
 in `assets/`, not in `dist/`. The preview serves `dist/`; rebuild after edits and refresh the page. Set `PORT`
 for a different local port. Marp HTML supports keyboard navigation and presenter
 view. HTML contains speaker notes; PDF is the audience-only handout.
+
+## Browse the documentation locally
+
+From this repository, run `npm ci` once, then:
+
+```sh
+npm run docs
+```
+
+Open [English documentation](http://127.0.0.1:4174/en/) or
+[臺灣華語文件](http://127.0.0.1:4174/zh-TW/). The language switcher keeps the
+current page while translating navigation and content. Mermaid renders locally.
+Refresh after editing Markdown; use `PORT` to select a different port.
+This command previews the repository documentation. Deck preview commands above
+run inside an initialized presentation project.
 
 ## Upgrade an existing deck
 
@@ -233,8 +240,9 @@ review, export, and plan-only routes. Role files provide distinct voices and
 original example lines. Ask for plain output to omit the character labels and
 mannerisms. A single model uses successive passes and reports that honestly.
 
-Collaboration defaults to Taiwanese Mandarin, independently of slide language;
-an explicit request can change the conversation language. 🎧 CHU² frames the aim
+Collaboration follows the user's language, defaulting to Taiwanese Mandarin when
+it is unclear, independently of slide language; an explicit request sets the
+conversation language. 🎧 CHU² frames the aim
 and delivery, while working roles respond to the preceding pass's concrete finding
 in their own rhythm. For example, 🎤 LAYER can propose keeping the conclusion on
 the slide and moving background into notes; 🎸 LOCK then picks up that decision
@@ -242,9 +250,13 @@ and explains the edit and checks. These are illustrative exchanges, not claims
 that any work has run. All seven operations and portable prompts share the same
 [interaction rules](references/voice.md).
 
-The optional [Wei profile](profiles/wei.md) captures short sentences, large type,
-progressive reveals, code/diagrams, and purposeful humour from the reference decks.
-Conference/company branding and personal artwork belong in individual projects.
+A speaker profile is your own Markdown file of preferences that hold across your
+decks; point a deck at it with `profile` in `ras.config.json` or pass `--profile`
+(see [memory layers](references/memory.md#memory-layers)). The
+[Wei profile](profiles/wei.md) is an example, not a default: it captures short
+sentences, large type, progressive reveals, code/diagrams, and purposeful humour
+from the reference decks. Conference/company branding and personal artwork belong
+in individual projects.
 
 ## Quality and scope
 
@@ -293,6 +305,20 @@ still run. File provenance still needs review.
 
 See [the first-version validation record](docs/validation.md) for executed checks
 and the limits of model/host testing.
+
+## Documentation guide
+
+| Document | Contents |
+| --- | --- |
+| [Workflow](references/workflow.md) | Roles, operation routes, delivery, and where each rule lives |
+| [Marp authoring](references/marp.md) | Slides, notes, themes, Mermaid, and local assets |
+| [Review and verification](references/review.md) | Machine checks, visual/factual review, and record freshness |
+| [Image rights and credits](references/image-rights.md) | Use basis for supplied images, rightsholder credits, and final-output checks |
+| [Project memory](references/memory.md) | Memory layers, remember, retro, storage scope, and precedence |
+| [Wei profile](profiles/wei.md) | An example speaker profile, with its [style study](profiles/wei-style-study.md) and [legacy format notes](profiles/wei-legacy-format.md) |
+| [Development](docs/development.md) | Local checks, CI, versions, and releases |
+| [Dependencies](docs/dependencies.md) | Pinned versions, CVE notes, and fonts |
+| [Validation record](docs/validation.md) | Executed checks, historical evidence, and testing limits |
 
 ## Development
 
