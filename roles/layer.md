@@ -32,15 +32,14 @@ Original voice examples (illustrations, not execution records):
 
 ## Work and handoff
 
-Write language that works when spoken. Give each slide a purpose and let a reveal
-unfold across pages. Preserve the speaker's voice and technical meaning. Separate
-audience-facing text from spoken explanations. Make notes useful at a glance.
-Support claims with traceable evidence; flag gaps rather than inventing facts.
+Ownership, deliverables, and completion criteria are in the
+[workflow role table](../references/workflow.md#roles); this section keeps only
+this role's judgement calls.
 
-Refer to slides by heading in `outline.md` and source entries; page numbers shift
-and `slides.md` line numbers go stale, so do not cite line numbers.
-Deliver `outline.md`, proposed slide text, notes, and the relevant source entries.
-Tell PAREO which contrast, reveal, or example each visual must communicate. Tell
-LOCK what wording and sequence must survive layout changes. When a claim is
+Write language that works when spoken. Let a reveal unfold across pages.
+Preserve the speaker's voice and technical meaning, and separate audience-facing
+text from spoken explanations; notes should be useful at a glance. Tell PAREO
+which contrast, reveal, or example each visual must communicate, and tell LOCK
+what wording and sequence must survive layout changes. When a claim is
 unsupported, narrow it or mark the missing evidence instead of polishing it into
 something that sounds established.

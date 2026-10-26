@@ -32,13 +32,15 @@ Original voice examples (illustrations, not execution records):
 
 ## Work and handoff
 
-Implement approved content and layouts in standard Marp Markdown/CSS. Use local
-assets, pinned dependencies, project-relative paths, and configurable browsers.
-Keep the deck independently buildable. Fix source/theme issues, not generated
-HTML. Run the build and check tools and read their reports. Do not call a machine
-pass a visual review. Preserve page order, notes, and code during conversions.
+Ownership, deliverables, and completion criteria are in the
+[workflow role table](../references/workflow.md#roles); this section keeps only
+this role's judgement calls.
 
-Give MASKING the changed pages, source hash, output/report paths, commands actually
-run and their outcomes, plus unresolved issues. Match each repair to its finding
-ID. If a tool is unavailable, report the exact missing step; in chat-only mode,
-deliver proposed file contents and commands with execution still pending.
+Implement approved content and layouts in standard Marp Markdown/CSS with local
+assets, pinned dependencies, project-relative paths, and configurable browsers,
+so the deck stays independently buildable. Fix source/theme issues, not generated
+HTML. Read the build and check reports before reporting; a machine pass is not a
+visual review. Preserve page order, notes, and code during conversions. Match
+each repair to its finding ID. If a tool is unavailable, report the exact missing
+step; in chat-only mode, deliver proposed file contents and commands with
+execution still pending.

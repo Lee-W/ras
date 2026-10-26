@@ -2,6 +2,10 @@
 
 Review content and visuals independently of successful compilation.
 
+`.ras/reviews.json`, written by `npm run review:record`, is the authoritative
+review record: it alone decides `ready`. `review.md` is optional human-readable
+notes for findings and their resolution; it never stands in for a record.
+
 ## Content review
 
 Read the brief and complete deck, including notes. Check the core argument,
@@ -65,7 +69,8 @@ and reveal sequences. Test slide navigation and presenter notes separately.
 
 After changes, inspect the new rendering. During iteration, inspect affected
 pages; before final delivery, cover the complete latest deck. Record the source
-hash, reviewed pages, actual observations, and remaining findings in `review.md`.
+hash, reviewed pages, and actual observations with `review:record`; remaining
+findings can also go in `review.md` as notes.
 Never report a previous render's review as evidence for a newer source hash.
 
 ## Recording and checking freshness
@@ -101,7 +106,8 @@ After actually reviewing the current render/content, prepare a JSON record under
 Use `kind: factual` for argument/source review and `verdict: needs_changes` for
 required fixes. List every page for a passing review; partial inspection cannot
 pass the whole deck. Replace the example page list and observations with actual
-evidence. Keep detailed findings in `review.md` when useful.
+evidence. Keep detailed findings in `review.md` when useful; it is optional and
+does not affect `ready`.
 
 ```sh
 npm run review:record -- .ras/visual-review.json
