@@ -9,6 +9,23 @@ copying files rather than cloning) does not transfer its memory. To reuse
 an entry elsewhere, have the user select its text and destination explicitly.
 Memory is not bundled into exported slides or into the public plugin repository.
 
+## Memory layers
+
+RAS reads preferences from three layers. The current request and brief take
+precedence over all of them; within the layers, the narrower one wins.
+
+1. **Project:** `.ras/memory.json` in the selected deck, described below. It holds
+   what applies to this talk.
+2. **User profile:** one Markdown file the speaker maintains for preferences that
+   hold across their decks. Its path comes from the `profile` key in the deck's
+   `ras.config.json` (relative to the deck directory), from
+   `ras prompt <operation> --profile <path>`, or from a path the user names in the
+   request. The file can live outside any repository. There is no default profile:
+   read one only when one of these names it. `profiles/wei.md` in the plugin is an
+   example, not a default.
+3. **Shared:** the plugin's `references/`, rules that hold for any speaker.
+   Speaker preferences do not belong here.
+
 ## Reading and precedence
 
 At the beginning of create, revise, review, or export, read the selected project's
@@ -68,6 +85,13 @@ and real build/review evidence. Identify a small set of reusable lessons; do not
 invent an earlier session. When context is missing, request a short recap.
 Distinguish a talk-specific preference from an actual tool defect: propose tool
 fixes separately instead of recording a workaround as a universal speaker rule.
+
+A preference that recurs across decks is a candidate to **promote to the profile**:
+the user says it applies to every talk, or it matches an entry from another deck
+that the user has shown. Propose appending its text to the active profile file
+and name that path. The same one-at-a-time confirmation and authorization apply;
+without a confirmed profile path and approval, do not write. Append only; do not
+rewrite the profile's other content.
 
 Present one candidate at a time with its supporting context, intended project,
 and proposed text. Offer save, edit, skip, or finish. Explicit authorization to
