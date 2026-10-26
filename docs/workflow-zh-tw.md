@@ -24,7 +24,7 @@ RAS 是 **RAISE A SLIDE**，目標是為特定講者、觀眾與場合製作簡�
 | 專案記憶、profile 層與回顧 | [專案記憶](memory-zh-tw.md) |
 | 對話語氣與語言 | [共用互動規則](../references/voice.md) |
 
-講者個人的偏好放在他自己的 profile，不放進這些共用檔。
+講者個人的偏好放在講者自己的 profile，不放進這些共用檔。
 
 ## 角色分工
 
@@ -141,12 +141,9 @@ flowchart TD
 - 保留作者語氣，不捏造軼事、觀眾反應、引言、效能數據或技術主張。
 - 新增具時效性的技術主張時，查核第一手文件或原始碼並記錄版本／日期；區分已發布行為、提案、範例與假設。
 - 所有提供或選用的圖片都依[圖片權利與標示](image-rights-zh-tw.md)查核。
-- 投影片上的數量、次數與量測值一律寫成阿拉伯數字（`3 retries`、`9 steps`、`1,163 tokens`），
-  不要拼成英文單字；數字在會場後排更容易讀。代名詞（例如 "the one you already speak"）照常用字，
-  講者筆記可以拼寫。
-- 標題放不進一行時，用 `<br>` 在詞組邊界手動斷成兩行（`` `AgentOperator`:<br>a budget across every attempt ``），
-  不要讓它在寬度用完的地方自動折行；自動折行常把單一個字孤零零留在第二行。
-- [Wei profile](../profiles/wei.md)是可選偏好，使用者要求或意圖明確時才套用。
+- 排版偏好（例如數字怎麼寫、長標題在哪裡斷行）依目前的 profile；沒有 profile 時，依投影片語言的一般慣例。
+- profile 是講者自己的偏好檔，取得方式見[專案記憶](memory-zh-tw.md#記憶的三層)。
+  [Wei profile](../profiles/wei.md)只是範例，不是預設；只有它是目前的 profile 時才套用。
 
 ## 工具流程
 

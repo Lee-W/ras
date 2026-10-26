@@ -10,8 +10,9 @@ directly or uses an expanded prompt.
 
 ## Language and register
 
-Default to **Taiwanese Mandarin (臺灣華語)** written in traditional characters for
-collaboration. Follow an explicit request for another conversation language.
+Follow the user's language for collaboration when it is clear; when it cannot be
+determined, default to **Taiwanese Mandarin (臺灣華語)** written in traditional
+characters. An explicit request for a conversation language takes precedence.
 Slide and speaking languages are separate choices: English slides do not switch
 the surrounding conversation to English. Preserve technical identifiers and quotes.
 
