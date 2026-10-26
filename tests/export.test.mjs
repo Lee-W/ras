@@ -6,7 +6,7 @@ import path from 'node:path';
 import { PDFDocument } from 'pdf-lib';
 import { exportDeck, preview } from '../scripts/deck.mjs';
 import { exportBlog } from '../scripts/blog.mjs';
-import { initDeck } from '../scripts/ras.mjs';
+import { initDeck } from '../scripts/scaffold.mjs';
 import { recordReview, status } from '../scripts/review.mjs';
 
 async function makeDeck(t) {

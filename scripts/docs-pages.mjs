@@ -1,5 +1,5 @@
 // One page identity across languages; Markdown remains the editable source.
-import { operations } from './ras.mjs';
+import { operations } from './prompt.mjs';
 export const locales = {
   'zh-TW': {
     label: '臺灣華語', docs: '文件', guide: '使用指南', maintenance: '專案維護',

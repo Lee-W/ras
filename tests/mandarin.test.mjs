@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import puppeteer from 'puppeteer';
-import { initDeck } from '../scripts/ras.mjs';
+import { initDeck } from '../scripts/scaffold.mjs';
 import { exportDeck } from '../scripts/deck.mjs';
 import { browserPath } from '../scripts/project.mjs';
 

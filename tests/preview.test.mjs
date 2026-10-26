@@ -5,7 +5,7 @@ import { request } from 'node:http';
 import os from 'node:os';
 import path from 'node:path';
 import { preview } from '../scripts/deck.mjs';
-import { initDeck } from '../scripts/ras.mjs';
+import { initDeck } from '../scripts/scaffold.mjs';
 
 function get(port, rawPath) {
   return new Promise((resolve, reject) => {

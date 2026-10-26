@@ -4,17 +4,16 @@ import { readFile, realpath, stat } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { locales, pages, pageUrl, sourcePages, sharedSources, zhTwSources } from './docs-pages.mjs';
 import { docsStyle } from './docs-style.mjs';
+import { runMain } from './cli.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(import.meta.url);
-// Resolve through the installed tool that owns each locked dependency.
-const marpRequire = createRequire(require.resolve('@marp-team/marp-core'));
-const mermaidRequire = createRequire(require.resolve('@mermaid-js/mermaid-cli'));
-const MarkdownIt = marpRequire('markdown-it');
-const mermaidRoot = path.dirname(mermaidRequire.resolve('mermaid/dist/mermaid.esm.min.mjs'));
+// markdown-it and mermaid are devDependencies pinned to the versions already in the lockfile.
+const MarkdownIt = require('markdown-it');
+const mermaidRoot = path.dirname(require.resolve('mermaid/dist/mermaid.esm.min.mjs'));
 const md = new MarkdownIt({ html: false, linkify: true });
 const escape = md.utils.escapeHtml;
 
@@ -155,9 +154,7 @@ export async function serveDocs({ port = 4174 } = {}) {
   return server;
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(await realpath(process.argv[1])).href) {
-  try {
-    const server = await serveDocs({ port: Number(process.env.PORT || 4174) });
-    console.log(`RAS docs: http://127.0.0.1:${server.address().port}/zh-TW/ — Ctrl+C stops.`);
-  } catch (error) { console.error(`[docs] ${process.env.RAS_DEBUG ? error.stack : error.message}`); process.exitCode = 1; }
-}
+await runMain(import.meta.url, 'docs', async () => {
+  const server = await serveDocs({ port: Number(process.env.PORT || 4174) });
+  console.log(`RAS docs: http://127.0.0.1:${server.address().port}/zh-TW/ — Ctrl+C stops.`);
+});
