@@ -14,7 +14,7 @@ RAS 從三層讀取偏好。目前的需求與 brief 優先於所有層；各層
 
 1. **專案：**所選簡報的 `.ras/memory.json`，見下文。存放只適用這場演講的內容。
 2. **使用者 profile：**講者自己維護的一份 Markdown，存放跨簡報都成立的偏好。
-   路徑來自簡報 `ras.config.json` 的 `profile` 鍵（相對於簡報目錄）、
+   路徑來自你自行在簡報 `ras.config.json` 加入的 `"profile": "<path>"` 鍵（相對於簡報目錄；範本不含此鍵）、
    `ras prompt <operation> --profile <path>`，或使用者在需求中指定的路徑。
    這份檔案可以放在任何儲存庫之外。沒有預設 profile：只有上述其中一種方式指定時才讀取。
    外掛中的 `profiles/wei.md` 是範例，不是預設。
