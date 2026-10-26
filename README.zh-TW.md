@@ -135,12 +135,12 @@ Claude Code 會[自動掃描外掛的 `skills/` 目錄](https://code.claude.com/
 若要立即在本機使用，可採用下列專案 skill bundle，或直接指定操作的 skill 檔案。
 建立或下載本儲存庫不會自動把它安裝到 Codex。
 
-專案內的替代安裝方式：將 `SKILL.md`、`skills/`、`references/`、`agents/`、
+專案內的替代安裝方式：將 `SKILL.md`、`skills/`、`references/`、`roles/`、
 `profiles/`、`templates/`、`scripts/`、`docs/`、`LICENSE`、`NOTICE.md`、套件 manifest 與鎖定檔，以及 `.gitignore`，
 一起複製到目標專案的 `.agents/skills/ras/`，然後開啟新工作階段。
 請保留整組檔案的相對路徑；只複製 `SKILL.md` 會缺少必要資源。
 
-可以用自然語言，或透過模型端的路由器提出需求：
+可以用自然語言，或透過根 `SKILL.md` 的模型端路由提出需求：
 
 ```text
 ras:create brief.md
@@ -153,7 +153,7 @@ ras:remember 在 talks/retries 裡，先說明問題再展示程式碼
 ras:retro 回顧這次工作階段，找出適合留在 talks/retries 的經驗
 ```
 
-宿主的命令探索方式各有不同；路由器不會註冊原生斜線命令，也不保證自動完成。
+宿主的命令探索方式各有不同；根 skill 的路由不會註冊原生斜線命令，也不保證自動完成。
 也可以直接請 AI 讀取本儲存庫的 `skills/<operation>/SKILL.md`。
 
 ### 開放模型與沒有外掛探索功能的宿主
@@ -211,7 +211,7 @@ RAS 不會代選或下載模型，也不會修改 provider 設定。
 例如，🎤 LAYER 提出「結論留在頁面上，背景移到備註」後，
 🎸 LOCK 會接下這個決定並說明要如何修改與檢查。
 這是互動方式的示例；實際回報只依當輪工作，不補演未執行的角色。
-七個操作與可攜式提示詞都使用同一份[互動規則](skills/orchestrator-voice/SKILL.md)，
+七個操作與可攜式提示詞都使用同一份[互動規則](references/voice.md)，
 更多說明見[工作流程](docs/workflow-zh-tw.md)。
 
 ```mermaid

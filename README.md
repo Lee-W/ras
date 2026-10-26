@@ -146,12 +146,12 @@ The repository includes a portable `plugin.json` and a compatible
 the project skill bundle described below, or point Codex directly to the operation
 skill. Creating this repository does not automatically install it in Codex.
 
-For a project-local skills fallback, copy `SKILL.md`, `skills/`, `references/`, `agents/`,
+For a project-local skills fallback, copy `SKILL.md`, `skills/`, `references/`, `roles/`,
 `profiles/`, `templates/`, `scripts/`, `docs/`, `LICENSE`, `NOTICE.md`, the package manifests, and `.gitignore` together
 under the project's `.agents/skills/ras/`, and start a new session. Preserve this
 bundle's relative paths; copying a `SKILL.md` alone loses its supporting files.
 
-Use natural language or the model-side router:
+Use natural language or the model-side routing in the root `SKILL.md`:
 
 ```text
 ras:create brief.md
@@ -164,7 +164,7 @@ ras:remember In talks/retries, introduce the problem before showing code
 ras:retro Review this session for reusable lessons in talks/retries
 ```
 
-Host command discovery varies. The router does not register native slash commands
+Host command discovery varies. The root skill's routing does not register native slash commands
 or promise autocomplete. You can also point the AI directly to the relevant
 `skills/<operation>/SKILL.md` in this repository.
 
@@ -236,7 +236,7 @@ in their own rhythm. For example, 🎤 LAYER can propose keeping the conclusion 
 the slide and moving background into notes; 🎸 LOCK then picks up that decision
 and explains the edit and checks. These are illustrative exchanges, not claims
 that any work has run. All seven operations and portable prompts share the same
-[interaction rules](skills/orchestrator-voice/SKILL.md).
+[interaction rules](references/voice.md).
 
 The optional [Wei profile](profiles/wei.md) captures short sentences, large type,
 progressive reveals, code/diagrams, and purposeful humour from the reference decks.

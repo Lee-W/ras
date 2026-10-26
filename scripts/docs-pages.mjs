@@ -40,8 +40,9 @@ export const pages = [
 
 export const sharedSources = new Set([
   'SKILL.md', 'profiles/wei.md', 'LICENSE', 'NOTICE.md',
-  ...['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `agents/${role}.md`),
-  ...['command-router', 'orchestrator-voice', 'create', 'outline', 'revise', 'review', 'export', 'remember', 'retro'].map(skill => `skills/${skill}/SKILL.md`),
+  'references/voice.md',
+  ...['chu2', 'layer', 'pareo', 'lock', 'masking'].map(role => `roles/${role}.md`),
+  ...operations.map(skill => `skills/${skill}/SKILL.md`),
 ]);
 
 // Operation skills that are maintained in Taiwanese Mandarin, so the English-only notice does not apply.
