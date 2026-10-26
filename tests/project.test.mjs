@@ -216,6 +216,15 @@ test('configuration rejects unknown settings, invalid limits, and malformed JSON
   await writeFile(path.join(root, 'ras.config.json'), JSON.stringify({ allowExportOnCheckFailure: true }));
   assert.equal((await readConfig(root)).allowExportOnCheckFailure, true);
   assert.equal(defaults.allowExportOnCheckFailure, false);
+  for (const value of [1, true, '', '  ', ['profiles/wei.md']]) {
+    await writeFile(path.join(root, 'ras.config.json'), JSON.stringify({ profile: value }));
+    await assert.rejects(readConfig(root), /profile must be a file path or null/);
+  }
+  assert.equal(defaults.profile, null);
+  await writeFile(path.join(root, 'ras.config.json'), JSON.stringify({ profile: null }));
+  assert.equal((await readConfig(root)).profile, null);
+  await writeFile(path.join(root, 'ras.config.json'), JSON.stringify({ profile: '../speaker/profile.md' }));
+  assert.equal((await readConfig(root)).profile, '../speaker/profile.md');
   await writeFile(path.join(root, 'ras.config.json'), '{"unknown": 24}');
   await assert.rejects(readConfig(root), /Unknown/);
   await writeFile(path.join(root, 'ras.config.json'), '{');

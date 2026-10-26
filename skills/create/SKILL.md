@@ -16,5 +16,6 @@ description: 使用 RAS 從主題、brief、outline 或素材建立 Marp 簡報�
 所有使用者提供與自行選用的圖片，都依[圖片權利與出處標示](../../references/image-rights.md)檢查。
 接著依[審查與驗證](../../references/review.md)繼續，修正問題，並交付 Markdown、HTML、PDF 與實際的驗證證據。
 
-若使用者提供 profile 路徑，請讀該檔；要求沿用 Wei 先前的演講風格時，該檔是 [Wei 的 profile](../../profiles/wei.md)。
+依 `ras.config.json` 的 `profile` 鍵或使用者提供的路徑讀取 profile（見[記憶的三層](../../references/memory.md#memory-layers)）；
+[Wei 的 profile](../../profiles/wei.md) 是範例，不是預設。
 專案專屬的事實與美術素材不要放進通用樣板。
