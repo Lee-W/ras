@@ -9,9 +9,17 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const temporary = await mkdtemp(path.join(os.tmpdir(), 'ras-release-check-'));
 const run = (command, args) => execFileSync(command, args, { cwd: temporary, encoding: 'utf8', timeout: 60_000, stdio: ['ignore', 'pipe', 'pipe'] }).trim();
 const git = (...args) => run('git', args);
-const cz = (...args) => run('uvx', ['--from', 'commitizen==4.16.2', 'cz', ...args]);
-// Match the workflow: only no-new-commits (3) and no-increment (21) are no-ops.
-const bump = () => cz('--no-raise', '3,21', 'bump', '--yes');
+// The release workflow is the single source of the commitizen pin and no-op exit codes.
+const workflow = await readFile(path.join(root, '.github/workflows/bumpversion.yml'), 'utf8');
+const workflowValue = name => {
+  const matches = [...workflow.matchAll(new RegExp(`^\\s+${name}:\\s*'?([^'\\s#]+)'?\\s*$`, 'gm'))];
+  assert.equal(matches.length, 1, `bumpversion.yml must define ${name} exactly once`);
+  return matches[0][1];
+};
+const czPackage = workflowValue('CZ_PACKAGE');
+const noRaise = workflowValue('CZ_NO_RAISE');
+const cz = (...args) => run('uvx', ['--from', czPackage, 'cz', ...args]);
+const bump = () => cz('--no-raise', noRaise, 'bump', '--yes');
 const readJson = async file => JSON.parse(await readFile(path.join(temporary, file), 'utf8'));
 const manifests = ['plugin.json', '.claude-plugin/plugin.json', '.codex-plugin/plugin.json'];
 

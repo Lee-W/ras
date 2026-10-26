@@ -13,16 +13,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  checks:
-    uses: ./.github/workflows/ci.yml
-
+  # Pull requests already ran the full CI matrix before merging; this job only
+  # re-checks the bumped result on one runner before it publishes.
   release:
-    needs: checks
     if: github.ref == 'refs/heads/main' && github.repository == 'Lee-W/ras' && !startsWith(github.event.head_commit.message, 'bump:')
     runs-on: ubuntu-24.04
-    timeout-minutes: 10
+    timeout-minutes: 20
     permissions:
       contents: write
+    env:
+      # Single source of the release tooling; scripts/release-check.mjs reads these.
+      CZ_PACKAGE: commitizen==4.16.2
+      # 3: no new commits; 21: commits without a version increment.
+      CZ_NO_RAISE: '3,21'
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -36,22 +40,59 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-      - name: Bump versions and publish release
+      - name: Set browser cache
+        shell: bash
+        run: echo "PUPPETEER_CACHE_DIR=$RUNNER_TEMP/ras-puppeteer" >> "$GITHUB_ENV"
+      - name: Bump versions
+        id: bump
+        shell: bash
+        run: |
+          previous_head="$(git rev-parse HEAD)"
+          uvx --from "$CZ_PACKAGE" cz --no-raise "$CZ_NO_RAISE" bump --yes
+          if [ "$(git rev-parse HEAD)" = "$previous_head" ]; then
+            echo 'No release-eligible commits.'
+            echo 'bumped=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'bumped=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Validate the bumped source
+        if: steps.bump.outputs.bumped == 'true'
+        run: npm run validate
+      - name: Install dependencies and pinned Chrome
+        if: steps.bump.outputs.bumped == 'true'
+        run: |
+          npm ci
+          npx --no-install puppeteer browsers install chrome
+      - name: Allow the CI Chrome binary to use its sandbox on Ubuntu
+        if: steps.bump.outputs.bumped == 'true'
+        shell: bash
+        run: |
+          sudo tee /etc/apparmor.d/ras-chrome > /dev/null <<EOF
+          abi <abi/4.0>,
+          include <tunables/global>
+          profile ras-chrome "$PUPPETEER_CACHE_DIR/**/chrome" flags=(unconfined) {
+            userns,
+          }
+          EOF
+          sudo apparmor_parser -r /etc/apparmor.d/ras-chrome
+      - name: Export a standalone starter deck from the bumped kit
+        if: steps.bump.outputs.bumped == 'true'
+        shell: bash
+        run: |
+          ras_fixture_dir="$(mktemp -d "$RUNNER_TEMP/ras-release.XXXXXX")"
+          node scripts/ras.mjs init "$ras_fixture_dir/talk"
+          cd "$ras_fixture_dir/talk"
+          npm ci
+          npm run export
+      - name: Publish release
+        if: steps.bump.outputs.bumped == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
-          previous_head="$(git rev-parse HEAD)"
-          # 3: no new commits; 21: commits without a version increment.
-          uvx --from commitizen==4.16.2 cz --no-raise 3,21 bump --yes
-          if [ "$(git rev-parse HEAD)" = "$previous_head" ]; then
-            echo 'No release-eligible commits.'
-            exit 0
-          fi
-          npm run validate
-          release_version="$(uvx --from commitizen==4.16.2 cz version --project)"
-          release_tag="$(uvx --from commitizen==4.16.2 cz version --project --tag)"
+          release_version="$(uvx --from "$CZ_PACKAGE" cz version --project)"
+          release_tag="$(uvx --from "$CZ_PACKAGE" cz version --project --tag)"
           release_notes="$RUNNER_TEMP/ras-release-notes.md"
-          uvx --from commitizen==4.16.2 cz changelog --dry-run "$release_version" > "$release_notes"
+          uvx --from "$CZ_PACKAGE" cz changelog --dry-run "$release_version" > "$release_notes"
           git push --atomic origin HEAD:main --follow-tags
           gh release create "$release_tag" --verify-tag --notes-file "$release_notes"
