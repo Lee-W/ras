@@ -1,3 +1,22 @@
+## v0.13.0 (2026-10-27)
+
+### Feat
+
+- name the profile layer and let ras.config.json point at it
+- trim the exported prompt per operation and accept --profile
+- split content and tooling hashes for review staleness
+- merge deck package.json on upgrade and keep review evidence in git
+
+### Fix
+
+- keep upgrade from touching ras.config.json for the optional profile key
+- label CLI failures and make doctor launch the browser
+
+### Refactor
+
+- move roles out of the agents directory and fold the router into SKILL.md
+- split prompt, scaffold, hash and config out of ras and project
+
 ## v0.12.0 (2026-10-26)
 
 ### Feat
