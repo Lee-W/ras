@@ -177,6 +177,10 @@ note. Text in the language itself uses traditional characters and Taiwan wording
   Keep research and editorial history in project documents. Preserve image
   provenance and required credits when selecting new assets; the reference
   decks' anime images, photos, logos, and fonts are not reusable RAS assets.
+- Do not put a speaker self-introduction on the opening slide or anywhere
+  before the hook, including for introductory and community talks: event hosts
+  introduce Wei. A bio or contact page, if any, goes at the end. (Stated
+  2026-10-28 for PyCon mini Tokyo and again 2026-11-02 for Tokyo Python.)
 
 ## Representative sequences to consult
 
@@ -229,3 +233,11 @@ recoverable. Two other known formatter damages are MD026 stripping a heading's
 trailing punctuation (not recoverable) and MD009 stripping a bare `##`. Make the
 splitter refuse to build when it sees any `^### `. In converted RAS `slides.md`,
 notes live in HTML comments, which formatters leave alone.
+
+## Explicit preferences (2026-10-28)
+
+- **Density is the rule Wei flags most strongly** (2026-10-28, his words:
+  「非常重要」). When a page holds more than one claim, split it. Budget pages
+  generously (about 3 pages per minute of progressive reveal was right for a
+  26-minute talk) and reserve space so later elements do not shift. Err toward
+  splitting; a page that feels slightly empty is correct.
