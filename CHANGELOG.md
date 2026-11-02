@@ -1,3 +1,10 @@
+## v0.14.0 (2026-11-02)
+
+### Feat
+
+- check links in the README, docs and profiles during validate
+- add the blog operation for turning a finished deck into an article draft
+
 ## v0.13.0 (2026-10-27)
 
 ### Feat
