@@ -42,7 +42,7 @@ that owner instead of editing the file themselves.
 | Role | Owns | Deliverable | Done when |
 | --- | --- | --- | --- |
 | 🎧 CHU² | `brief.md` | The brief | Audience, one-sentence takeaway, duration, and venue constraints are all stated |
-| 🎤 LAYER | `outline.md`, `sources.md` | The outline in the [outline template](../templates/outline.md), including each slide's `layout:` field; slide text and notes handed to LOCK for `slides.md`; source entries | Every slide has one purpose; every claim and image traces to a source entry |
+| 🎤 LAYER | `outline.md`, `sources.md`, `blog/index.md` | The outline in the [outline template](../templates/outline.md), including each slide's `layout:` field; slide text and notes handed to LOCK for `slides.md`; source entries; for `blog`, the article draft | Every slide has one purpose; every claim and image traces to a source entry |
 | 🎹 PAREO | `theme.css` | The `theme.css` change; the value of each slide's `layout:` field, which LAYER records in `outline.md`; image entries, which LAYER records in `sources.md` | Layout decisions are written down before rendering, so LOCK and MASKING can compare the render against them |
 | 🎸 LOCK | `slides.md`, build output (`dist/`, `.ras/` build and check files) | Source hash, report paths, and the commands actually run with their outcomes | The deck builds from source with the reported commands |
 | 🥁 MASKING | `review.md` (optional human-readable notes), `.ras/reviews.json` (authoritative) | Records written with `review:record` | Every finding has a page heading, impact, and fix; rendered-page inspection, the factual review (`kind: factual`: argument and sources hold up, technical statements are correct, versions and dates are still valid), and the image-rights audit are recorded |
@@ -80,6 +80,7 @@ theme. The collaboration voice defines plain output and artifact-format boundari
 | revise | CHU² scopes the feedback → relevant writing/design pass → LOCK updates → MASKING rechecks | Requested changes and a review of the latest render |
 | review | MASKING leads, consulting LAYER/PAREO criteria as needed | Findings and review status; editable source stays unchanged |
 | export | LOCK builds/checks/exports → MASKING inspects or verifies a matching prior review → CHU² delivers | Artifacts plus actual verification status |
+| blog | LAYER turns the draft from `npm run blog` into an article → CHU² delivers; MASKING does not take part because there is no rendered page | Draft path, conversion warnings, and the image rights still to confirm |
 | remember | CHU² resolves the project and saves an authorized entry | Saved entry and path, or explicit pending persistence |
 | retro | CHU² proposes grounded lessons → user selects → remember saves | Actual saved IDs and unresolved candidates |
 
@@ -196,9 +197,10 @@ relative paths. An existing `index.md` is never replaced unless you pass `--forc
 folder. `--screenshots` puts a slide screenshot at the top of each section instead
 of the original images: it reuses current `npm run check` previews, otherwise it
 runs `check` first, which rebuilds `dist/` and removes any earlier PDF.
-The result is a draft. Conversion is not factual or visual review, and image
-permissions in `sources.md` were obtained for the presentation, so confirm them
-again before publishing the article.
+The result is a draft. LAYER rewrites it into the article and CHU² delivers it;
+MASKING does not take part because there is no rendered page. Conversion is not
+factual or visual review, and image permissions in `sources.md` were obtained for
+the presentation, so confirm them again before publishing the article.
 
 Read `references/marp.md` for the source conventions and `references/review.md`
 for the verification contract. Generated projects carry their own tools and lockfile;

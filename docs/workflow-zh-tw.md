@@ -41,7 +41,7 @@ RAS 是 **RAISE A SLIDE**，目標是為特定講者、觀眾與場合製作簡�
 | 角色 | 擁有的檔案 | 交付物 | 完成判準 |
 | --- | --- | --- | --- |
 | 🎧 CHU² | `brief.md` | brief | 聽眾、一句核心訊息、時間與場地限制都已寫明 |
-| 🎤 LAYER | `outline.md`、`sources.md` | 依 [outline 樣板](../templates/outline.md)寫成的 outline（含每頁的 `layout:` 欄位）；交給 LOCK 寫進 `slides.md` 的投影片文字與備註；來源條目 | 每頁只有一個目的；每個主張與圖片都能追到來源條目 |
+| 🎤 LAYER | `outline.md`、`sources.md`、`blog/index.md` | 依 [outline 樣板](../templates/outline.md)寫成的 outline（含每頁的 `layout:` 欄位）；交給 LOCK 寫進 `slides.md` 的投影片文字與備註；來源條目；`blog` 操作時為文章草稿 | 每頁只有一個目的；每個主張與圖片都能追到來源條目 |
 | 🎹 PAREO | `theme.css` | `theme.css` 的變更；每頁 `layout:` 欄位的值，由 LAYER 寫進 `outline.md`；圖片條目，由 LAYER 寫進 `sources.md` | 版面決策在渲染前就寫下來，LOCK 與 MASKING 可以拿渲染結果對照 |
 | 🎸 LOCK | `slides.md`、建置產物（`dist/`、`.ras/` 的建置與檢查檔） | 來源雜湊、報告路徑，以及實際執行過的指令與結果 | 用回報的指令能從來源建置出這份簡報 |
 | 🥁 MASKING | `review.md`（可選的人讀筆記）、`.ras/reviews.json`（權威） | 以 `review:record` 寫入的紀錄 | 每個問題都有頁面標題、影響與修正方式；渲染後檢查、事實審閱（`kind: factual`：論證與來源是否成立、技術陳述是否正確、版本與日期是否仍有效）與圖片權利稽核都有紀錄 |
@@ -100,6 +100,7 @@ flowchart TD
 | `revise` | CHU² 確認回饋範圍 → 相關寫作／設計工作 → LOCK 更新 → MASKING 複查 | 完成指定修改並檢查最新畫面 |
 | `review` | MASKING 主導，按需要參照 LAYER／PAREO 的準則 | 提出問題與審閱狀態，保留可編輯來源原樣 |
 | `export` | LOCK 建置／檢查／匯出 → MASKING 檢視或確認相符的既有審閱 → CHU² 交付 | 產出與實際驗證狀態 |
+| `blog` | LAYER 把 `npm run blog` 產生的草稿改寫成文章 → CHU² 交付；沒有渲染頁，所以 MASKING 不上場 | 草稿路徑、轉換警告與尚待確認的圖片權利 |
 | `remember` | CHU² 確認目標專案，儲存已授權條目 | 已存條目與路徑，或明確說明尚未儲存 |
 | `retro` | CHU² 提出有依據的經驗 → 使用者選擇 → remember 儲存 | 實際儲存的 ID 與尚未決定的候選項目 |
 
@@ -177,7 +178,7 @@ npm run preview
 引用的圖片會複製到相同的相對路徑。已存在的 `index.md` 不會被取代，除非加 `--force`
 （只覆寫 `index.md` 與圖片）；`--out <dir>` 可指定其他資料夾。`--screenshots` 會在每一節最前面放該頁截圖，
 取代原圖：目前有效的 `npm run check` 預覽會直接沿用，否則先執行 `check`，這會重建 `dist/` 並移除先前的 PDF。
-輸出只是草稿：轉換不等於事實或視覺審閱；`sources.md` 的圖片授權是為簡報取得的，公開成文章前要重新確認。
+輸出只是草稿：由 LAYER 改寫成文章、CHU² 交付；沒有渲染頁，所以 MASKING 不上場。轉換不等於事實或視覺審閱；`sources.md` 的圖片授權是為簡報取得的，公開成文章前要重新確認。
 
 要把既有簡報的工具更新到目前的 RAS 版本：
 
