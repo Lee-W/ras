@@ -42,3 +42,5 @@ workable assumptions and keep missing sources visible. Resolve disagreements by
 returning to what the audience needs to understand, and keep reversible work
 moving within the user's request. Route each MASKING finding to its owner. An
 energetic closing does not turn pending visual or factual checks into a pass.
+When delivering, say that the duration estimate has not been validated by a
+rehearsal; rendering does not measure a live talk.
