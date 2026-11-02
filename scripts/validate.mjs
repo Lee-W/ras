@@ -25,8 +25,24 @@ for (const name of ['puppeteer-core', '@marp-team/marp-core']) {
   const nodes = Object.keys(lock.packages).filter(key => key === `node_modules/${name}` || key.endsWith(`/node_modules/${name}`));
   assert.equal(nodes.length, 1, `package-lock.json must contain exactly one ${name} node; found ${nodes.length}: ${nodes.join(', ')}`);
 }
+// Links inside fenced code and inline code spans are examples to copy, not references.
+// Fences may sit inside lists or quotes, so the opener allows leading whitespace and ">".
+function withoutCode(file, text) {
+  let fence = null;
+  const lines = text.split('\n').map(line => {
+    const marker = line.match(/^[\s>]*(`{3,}|~{3,})/);
+    if (fence) {
+      if (marker && marker[1][0] === fence[0] && marker[1].length >= fence.length && !line.replace(/^[\s>]*/, '').slice(marker[1].length).trim()) fence = null;
+      return '';
+    }
+    if (marker) { fence = marker[1]; return ''; }
+    return line.replace(/(`+)[^`\n]*?\1/g, '');
+  });
+  if (fence) throw new Error(`Unclosed code fence in ${path.relative(root, file)}`);
+  return lines.join('\n');
+}
 async function checkLinks(file, text, { markdownOnly = false } = {}) {
-  for (const match of text.matchAll(/\]\(([^)]+)\)/g)) {
+  for (const match of withoutCode(file, text).matchAll(/\]\(([^)]+)\)/g)) {
     if (/^(https?:|#)/.test(match[1])) continue;
     // Guides show deck-relative example links (images, assets); only cross-file Markdown links are checked there.
     if (markdownOnly && !/\.md(#|$)/.test(match[1])) continue;
@@ -82,5 +98,27 @@ if (existsSync(path.join(root, '.git'))) {
   console.log('Staged and working-tree source files are valid.');
 } else {
   console.warn('Source-file checks skipped: no Git metadata found. Use a Git checkout to validate staged and working-tree files.');
+}
+// README, docs and profiles are read by people and models alike, so their links must resolve too.
+// This runs after the source policy so a symlinked or binary file is rejected as such before it is read;
+// the source policy only runs in a Git checkout, so the walk below also refuses symlinks itself.
+// templates/ is skipped on purpose: its links are deck-relative and scaffold.mjs rewrites them
+// for the generated project, so they do not resolve from this repository.
+async function markdownFiles(folder) {
+  const found = [];
+  for (const entry of await readdir(path.join(root, folder), { withFileTypes: true })) {
+    const relative = path.join(folder, entry.name);
+    if (entry.isSymbolicLink()) throw new Error(`Symlink not allowed: ${relative}`);
+    if (entry.isDirectory()) found.push(...await markdownFiles(relative));
+    else if (entry.name.endsWith('.md')) found.push(relative);
+  }
+  return found;
+}
+const documentFiles = ['README.md', 'README.zh-TW.md']
+  .filter(name => existsSync(path.join(root, name)))
+  .concat(...await Promise.all(['docs', 'profiles'].filter(folder => existsSync(path.join(root, folder))).map(markdownFiles)));
+for (const name of documentFiles) {
+  const file = path.join(root, name);
+  await checkLinks(file, await readFile(file, 'utf8'));
 }
 console.log('Plugin identities, dependency lock, skill frontmatter, and skill, role, and reference links are valid.');
