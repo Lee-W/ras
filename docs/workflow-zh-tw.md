@@ -34,7 +34,7 @@ RAS 是 **RAISE A SLIDE**，目標是為特定講者、觀眾與場合製作簡�
 | 🎤 LAYER | [敘事、文字與備註](../roles/layer.md) |
 | 🎹 PAREO | [主題、視覺層次與版面決策](../roles/pareo.md) |
 | 🎸 LOCK | [實作、建置與修正](../roles/lock.md) |
-| 🥁 MASKING | [內容、節奏、證據、畫面與圖片權利審閱](../roles/masking.md) |
+| 🥁 MASKING | [內容、節奏、證據、事實審閱、畫面與圖片權利審閱](../roles/masking.md) |
 
 每個簡報檔案只有一位負責人；其他角色把自己的貢獻交給負責人寫入，不直接編輯該檔。
 
@@ -44,9 +44,9 @@ RAS 是 **RAISE A SLIDE**，目標是為特定講者、觀眾與場合製作簡�
 | 🎤 LAYER | `outline.md`、`sources.md` | 依 [outline 樣板](../templates/outline.md)寫成的 outline（含每頁的 `layout:` 欄位）；交給 LOCK 寫進 `slides.md` 的投影片文字與備註；來源條目 | 每頁只有一個目的；每個主張與圖片都能追到來源條目 |
 | 🎹 PAREO | `theme.css` | `theme.css` 的變更；每頁 `layout:` 欄位的值，由 LAYER 寫進 `outline.md`；圖片條目，由 LAYER 寫進 `sources.md` | 版面決策在渲染前就寫下來，LOCK 與 MASKING 可以拿渲染結果對照 |
 | 🎸 LOCK | `slides.md`、建置產物（`dist/`、`.ras/` 的建置與檢查檔） | 來源雜湊、報告路徑，以及實際執行過的指令與結果 | 用回報的指令能從來源建置出這份簡報 |
-| 🥁 MASKING | `review.md`（可選的人讀筆記）、`.ras/reviews.json`（權威） | 以 `review:record` 寫入的紀錄 | 每個問題都有頁面標題、影響與修正方式；渲染後檢查與圖片權利稽核都有紀錄 |
+| 🥁 MASKING | `review.md`（可選的人讀筆記）、`.ras/reviews.json`（權威） | 以 `review:record` 寫入的紀錄 | 每個問題都有頁面標題、影響與修正方式；渲染後檢查、事實審閱（`kind: factual`：論證與來源是否成立、技術陳述是否正確、版本與日期是否仍有效）與圖片權利稽核都有紀錄 |
 
-渲染後的畫面檢查與圖片權利稽核只歸 MASKING。PAREO 的版面決策是 MASKING 對照渲染結果的準則。
+渲染後的畫面檢查、事實審閱與圖片權利稽核只歸 MASKING。LAYER 的責任止於每個主張都有來源條目。PAREO 的版面決策是 MASKING 對照渲染結果的準則。
 
 角色是責任分工，不強制呼叫五次模型。依宿主的委派規則執行；
 無法或不需要委派時，由目前代理依序完成各輪工作。

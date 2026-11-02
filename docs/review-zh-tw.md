@@ -104,7 +104,7 @@ flowchart TD
 }
 ```
 
-論點與來源審閱使用 `kind: factual`；有必要修正的問題時使用 `verdict: needs_changes`。
+論點與來源審閱使用 `kind: factual`，由 MASKING 負責，涵蓋論證與來源是否成立、技術陳述是否正確、版本與日期是否仍有效；有必要修正的問題時使用 `verdict: needs_changes`。
 通過紀錄必須列出每一頁，局部檢查不能讓整份簡報通過。
 範例中的頁碼與觀察內容都必須替換為實際證據，詳細問題可另存 `review.md`；它是可選的，不影響 `ready`。
 
