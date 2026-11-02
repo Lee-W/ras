@@ -99,7 +99,9 @@ After actually reviewing the current render/content, prepare a JSON record under
 }
 ```
 
-Use `kind: factual` for argument/source review and `verdict: needs_changes` for
+Use `kind: factual` for argument/source review; MASKING owns it, covering whether
+the argument and sources hold up, whether technical statements are correct, and
+whether versions and dates are still valid. Use `verdict: needs_changes` for
 required fixes. List every page for a passing review; partial inspection cannot
 pass the whole deck. Replace the example page list and observations with actual
 evidence. Keep detailed findings in `review.md` when useful; it is optional and

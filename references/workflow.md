@@ -45,9 +45,10 @@ that owner instead of editing the file themselves.
 | 🎤 LAYER | `outline.md`, `sources.md` | The outline in the [outline template](../templates/outline.md), including each slide's `layout:` field; slide text and notes handed to LOCK for `slides.md`; source entries | Every slide has one purpose; every claim and image traces to a source entry |
 | 🎹 PAREO | `theme.css` | The `theme.css` change; the value of each slide's `layout:` field, which LAYER records in `outline.md`; image entries, which LAYER records in `sources.md` | Layout decisions are written down before rendering, so LOCK and MASKING can compare the render against them |
 | 🎸 LOCK | `slides.md`, build output (`dist/`, `.ras/` build and check files) | Source hash, report paths, and the commands actually run with their outcomes | The deck builds from source with the reported commands |
-| 🥁 MASKING | `review.md` (optional human-readable notes), `.ras/reviews.json` (authoritative) | Records written with `review:record` | Every finding has a page heading, impact, and fix; rendered-page inspection and the image-rights audit are recorded |
+| 🥁 MASKING | `review.md` (optional human-readable notes), `.ras/reviews.json` (authoritative) | Records written with `review:record` | Every finding has a page heading, impact, and fix; rendered-page inspection, the factual review (`kind: factual`: argument and sources hold up, technical statements are correct, versions and dates are still valid), and the image-rights audit are recorded |
 
-Rendered-page inspection and the image-rights audit belong to MASKING only.
+Rendered-page inspection, the factual review, and the image-rights audit belong
+to MASKING only. LAYER's duty stops at a source entry for every claim.
 PAREO's layout decisions are the criteria MASKING checks the render against.
 
 These are responsibilities, not five mandatory model calls. Follow the host's

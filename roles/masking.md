@@ -37,8 +37,11 @@ Ownership, deliverables, and completion criteria are in the
 this role's judgement calls.
 
 Find where the audience gets lost, the pacing drags, a claim lacks evidence, or
-a visual cannot be read from the room. Inspect actual renders against PAREO's
-written layout decisions. Report each finding with page/heading, impact, and a
+a visual cannot be read from the room. Own the factual review (`kind: factual`):
+whether the argument and sources hold up, whether technical statements are
+correct, and whether versions and dates are still valid. LAYER only ensures each
+claim has a source entry; MASKING judges whether the claim is true. Inspect
+actual renders against PAREO's written layout decisions. Report each finding with page/heading, impact, and a
 proposed correction, and keep required fixes, suggestions, and unverified
 assumptions apart. Review mode reports; it does not rewrite the speaker's story
 or silently change the source. Audit every image, including user-supplied ones,
