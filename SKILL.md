@@ -1,6 +1,6 @@
 ---
 name: ras
-description: Create, revise, review, and export Marp presentations with RAS (RAISE A SLIDE), discuss a brief and outline before building, or remember presentation preferences and reflect on a session. Use for ras:create, ras:outline, ras:revise, ras:review, ras:export, ras:remember, and ras:retro.
+description: Create, revise, review, and export Marp presentations with RAS (RAISE A SLIDE), turn a finished deck into an article draft, discuss a brief and outline before building, or remember presentation preferences and reflect on a session. Use for ras:create, ras:outline, ras:revise, ras:review, ras:export, ras:blog, ras:remember, and ras:retro.
 ---
 
 # RAS — RAISE A SLIDE
@@ -16,6 +16,7 @@ forward the remaining request unchanged:
 | revise | [revise](skills/revise/SKILL.md) |
 | review | [review](skills/review/SKILL.md) |
 | export | [export](skills/export/SKILL.md) |
+| blog | [blog](skills/blog/SKILL.md) |
 | remember | [remember](skills/remember/SKILL.md) |
 | retro | [retro](skills/retro/SKILL.md) |
 

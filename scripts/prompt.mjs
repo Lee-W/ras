@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { pluginRoot } from './plugin-root.mjs';
 
-export const operations = ['create', 'outline', 'revise', 'review', 'export', 'remember', 'retro'];
+export const operations = ['create', 'outline', 'revise', 'review', 'export', 'blog', 'remember', 'retro'];
 
 const roles = names => names.map(role => `roles/${role}.md`);
 const allRoles = roles(['chu2', 'layer', 'pareo', 'lock', 'masking']);
@@ -15,6 +15,7 @@ const operationFiles = {
   revise: [...authoring.filter(file => file !== 'templates/outline.md'), ...allRoles],
   review: ['references/workflow.md', 'references/review.md', 'references/image-rights.md', ...roles(['masking', 'lock'])],
   export: ['references/workflow.md', 'references/marp.md', 'references/review.md', 'references/image-rights.md', ...roles(['lock', 'masking'])],
+  blog: ['references/workflow.md', 'references/image-rights.md', ...roles(['layer', 'chu2'])],
   remember: ['references/memory.md', 'roles/chu2.md'],
   retro: ['references/memory.md', 'roles/chu2.md', 'skills/remember/SKILL.md'],
 };

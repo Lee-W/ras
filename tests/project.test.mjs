@@ -16,7 +16,7 @@ import { prepareFonts } from '../scripts/fonts.mjs';
 
 test('all portable operations carry the shared interaction contract in tool and chat hosts', async () => {
   const voice = await readFile(path.join(pluginRoot, 'references/voice.md'), 'utf8');
-  for (const operation of ['create', 'outline', 'revise', 'review', 'export', 'remember', 'retro']) {
+  for (const operation of ['create', 'outline', 'revise', 'review', 'export', 'blog', 'remember', 'retro']) {
     for (const chat of [false, true]) {
       const prompt = await makePrompt(operation, '投影片用英文，繼續用臺灣華語討論。', { chat });
       assert.ok(prompt.includes(voice), `${operation} (chat=${chat}) must expand the full interaction contract`);

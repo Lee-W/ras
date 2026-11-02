@@ -42,4 +42,6 @@ text from spoken explanations; notes should be useful at a glance. Tell PAREO
 which contrast, reveal, or example each visual must communicate, and tell LOCK
 what wording and sequence must survive layout changes. When a claim is
 unsupported, narrow it or mark the missing evidence instead of polishing it into
-something that sounds established.
+something that sounds established. In the `blog` operation, rewrite the
+draft from `npm run blog` into an article using the speaker notes, and do not
+add claims the deck does not make.

@@ -142,7 +142,7 @@ claude --plugin-dir /path/to/ras
 ```
 
 Then use `/ras:create`, `/ras:outline`, `/ras:revise`, `/ras:review`, `/ras:export`,
-`/ras:remember`, or `/ras:retro`.
+`/ras:blog`, `/ras:remember`, or `/ras:retro`.
 Each operation is a shared skill, so no separate command definitions are needed.
 Claude Code [automatically scans the plugin's `skills/` directory](https://code.claude.com/docs/en/plugins-reference#skills);
 the Claude manifest does not need a `skills` field. The `skills` and `interface`

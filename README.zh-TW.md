@@ -131,7 +131,7 @@ claude --plugin-dir /path/to/ras
 ```
 
 接著使用 `/ras:create`、`/ras:outline`、`/ras:revise`、`/ras:review`、`/ras:export`、
-`/ras:remember` 或 `/ras:retro`。
+`/ras:blog`、`/ras:remember` 或 `/ras:retro`。
 每個操作都是共用 skill，不需要另外維護命令定義。
 Claude Code 會[自動掃描外掛的 `skills/` 目錄](https://code.claude.com/docs/en/plugins-reference#skills)，
 因此 Claude manifest 不需要 `skills` 欄位；本儲存庫的 `skills` 與 `interface` 欄位位於 `.codex-plugin/plugin.json`。
