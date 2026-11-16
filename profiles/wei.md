@@ -137,6 +137,7 @@ measurements on slides as numerals (`3 retries`, `9 steps`, `1,163 tokens`),
 never as spelled-out English words, because digits read faster from the back of
 a room. Pronouns such as "the one you already speak" stay words, and speaker
 notes may spell numbers out.
+(Superseded on 2026-11-16 by the line-break rule under "Explicit preferences (2026-11-16)"; kept for history.)
 Also (2026-10-07): when a title is too long for one line, break it by hand with
 `<br>` at a phrase boundary (`` `AgentOperator`:<br>a budget across every attempt ``)
 rather than letting it wrap wherever the width runs out; an automatic wrap can
@@ -241,3 +242,20 @@ notes live in HTML comments, which formatters leave alone.
   generously (about 3 pages per minute of progressive reveal was right for a
   26-minute talk) and reserve space so later elements do not shift. Err toward
   splitting; a page that feels slightly empty is correct.
+
+## Explicit preferences (2026-11-16)
+
+Stated during the Tokyo Python Airflow intro deck:
+
+- **No grey for anything the audience reads.** Body text, labels, card text,
+  sub-lines and furigana use the normal text colour. Grey is only for page
+  numbers, footnotes, and connector lines or arrows. Not-yet-revealed items in
+  a progressive reveal may be dimmed, but visibly on purpose.
+- **No hand-placed line breaks in titles and large statements.** Let a line
+  that fits stay on one line; when it has to wrap, balance the lines (CSS
+  `text-wrap: balance`) rather than inserting `<br>`. Keep a manual break only
+  where each line is its own beat ("One morning, it fails." / "Nobody is
+  told."). This supersedes the 2026-10-07 instruction to break long titles by
+  hand; balancing covers its concern about a stranded single word.
+- **Centre sparse pages vertically.** A page with little content must not sit
+  at the top with an empty lower half.
