@@ -46,4 +46,4 @@ description: 與使用者來回討論簡報的 brief 與 outline，確認後才�
 ## 純聊天宿主
 
 沒有檔案系統或 shell 時，只回傳 `outline.md`（必要時加上 `brief.md`）的草稿內容，
-每份各放在一個獨立的 fenced block，並標上檔名。不要宣稱已經寫入檔案，也不要模擬工具呼叫。
+每份各放在一個獨立的 fenced block，並標上檔名；外層 fence 的 backtick 要比檔案內容中最長的 fence 多一個（內容沒有 fence 時用三個）。不要宣稱已經寫入檔案，也不要模擬工具呼叫。
