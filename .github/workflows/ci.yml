@@ -10,6 +10,26 @@ permissions:
   contents: read
 
 jobs:
+  commit-messages:
+    name: Commit messages
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      # Keep in step with CZ_PACKAGE in bumpversion.yml, which derives releases from these messages.
+      CZ_PACKAGE: commitizen==4.16.2
+      BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b # v8.1.0
+      - name: Check Conventional Commits
+        run: uvx --from "$CZ_PACKAGE" cz check --rev-range "$BASE_SHA..$HEAD_SHA"
+
   check:
     name: ${{ matrix.os }} / Node ${{ matrix.node }}
     runs-on: ${{ matrix.os }}
