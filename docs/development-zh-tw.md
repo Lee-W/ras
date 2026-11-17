@@ -20,7 +20,7 @@
 
 ## CI
 
-`.github/workflows/ci.yml` 在 PR 與手動觸發時執行；主分支的發布工作流程不再重跑。
+`.github/workflows/ci.yml` 在 PR、推送至 `main` 與手動觸發時執行；發布工作流程不會重跑其測試矩陣。
 測試矩陣涵蓋 Ubuntu 24.04、macOS 15，以及 Node 22.18.0、26.9.0。
 每個工作會安裝鎖定版本的相依套件與 Puppeteer 指定的 Chrome、驗證儲存庫來源、執行測試，
 並在 checkout 目錄外初始化、安裝與匯出獨立起始簡報。
@@ -32,7 +32,7 @@ Ubuntu 使用限縮範圍的 AppArmor profile，允許 CI 瀏覽器快取中的�
 
 ```mermaid
 flowchart TD
-  A["PR 或手動執行 CI"] --> C["CI：檢查與獨立匯出"]
+  A["PR、推送至 main 或手動執行 CI"] --> C["CI：檢查與獨立匯出"]
   B["推送至 main 或手動重試發布"] --> F["Commitizen 檢查提交紀錄"]
   F --> G{"需要新版本？"}
   G -->|否| H["結束，不建立版本"]
@@ -57,7 +57,7 @@ actionlint .github/workflows/ci.yml .github/workflows/bumpversion.yml
 
 ## 版本與發布
 
-推送至 `main` 時，`.github/workflows/bumpversion.yml` 不再重跑 CI 矩陣（PR 已執行過）。
+推送至 `main` 時，`.github/workflows/bumpversion.yml` 同樣會執行，但不重跑 CI 矩陣，只在單一 runner 上重新檢查版本更新後的結果，再發布。
 由 Commitizen 4.16.2 依 `.cz.toml` 解析 Conventional Commits：
 `feat` 提升次版本，`fix` 提升修訂版本；沒有符合發布條件的變更時不建立版本。
 `major_version_zero` 啟用期間，套件維持主版本零。
