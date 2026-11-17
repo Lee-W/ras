@@ -31,6 +31,10 @@ Puppeteer-pinned Chrome, validates repository source, runs tests, and initialize
 deck outside the checkout. That export includes Mermaid, fonts, notes, PNGs,
 and a PDF. Generated media is temporary and is not committed or published.
 
+On pull requests, a separate `commit-messages` job runs `cz check --rev-range` with the same
+pinned Commitizen over the pull request's commits, because a misspelled commit type would
+otherwise silently skip a release.
+
 On Ubuntu, a scoped AppArmor profile permits the CI browser cache to use user
 namespaces, following the [Chromium guidance](https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md).
 The browser continues to use its sandbox. Local developer machines need no
@@ -58,8 +62,9 @@ The [npm version provider](https://github.com/commitizen-tools/commitizen/blob/v
 updates `package.json` and both root version entries in `package-lock.json`.
 The explicit version-file list updates `plugin.json`, `.claude-plugin/plugin.json`,
 and `.codex-plugin/plugin.json`. Commitizen also updates `CHANGELOG.md`, creates
-a bump commit and an annotated `v…` tag. The commitizen package and the no-op exit codes are workflow `env` values that
-`npm run test:release` reads, so the workflow is their only source. After a bump the
+a bump commit and an annotated `v…` tag. The commitizen package and the no-op exit codes are `bumpversion.yml` `env` values that
+`npm run test:release` reads, so that workflow is their source; `ci.yml` repeats the commitizen
+version for its commit-message check and must be kept in step. After a bump the
 workflow validates the changed metadata, installs dependencies, exports a standalone
 starter deck from the bumped kit, prepares release notes, atomically pushes the commit/tag, then creates
 a GitHub Release in the same job. It does not publish to npm.

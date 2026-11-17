@@ -26,6 +26,9 @@
 並在 checkout 目錄外初始化、安裝與匯出獨立起始簡報。
 匯出涵蓋 Mermaid、字型、備註、PNG 與 PDF；產生的媒體只作暫存，不提交或發布。
 
+PR 另有獨立的 `commit-messages` 工作，以相同版本的 Commitizen 對 PR 的 commit 範圍執行
+`cz check --rev-range`；否則 commit type 拼錯時會靜默地不發版。
+
 Ubuntu 使用限縮範圍的 AppArmor profile，允許 CI 瀏覽器快取中的執行檔使用 user namespaces，
 依據 [Chromium 指南](https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md)設定。
 瀏覽器仍使用 sandbox；本機開發環境不需要因此修改 AppArmor。
@@ -66,7 +69,7 @@ actionlint .github/workflows/ci.yml .github/workflows/bumpversion.yml
 更新 `package.json` 與 `package-lock.json` 的兩個根版本欄位；
 明列的版本檔案清單會更新 `plugin.json`、`.claude-plugin/plugin.json` 與 `.codex-plugin/plugin.json`。
 Commitizen 也更新 `CHANGELOG.md`、建立版本提交與附註式 `v…` tag。
-Commitizen 套件版本與不視為失敗的結束碼定義在工作流程的 `env`，`npm run test:release` 從那裡讀取，因此工作流程是唯一來源。
+Commitizen 套件版本與不視為失敗的結束碼定義在 `bumpversion.yml` 的 `env`，`npm run test:release` 從那裡讀取，因此以該工作流程為來源；`ci.yml` 的 commit 訊息檢查重複了 Commitizen 版本，須同步更新。
 版本更新後，工作流程驗證 metadata、安裝相依套件、以新版工具組匯出獨立起始簡報、準備發布說明，再以原子操作推送 commit／tag，於同一工作建立 GitHub Release。
 這個流程不發布到 npm。
 
